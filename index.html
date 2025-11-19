@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="bg">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Офертико | Очаквайте Скоро</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      .animate-blob {
+        animation: blob 20s infinite;
+      }
+      .animation-delay-2000 {
+        animation-delay: 2s;
+      }
+      .animation-delay-4000 {
+        animation-delay: 4s;
+      }
+      /* New longer delays for the slower animation */
+      .animation-delay-long {
+        animation-delay: 7s;
+      }
+      .animation-delay-extra-long {
+        animation-delay: 13s;
+      }
+
+      @keyframes blob {
+        0% { transform: translate(0px, 0px) scale(1); opacity: 0.2; }
+        33% { transform: translate(50px, -50px) scale(1.2); opacity: 0.4; }
+        66% { transform: translate(-40px, 40px) scale(0.8); opacity: 0.25; }
+        100% { transform: translate(0px, 0px) scale(1); opacity: 0.2; }
+      }
+      
+      /* Custom Text Animations */
+      @keyframes text-shimmer {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      .animate-text-shimmer {
+        background-size: 200% auto;
+        animation: text-shimmer 3s linear infinite;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-in-up {
+        animation: fadeInUp 1s ease-out forwards;
+      }
+
+      /* Logo Animations */
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); }
+      }
+      .animate-float {
+        animation: float 4s ease-in-out infinite;
+      }
+
+      @keyframes blink {
+        0%, 90%, 100% { transform: scaleY(1); }
+        95% { transform: scaleY(0.1); }
+      }
+      .animate-blink {
+        animation: blink 4s infinite;
+        transform-origin: center;
+      }
+
+      /* Countdown Animation */
+      @keyframes countPulse {
+        0% { transform: scale(0.9); opacity: 0.5; }
+        50% { transform: scale(1.05); opacity: 1; }
+        100% { transform: scale(1); opacity: 1; }
+      }
+      .animate-count-pulse {
+        animation: countPulse 0.3s ease-out;
+      }
+
+      /* Shake Animation for Error Feedback */
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+        20%, 40%, 60%, 80% { transform: translateX(4px); }
+      }
+      .animate-shake {
+        animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+  }
+}
+</script>
+</head>
+  <body class="bg-slate-950 text-white antialiased selection:bg-purple-500 selection:text-white">
+    <div id="root"></div>
+  </body>
+</html>
