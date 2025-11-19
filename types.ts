@@ -11,3 +11,21 @@ export interface CountdownTime {
   minutes: number;
   seconds: number;
 }
+
+export interface Theme {
+  id: string;
+  label: string;
+  colors: {
+    background: string;
+    textMain: string;
+    textSecondary: string;
+    textMuted: string;
+    cardBg: string;
+    cardBorder: string;
+    inputBg: string;
+    inputBorder: string;
+    accent: string;
+    buttonGradient: string;
+    divider: string;
+  };
+}

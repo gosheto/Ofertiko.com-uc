@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { CountdownTime } from '../types';
+import { CountdownTime, Theme } from '../types';
 
-const Countdown: React.FC = () => {
+interface CountdownProps {
+  theme: Theme;
+}
+
+const Countdown: React.FC<CountdownProps> = ({ theme }) => {
   const [timeLeft, setTimeLeft] = useState<CountdownTime>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
@@ -34,14 +38,14 @@ const Countdown: React.FC = () => {
   }, []);
 
   const TimeUnit: React.FC<{ value: number; label: string }> = ({ value, label }) => (
-    <div className="flex flex-col items-center p-2 bg-white/5 backdrop-blur-md rounded-lg border border-white/10 min-w-[80px]">
+    <div className={`flex flex-col items-center p-2 backdrop-blur-md rounded-lg border min-w-[80px] transition-colors duration-300 ${theme.colors.cardBg} ${theme.colors.cardBorder}`}>
       <span 
         key={value}
-        className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-400 font-mono animate-count-pulse"
+        className={`text-3xl font-bold font-mono animate-count-pulse ${theme.colors.textMain}`}
       >
         {value < 10 ? `0${value}` : value}
       </span>
-      <span className="text-xs uppercase tracking-widest text-slate-400 mt-1">{label}</span>
+      <span className={`text-xs uppercase tracking-widest mt-1 ${theme.colors.textMuted}`}>{label}</span>
     </div>
   );
 
