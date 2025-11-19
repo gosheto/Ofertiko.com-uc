@@ -8,12 +8,14 @@ export default defineConfig(({ mode }) => {
   
   // Prioritize Vercel system env vars (process.env) if available, otherwise fallback to .env file (env)
   const apiKey = process.env.API_KEY || env.API_KEY;
+  const formspreeEndpoint = process.env.FORMSPREE_ENDPOINT || env.FORMSPREE_ENDPOINT;
 
   return {
     plugins: [react()],
     define: {
-      // This ensures process.env.API_KEY works in the browser after build
+      // This ensures process.env variables work in the browser after build
       'process.env.API_KEY': JSON.stringify(apiKey),
+      'process.env.FORMSPREE_ENDPOINT': JSON.stringify(formspreeEndpoint),
     },
   };
 });

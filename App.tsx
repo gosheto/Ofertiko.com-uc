@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Hammer, Mail, ArrowRight, Github, Twitter, Instagram, AlertCircle, Palette, Check, Sun, Moon, Sparkles } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Hammer, Mail, ArrowRight, Github, Twitter, Instagram, AlertCircle, Palette, Check, Sun, Moon, Sparkles, Type, X, Loader2 } from 'lucide-react';
 import Countdown from './components/Countdown';
 import AiForeman from './components/AiForeman';
 import { Theme } from './types';
@@ -62,13 +62,23 @@ const lightTheme: Theme = {
 
 const themes = [darkTheme, midnightTheme, lightTheme];
 
+// --- FONT DEFINITIONS ---
+
+const FONTS = {
+  inter: "'Inter', sans-serif",
+  apple: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'"
+};
+
 // --- LOGO COMPONENT ---
 
-const OfertikoLogo: React.FC<{ theme: Theme }> = ({ theme }) => {
+const OfertikoLogo: React.FC<{ theme: Theme; onClick: () => void }> = ({ theme, onClick }) => {
   const isDark = theme.id !== 'light';
   
   return (
-    <div className="relative w-32 h-32 mx-auto mb-6 animate-float group cursor-pointer">
+    <div 
+      onClick={onClick}
+      className="relative w-32 h-32 mx-auto mb-6 animate-float group cursor-pointer select-none active:scale-95 transition-transform"
+    >
       <svg key={theme.id} viewBox="0 0 200 200" className={`w-full h-full transition-transform duration-500 ease-in-out group-hover:rotate-6 group-hover:scale-110 ${isDark ? 'drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]' : 'drop-shadow-[0_0_15px_rgba(6,182,212,0.3)]'}`}>
         <defs>
           {/* Glass Gradient for Head */}
@@ -201,6 +211,62 @@ const ThemeSwitcher: React.FC<{ currentTheme: Theme, onThemeChange: (t: Theme) =
   );
 };
 
+// --- SECRET FONT MENU COMPONENT ---
+
+const SecretFontMenu: React.FC<{ 
+  isOpen: boolean; 
+  onClose: () => void; 
+  currentFont: string; 
+  onFontChange: (font: string) => void;
+  theme: Theme;
+}> = ({ isOpen, onClose, currentFont, onFontChange, theme }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className={`w-80 rounded-2xl p-6 shadow-2xl border animate-in zoom-in-95 duration-200 ${theme.colors.cardBg} ${theme.colors.cardBorder}`}>
+        <div className="flex justify-between items-center mb-6">
+          <div className="flex items-center gap-2">
+            <Type className={`w-5 h-5 ${theme.colors.accent}`} />
+            <h3 className={`text-lg font-bold ${theme.colors.textMain}`}>Тайни Настройки</h3>
+          </div>
+          <button onClick={onClose} className={`p-1 rounded-lg hover:bg-white/10 ${theme.colors.textSecondary}`}>
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <p className={`text-sm mb-4 ${theme.colors.textMuted}`}>Избери шрифт на сайта:</p>
+
+        <div className="space-y-3">
+          <button
+            onClick={() => onFontChange(FONTS.inter)}
+            className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all ${
+              currentFont === FONTS.inter 
+                ? `border-cyan-500 bg-cyan-500/10 ${theme.colors.textMain}` 
+                : `${theme.colors.cardBorder} hover:bg-white/5 ${theme.colors.textSecondary}`
+            }`}
+          >
+            <span style={{ fontFamily: FONTS.inter }}>Inter (Стандартен)</span>
+            {currentFont === FONTS.inter && <Check className="w-4 h-4 text-cyan-500" />}
+          </button>
+
+          <button
+            onClick={() => onFontChange(FONTS.apple)}
+            className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all ${
+              currentFont === FONTS.apple 
+                ? `border-cyan-500 bg-cyan-500/10 ${theme.colors.textMain}` 
+                : `${theme.colors.cardBorder} hover:bg-white/5 ${theme.colors.textSecondary}`
+            }`}
+          >
+            <span style={{ fontFamily: FONTS.apple }}>Apple System (SF)</span>
+            {currentFont === FONTS.apple && <Check className="w-4 h-4 text-cyan-500" />}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- MAIN APP COMPONENT ---
 
 const App: React.FC = () => {
@@ -208,7 +274,14 @@ const App: React.FC = () => {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [shakeInput, setShakeInput] = useState(false);
+  const [isInputFocused, setIsInputFocused] = useState(false);
+  
+  // Secret Menu States
+  const [fontFamily, setFontFamily] = useState(FONTS.inter);
+  const [secretClicks, setSecretClicks] = useState(0);
+  const [showSecretMenu, setShowSecretMenu] = useState(false);
 
   const validateEmail = (email: string) => {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -228,32 +301,111 @@ const App: React.FC = () => {
       setShakeInput(true);
       setTimeout(() => setShakeInput(false), 500);
     }
+    setIsInputFocused(false);
   };
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (validateEmail(email)) {
-      setSubscribed(true);
-      // Logic to send email to backend would go here
-    } else {
+    
+    if (!validateEmail(email)) {
       setEmailError('Моля, въведете валиден имейл адрес.');
       setShakeInput(true);
       setTimeout(() => setShakeInput(false), 500);
+      return;
+    }
+
+    setIsSubmitting(true);
+    const endpoint = process.env.FORMSPREE_ENDPOINT;
+
+    // If no endpoint is configured, simulate success after a delay (for demo purposes)
+    if (!endpoint) {
+      console.warn("FORMSPREE_ENDPOINT not set. Simulating submission.");
+      setTimeout(() => {
+        setSubscribed(true);
+        setIsSubmitting(false);
+      }, 1500);
+      return;
+    }
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email })
+      });
+
+      if (response.ok) {
+        setSubscribed(true);
+        setEmail("");
+      } else {
+        const data = await response.json();
+        if (data && typeof data === 'object' && 'errors' in data) {
+          setEmailError(data["errors"].map((error: any) => error["message"]).join(", "));
+        } else {
+          setEmailError("Възникна проблем. Моля, опитайте отново.");
+        }
+      }
+    } catch (error) {
+      setEmailError("Грешка при свързване. Проверете интернет връзката си.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
+  const handleLogoClick = () => {
+    setSecretClicks(prev => {
+      const newCount = prev + 1;
+      if (newCount >= 5) {
+        setShowSecretMenu(true);
+        return 0;
+      }
+      return newCount;
+    });
+
+    // Reset clicks if inactive for 2 seconds
+    setTimeout(() => setSecretClicks(0), 2000);
+  };
+
   const isDark = currentTheme.id !== 'light';
+  
+  const focusGradient = currentTheme.id === 'midnight' 
+    ? 'bg-gradient-to-r from-fuchsia-600 via-purple-600 to-indigo-600'
+    : currentTheme.id === 'light'
+      ? 'bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500'
+      : 'bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500'; // dark default
 
   return (
-    <div className={`min-h-screen w-full relative overflow-hidden flex flex-col transition-colors duration-500 ${currentTheme.colors.background}`}>
+    <div 
+      className={`min-h-screen w-full relative overflow-hidden flex flex-col transition-colors duration-500 ${currentTheme.colors.background}`}
+      style={{ fontFamily: fontFamily }}
+    >
       
       <ThemeSwitcher currentTheme={currentTheme} onThemeChange={setCurrentTheme} />
 
+      <SecretFontMenu 
+        isOpen={showSecretMenu} 
+        onClose={() => setShowSecretMenu(false)} 
+        currentFont={fontFamily} 
+        onFontChange={setFontFamily} 
+        theme={currentTheme}
+      />
+
       {/* Animated Background blobs - Adjusted for Light/Dark Modes */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
-        <div className={`absolute top-0 -left-4 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl animate-blob ${isDark ? 'bg-purple-600 opacity-20' : 'bg-purple-300 opacity-40'}`}></div>
-        <div className={`absolute top-0 -right-4 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-long ${isDark ? 'bg-cyan-600 opacity-20' : 'bg-cyan-300 opacity-40'}`}></div>
-        <div className={`absolute -bottom-8 left-20 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-extra-long ${isDark ? 'bg-pink-600 opacity-20' : 'bg-pink-300 opacity-40'}`}></div>
+        <div 
+          className={`absolute top-0 -left-4 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl animate-blob ${isDark ? 'bg-purple-600 opacity-20' : 'bg-purple-300 opacity-40'}`}
+          style={{ animationDuration: '20s' }}
+        ></div>
+        <div 
+          className={`absolute top-0 -right-4 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-long ${isDark ? 'bg-cyan-600 opacity-20' : 'bg-cyan-300 opacity-40'}`}
+          style={{ animationDuration: '25s' }}
+        ></div>
+        <div 
+          className={`absolute -bottom-8 left-20 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-extra-long ${isDark ? 'bg-pink-600 opacity-20' : 'bg-pink-300 opacity-40'}`}
+          style={{ animationDuration: '23s' }}
+        ></div>
       </div>
 
       {/* Grid Overlay */}
@@ -264,7 +416,7 @@ const App: React.FC = () => {
         <div className="max-w-4xl w-full mx-auto text-center">
           
           {/* Logo */}
-          <OfertikoLogo theme={currentTheme} />
+          <OfertikoLogo theme={currentTheme} onClick={handleLogoClick} />
 
           {/* Header Badge */}
           <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-8 backdrop-blur-sm shadow-xl ${currentTheme.colors.cardBg} ${currentTheme.colors.cardBorder}`}>
@@ -311,24 +463,40 @@ const App: React.FC = () => {
               {!subscribed ? (
                 <form onSubmit={handleSubscribe} className="relative" noValidate>
                   <div className={`relative ${shakeInput ? 'animate-shake' : ''}`}>
+                    {/* Gradient Border Background - Visible on focus */}
+                    <div className={`absolute -inset-[2px] rounded-xl opacity-0 transition-opacity duration-300 -z-10 ${focusGradient} ${isInputFocused ? 'opacity-100' : ''}`} />
+                    
                     <input
                       type="email"
+                      name="email"
                       placeholder="твоят@email.com"
                       value={email}
                       onChange={handleEmailChange}
+                      onFocus={() => setIsInputFocused(true)}
                       onBlur={handleEmailBlur}
-                      className={`w-full border rounded-xl py-3 pl-4 pr-12 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all ${currentTheme.colors.inputBg} ${currentTheme.colors.inputBorder} ${emailError ? 'border-red-500 focus:ring-red-500' : ''} ${currentTheme.colors.textMain}`}
+                      disabled={isSubmitting}
+                      className={`relative z-10 w-full border rounded-xl py-3 pl-4 pr-12 focus:outline-none transition-all 
+                        ${currentTheme.colors.inputBg} 
+                        ${currentTheme.colors.textMain} 
+                        ${isInputFocused ? 'border-transparent' : `${currentTheme.colors.inputBorder} focus:border-cyan-500`}
+                        ${emailError ? 'border-red-500 focus:ring-red-500' : ''}
+                        ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}
+                      `}
                     />
                     <button
                       type="submit"
-                      disabled={!!emailError || !email}
-                      className={`absolute right-1 top-1 bottom-1 p-2 rounded-lg transition-colors ${
-                        !!emailError || !email 
+                      disabled={!!emailError || !email || isSubmitting}
+                      className={`absolute right-1 top-1 bottom-1 p-2 rounded-lg transition-colors z-20 flex items-center justify-center ${
+                        !!emailError || !email || isSubmitting
                           ? 'bg-slate-500/20 text-slate-400 cursor-not-allowed' 
                           : 'bg-cyan-600 hover:bg-cyan-500 text-white'
                       }`}
                     >
-                      <ArrowRight className="w-5 h-5" />
+                      {isSubmitting ? (
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                      ) : (
+                        <ArrowRight className="w-5 h-5" />
+                      )}
                     </button>
                   </div>
                   {emailError && (

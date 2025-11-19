@@ -41,7 +41,7 @@ const Countdown: React.FC<CountdownProps> = ({ theme }) => {
     <div className={`flex flex-col items-center p-2 backdrop-blur-md rounded-lg border min-w-[80px] transition-colors duration-300 ${theme.colors.cardBg} ${theme.colors.cardBorder}`}>
       <span 
         key={value}
-        className={`text-3xl font-bold font-mono animate-count-pulse ${theme.colors.textMain}`}
+        className={`text-3xl font-bold font-mono animate-count-update inline-block ${theme.colors.textMain}`}
       >
         {value < 10 ? `0${value}` : value}
       </span>
