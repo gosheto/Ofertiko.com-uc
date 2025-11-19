@@ -315,20 +315,10 @@ const App: React.FC = () => {
     }
 
     setIsSubmitting(true);
-    const endpoint = process.env.FORMSPREE_ENDPOINT;
-
-    // If no endpoint is configured, simulate success after a delay (for demo purposes)
-    if (!endpoint) {
-      console.warn("FORMSPREE_ENDPOINT not set. Simulating submission.");
-      setTimeout(() => {
-        setSubscribed(true);
-        setIsSubmitting(false);
-      }, 1500);
-      return;
-    }
-
+    
     try {
-      const response = await fetch(endpoint, {
+      // Send request to our Vercel API function
+      const response = await fetch('/api/subscribe', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -340,14 +330,15 @@ const App: React.FC = () => {
         setSubscribed(true);
         setEmail("");
       } else {
-        const data = await response.json();
-        if (data && typeof data === 'object' && 'errors' in data) {
-          setEmailError(data["errors"].map((error: any) => error["message"]).join(", "));
+        const data = await response.json().catch(() => ({}));
+        if (data && data.error) {
+          setEmailError(data.error);
         } else {
           setEmailError("Възникна проблем. Моля, опитайте отново.");
         }
       }
     } catch (error) {
+      console.error("Subscribe error:", error);
       setEmailError("Грешка при свързване. Проверете интернет връзката си.");
     } finally {
       setIsSubmitting(false);
