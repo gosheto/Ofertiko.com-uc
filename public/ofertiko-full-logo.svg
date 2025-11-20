@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100">
+  <defs>
+    <linearGradient id="grad-cyan" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#22d3ee" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+    <linearGradient id="grad-pink" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f472b6" />
+      <stop offset="100%" stop-color="#ec4899" />
+    </linearGradient>
+    <linearGradient id="grad-purple" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#a855f7" />
+      <stop offset="100%" stop-color="#7e22ce" />
+    </linearGradient>
+  </defs>
+
+  <!-- Swirl Icon (The "O") -->
+  <g transform="translate(20, 15) scale(0.7)">
+    <!-- Top Segment (Pink) -->
+    <path d="M50 50 C 50 20, 90 20, 85 55 C 80 80, 50 50, 50 50 Z" fill="url(#grad-pink)" stroke="none" />
+    <!-- Bottom Right Segment (Purple) -->
+    <path d="M50 50 C 80 50, 80 90, 45 85 C 20 80, 50 50, 50 50 Z" fill="url(#grad-purple)" stroke="none" />
+    <!-- Bottom Left Segment (Cyan) -->
+    <path d="M50 50 C 20 50, 20 10, 55 15 C 80 20, 50 50, 50 50 Z" fill="url(#grad-cyan)" stroke="none" transform="rotate(180 50 50)" />
+  </g>
+
+  <!-- Text "fertiko" -->
+  <text x="90" y="65" font-family="Arial, sans-serif" font-weight="bold" font-size="50" fill="#1e293b">fertiko</text>
+  
+  <!-- Text ".com" -->
+  <text x="245" y="65" font-family="Arial, sans-serif" font-weight="bold" font-size="50" fill="#06b6d4">.com</text>
+</svg>

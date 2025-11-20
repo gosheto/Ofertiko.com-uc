@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Hammer, Mail, ArrowRight, Github, Twitter, Instagram, AlertCircle, Palette, Check, Sun, Moon, Sparkles, Type, X, Loader2, Menu, Zap, Search, ShieldCheck, ShoppingBag, Tag, ExternalLink, ChevronRight, ChevronLeft, BarChart3, Bell, Smartphone, Watch, Monitor, Headphones, Heart, Home, Trophy } from 'lucide-react';
+import { Hammer, Mail, ArrowRight, Github, Twitter, Instagram, AlertCircle, Palette, Check, Sun, Moon, Sparkles, Type, X, Loader2, Menu, Zap, Search, ShieldCheck, ShoppingBag, Tag, ExternalLink, ChevronRight, ChevronLeft, BarChart3, Bell, Smartphone, Watch, Monitor, Headphones, Heart, Home, Trophy, Star, Store } from 'lucide-react';
 import Countdown from './components/Countdown';
 import AiForeman from './components/AiForeman';
 import { Theme } from './types';
@@ -60,7 +60,53 @@ const lightTheme: Theme = {
   }
 };
 
-const themes = [darkTheme, midnightTheme, lightTheme];
+const pastelTheme: Theme = {
+  id: 'pastel',
+  label: 'Пастел',
+  colors: {
+    // Background based on the Beige/Cream color #E7DACB, but lighter for readability
+    background: 'bg-[#F5F0EB]', 
+    // Text based on the Blue-Grey #738A94 but darker
+    textMain: 'text-[#4A5D6B]', 
+    textSecondary: 'text-[#738A94]',
+    textMuted: 'text-[#9BAdb6]',
+    // Card bg based on Beige
+    cardBg: 'bg-[#FFFFFF]/60', 
+    cardBorder: 'border-[#E7DACB]',
+    inputBg: 'bg-[#FFFFFF]',
+    inputBorder: 'border-[#738A94]/30',
+    // Accent based on Terracotta #C26D54
+    accent: 'text-[#C26D54]', 
+    // Gradient from Mustard #DFB446 to Terracotta #C26D54
+    buttonGradient: 'bg-gradient-to-r from-[#DFB446] to-[#C26D54] hover:from-[#EBC55E] hover:to-[#D67E65] shadow-[#C26D54]/20',
+    divider: 'border-[#E7DACB]',
+  }
+};
+
+const classicTheme: Theme = {
+  id: 'classic',
+  label: 'Класик',
+  colors: {
+    // Clean White/Light Gray background
+    background: 'bg-[#F3F4F6]', 
+    // High contrast Black text
+    textMain: 'text-[#111111]', 
+    textSecondary: 'text-[#374151]',
+    textMuted: 'text-[#6B7280]',
+    // White cards with clean borders
+    cardBg: 'bg-white', 
+    cardBorder: 'border-gray-200',
+    inputBg: 'bg-white',
+    inputBorder: 'border-gray-300',
+    // Red Accent (Top Stripe)
+    accent: 'text-[#DC2626]', 
+    // Gradient from Blue (Bottom Stripe) to Red (Top Stripe)
+    buttonGradient: 'bg-gradient-to-r from-[#003399] to-[#DC2626] hover:from-[#002288] hover:to-[#B91C1C] shadow-blue-900/20',
+    divider: 'border-gray-200',
+  }
+};
+
+const themes = [darkTheme, midnightTheme, lightTheme, pastelTheme, classicTheme];
 
 // --- FONT DEFINITIONS ---
 
@@ -72,28 +118,28 @@ const FONTS = {
 // --- REUSABLE LOGO COMPONENT ---
 
 const OfertikoLogo: React.FC<{ theme: Theme; onClick?: () => void; className?: string; animated?: boolean }> = ({ theme, onClick, className = "w-32 h-32", animated = true }) => {
-  const isDark = theme.id !== 'light';
+  const isDark = theme.id !== 'light' && theme.id !== 'pastel' && theme.id !== 'classic';
   
   return (
     <div 
       onClick={onClick}
       className={`relative ${className} ${animated ? 'animate-float' : ''} group cursor-pointer select-none active:scale-95 transition-transform`}
     >
-      <svg key={theme.id} viewBox="0 0 200 200" className={`w-full h-full transition-transform duration-500 ease-in-out ${animated ? 'group-hover:rotate-6 group-hover:scale-110' : ''} ${isDark ? 'drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]' : 'drop-shadow-[0_0_15px_rgba(6,182,212,0.3)]'}`}>
+      <svg key={theme.id} viewBox="0 0 200 200" className={`w-full h-full transition-transform duration-500 ease-in-out ${animated ? 'group-hover:rotate-6 group-hover:scale-110' : ''} ${isDark ? 'drop-shadow-[0_0_20px_rgba(34,211,238,0.6)]' : 'drop-shadow-[0_0_20px_rgba(6,182,212,0.4)]'}`}>
         <defs>
-          {/* Glass Gradient for Head */}
+          {/* Glass Gradient for Head - Increased opacity for brighter look */}
           <linearGradient id={`glass-grad-${theme.id}`} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor={isDark ? "rgba(255, 255, 255, 0.15)" : "rgba(255, 255, 255, 0.8)"} />
-            <stop offset="50%" stopColor={isDark ? "rgba(255, 255, 255, 0.02)" : "rgba(255, 255, 255, 0.4)"} />
-            <stop offset="100%" stopColor={isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.6)"} />
+            <stop offset="0%" stopColor={isDark ? "rgba(255, 255, 255, 0.25)" : "rgba(255, 255, 255, 0.9)"} />
+            <stop offset="50%" stopColor={isDark ? "rgba(255, 255, 255, 0.05)" : "rgba(255, 255, 255, 0.6)"} />
+            <stop offset="100%" stopColor={isDark ? "rgba(255, 255, 255, 0.15)" : "rgba(255, 255, 255, 0.8)"} />
           </linearGradient>
 
           {/* Dynamic Sheen Gradient for Moving Reflection */}
           {animated && (
             <linearGradient id={`dynamic-sheen-${theme.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="white" stopOpacity="0" />
-              <stop offset="50%" stopColor="white" stopOpacity={isDark ? "0.08" : "0.3"}>
-                 <animate attributeName="stop-opacity" values={isDark ? "0.08;0.2;0.08" : "0.3;0.5;0.3"} dur="4s" repeatCount="indefinite" />
+              <stop offset="50%" stopColor="white" stopOpacity={isDark ? "0.15" : "0.4"}>
+                 <animate attributeName="stop-opacity" values={isDark ? "0.15;0.3;0.15" : "0.4;0.6;0.4"} dur="4s" repeatCount="indefinite" />
               </stop>
               <stop offset="100%" stopColor="white" stopOpacity="0" />
               
@@ -106,13 +152,13 @@ const OfertikoLogo: React.FC<{ theme: Theme; onClick?: () => void; className?: s
 
           {/* Colorful internal reflection with pulsing animation */}
           <linearGradient id={`inner-glow-${theme.id}`} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#22d3ee" stopOpacity={isDark ? "0.2" : "0.3"}>
+            <stop offset="0%" stopColor="#22d3ee" stopOpacity={isDark ? "0.4" : "0.5"}>
               {animated && <animate attributeName="stop-color" values="#22d3ee;#ec4899;#a855f7;#22d3ee" dur="6s" repeatCount="indefinite" />}
             </stop>
-            <stop offset="50%" stopColor="#a855f7" stopOpacity={isDark ? "0.15" : "0.2"}>
+            <stop offset="50%" stopColor="#a855f7" stopOpacity={isDark ? "0.3" : "0.4"}>
               {animated && <animate attributeName="stop-color" values="#a855f7;#22d3ee;#ec4899;#a855f7" dur="6s" repeatCount="indefinite" />}
             </stop>
-            <stop offset="100%" stopColor="#ec4899" stopOpacity={isDark ? "0.2" : "0.3"}>
+            <stop offset="100%" stopColor="#ec4899" stopOpacity={isDark ? "0.4" : "0.5"}>
               {animated && <animate attributeName="stop-color" values="#ec4899;#a855f7;#22d3ee;#ec4899" dur="6s" repeatCount="indefinite" />}
             </stop>
           </linearGradient>
@@ -129,8 +175,8 @@ const OfertikoLogo: React.FC<{ theme: Theme; onClick?: () => void; className?: s
           x="30" y="40" width="140" height="130" rx="40" 
           fill={`url(#glass-grad-${theme.id})`} 
           stroke={`url(#inner-glow-${theme.id})`} 
-          strokeWidth="2"
-          className="backdrop-blur-sm"
+          strokeWidth="3"
+          className="backdrop-blur-md"
         />
         
         {/* Sheen Overlay */}
@@ -143,7 +189,7 @@ const OfertikoLogo: React.FC<{ theme: Theme; onClick?: () => void; className?: s
         )}
         
         {/* Internal Reflection Highlight */}
-        <path d="M 40 80 Q 50 50 80 45" stroke={isDark ? "white" : "#1e293b"} strokeWidth="2" strokeOpacity="0.3" fill="none" />
+        <path d="M 40 80 Q 50 50 80 45" stroke={isDark ? "white" : "#1e293b"} strokeWidth="2" strokeOpacity="0.5" fill="none" />
 
         {/* Eyes */}
         <g className={animated ? "animate-blink" : ""}>
@@ -152,8 +198,8 @@ const OfertikoLogo: React.FC<{ theme: Theme; onClick?: () => void; className?: s
         </g>
 
         {/* Cheeks */}
-        <circle cx="60" cy="115" r="6" fill="#ec4899" fillOpacity="0.3" />
-        <circle cx="140" cy="115" r="6" fill="#ec4899" fillOpacity="0.3" />
+        <circle cx="60" cy="115" r="6" fill="#ec4899" fillOpacity="0.5" />
+        <circle cx="140" cy="115" r="6" fill="#ec4899" fillOpacity="0.5" />
 
         {/* Smile */}
         <path 
@@ -162,7 +208,7 @@ const OfertikoLogo: React.FC<{ theme: Theme; onClick?: () => void; className?: s
           strokeWidth="4" 
           strokeLinecap="round" 
           fill="none" 
-          strokeOpacity="0.8"
+          strokeOpacity="0.9"
         />
       </svg>
     </div>
@@ -171,17 +217,23 @@ const OfertikoLogo: React.FC<{ theme: Theme; onClick?: () => void; className?: s
 
 // --- HEADER COMPONENT ---
 
-const Header: React.FC<{ theme: Theme; onThemeToggle: () => void }> = ({ theme, onThemeToggle }) => {
-  const [isScrolled, setIsScrolled] = useState(false);
+const Header: React.FC<{ theme: Theme; onThemeToggle: () => void; scrollY: number }> = ({ theme, onThemeToggle, scrollY }) => {
+  const isScrolled = scrollY > 20;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  const navLinkClass = `text-sm font-medium px-4 py-2 rounded-full transition-all duration-300 ${theme.colors.textSecondary} hover:bg-white/10 hover:text-cyan-400 hover:shadow-[0_0_10px_rgba(34,211,238,0.2)]`;
+
+  // Lock body scroll when mobile menu is open
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isMobileMenuOpen]);
 
   return (
     <header 
@@ -192,24 +244,24 @@ const Header: React.FC<{ theme: Theme; onThemeToggle: () => void }> = ({ theme, 
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16 relative">
           
-          {/* Brand with 1:1 Logo (Static in Menu) */}
+          {/* Brand */}
           <div className="flex items-center gap-2 cursor-pointer group">
             <div className="relative w-10 h-10">
               <OfertikoLogo theme={theme} className="w-full h-full" animated={false} />
             </div>
-            <span className={`text-xl font-bold tracking-tight transition-all duration-300 group-hover:text-cyan-400 group-hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)] ${theme.colors.textMain}`}>
-              Ofertiko<span className="text-cyan-500">.com</span>
-            </span>
+            <div className={`flex items-center text-xl font-bold tracking-tight transition-all duration-300 group-hover:text-cyan-400 group-hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)] ${theme.colors.textMain}`}>
+              <span>Ofertiko<span className="text-cyan-500">.com</span></span>
+            </div>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
-            <a href="#" className={`text-sm font-medium hover:text-cyan-500 transition-colors ${theme.colors.textSecondary}`}>Начало</a>
-            <a href="#features" className={`text-sm font-medium hover:text-cyan-500 transition-colors ${theme.colors.textSecondary}`}>Как работи</a>
-            <a href="#deals" className={`text-sm font-medium hover:text-cyan-500 transition-colors ${theme.colors.textSecondary}`}>Оферти</a>
-            <a href="#contact" className={`text-sm font-medium hover:text-cyan-500 transition-colors ${theme.colors.textSecondary}`}>Контакти</a>
+          <nav className="hidden md:flex items-center gap-4">
+            <a href="#" className={navLinkClass}>Начало</a>
+            <a href="#features" className={navLinkClass}>Как работи</a>
+            <a href="#deals" className={navLinkClass}>Оферти</a>
+            <a href="#contact" className={navLinkClass}>Контакти</a>
           </nav>
 
           {/* Actions */}
@@ -222,27 +274,32 @@ const Header: React.FC<{ theme: Theme; onThemeToggle: () => void }> = ({ theme, 
             </button>
           </div>
 
-          {/* Mobile Toggle */}
+          {/* Mobile Toggle (Hamburger) with Animation */}
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className={`md:hidden p-2 rounded-lg ${theme.colors.textMain}`}
+            className={`md:hidden p-2 rounded-lg z-50 relative transition-transform duration-300 ${isMobileMenuOpen ? 'rotate-90' : ''} ${theme.colors.textMain}`}
           >
-            {isMobileMenuOpen ? <X /> : <Menu />}
+            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Full Screen Mobile Menu Overlay */}
       {isMobileMenuOpen && (
-        <div className={`md:hidden absolute top-full left-0 w-full border-b shadow-xl backdrop-blur-xl animate-in slide-in-from-top-5 ${theme.colors.cardBg} ${theme.colors.divider}`}>
-          <div className="px-4 py-6 space-y-4 flex flex-col">
-            <a href="#" className={`text-lg font-medium ${theme.colors.textMain}`}>Начало</a>
-            <a href="#features" className={`text-lg font-medium ${theme.colors.textSecondary}`}>Как работи</a>
-            <a href="#deals" className={`text-lg font-medium ${theme.colors.textSecondary}`}>Оферти</a>
-            <hr className={`${theme.colors.divider}`} />
-            <button className={`w-full py-3 rounded-lg border font-medium ${theme.colors.textMain} ${theme.colors.cardBorder}`}>Вход</button>
-            <button className={`w-full py-3 rounded-lg font-medium text-white ${theme.colors.buttonGradient}`}>Регистрация</button>
+        <div className={`md:hidden fixed inset-0 h-[100dvh] z-40 flex flex-col pt-24 px-6 backdrop-blur-xl animate-in slide-in-from-top-5 duration-300 overflow-y-auto ${theme.colors.background}`}>
+          <div className="space-y-6 flex flex-col">
+            <a href="#" onClick={() => setIsMobileMenuOpen(false)} className={`text-2xl font-bold animate-in fade-in slide-in-from-left-4 delay-100 ${theme.colors.textMain}`}>Начало</a>
+            <a href="#features" onClick={() => setIsMobileMenuOpen(false)} className={`text-2xl font-bold animate-in fade-in slide-in-from-left-4 delay-150 ${theme.colors.textSecondary}`}>Как работи</a>
+            <a href="#deals" onClick={() => setIsMobileMenuOpen(false)} className={`text-2xl font-bold animate-in fade-in slide-in-from-left-4 delay-200 ${theme.colors.textSecondary}`}>Оферти</a>
+            
+            <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-500/30 to-transparent my-4"></div>
+            
+            <button className={`w-full py-4 text-lg rounded-xl border font-medium animate-in fade-in slide-in-from-bottom-4 delay-300 ${theme.colors.textMain} ${theme.colors.cardBorder}`}>Вход</button>
+            <button className={`w-full py-4 text-lg rounded-xl font-medium text-white animate-in fade-in slide-in-from-bottom-4 delay-400 ${theme.colors.buttonGradient}`}>Регистрация</button>
           </div>
+          
+          {/* Decoration */}
+          <div className="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-t from-cyan-500/10 to-transparent pointer-events-none"></div>
         </div>
       )}
     </header>
@@ -250,46 +307,80 @@ const Header: React.FC<{ theme: Theme; onThemeToggle: () => void }> = ({ theme, 
 };
 
 // --- THEME SWITCHER COMPONENT ---
-const ThemeSwitcher: React.FC<{ currentTheme: Theme, onThemeChange: (t: Theme) => void }> = ({ currentTheme, onThemeChange }) => {
+const ThemeSwitcher: React.FC<{ currentTheme: Theme, onThemeChange: (t: Theme) => void, scrollY: number }> = ({ currentTheme, onThemeChange, scrollY }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const isDocked = scrollY > 50;
 
+  // Logic for sticky positioning
+  // Desktop: Always fixed to right-6 (or similar), moves vertically.
+  // Mobile: Fixed to the LEFT of the hamburger menu (hamburger is usually right-4).
   return (
-    <div className="absolute top-24 right-6 z-40">
-      <button 
-        onClick={() => setIsOpen(!isOpen)}
-        className={`p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-105 ${currentTheme.colors.cardBg} ${currentTheme.colors.cardBorder} border backdrop-blur-md`}
+    <div 
+      className="fixed z-[60] transition-all duration-500 ease-in-out"
+      style={{
+        top: isDocked ? '0.6rem' : '6rem', // Adjusted from 1rem to 0.6rem for better vertical centering
+      }}
+    >
+      <div 
+         className={`
+           fixed transition-all duration-500 
+           right-[60px] md:right-6 
+         `}
       >
-        <Palette className={`w-5 h-5 ${currentTheme.colors.textMain}`} />
-      </button>
+        <button 
+          onClick={() => setIsOpen(!isOpen)}
+          className={`p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-105 ${currentTheme.colors.cardBg} ${currentTheme.colors.cardBorder} border backdrop-blur-md`}
+        >
+          <Palette className={`w-5 h-5 ${currentTheme.colors.textMain}`} />
+        </button>
 
-      {isOpen && (
-        <div className={`absolute right-0 mt-2 w-48 rounded-xl border shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 ${currentTheme.colors.cardBg} ${currentTheme.colors.cardBorder}`}>
-          <div className="p-2">
-            {themes.map((t) => (
-              <button
-                key={t.id}
-                onClick={() => {
-                  onThemeChange(t);
-                  setIsOpen(false);
-                }}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
-                  currentTheme.id === t.id 
-                    ? 'bg-indigo-500/10 text-indigo-500' 
-                    : `${t.colors.textSecondary} hover:bg-slate-500/10`
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  {t.id === 'dark' && <Moon className="w-4 h-4" />}
-                  {t.id === 'midnight' && <Sparkles className="w-4 h-4" />}
-                  {t.id === 'light' && <Sun className="w-4 h-4" />}
-                  <span>{t.label}</span>
-                </div>
-                {currentTheme.id === t.id && <Check className="w-3 h-3" />}
-              </button>
-            ))}
+        {isOpen && (
+          <div className={`absolute right-0 mt-2 w-48 rounded-xl border shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 ${currentTheme.colors.cardBg} ${currentTheme.colors.cardBorder}`}>
+            <div className="p-2">
+              {themes.map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => {
+                    onThemeChange(t);
+                    setIsOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
+                    currentTheme.id === t.id 
+                      ? 'bg-indigo-500/10 text-indigo-500' 
+                      : `${t.colors.textSecondary} hover:bg-slate-500/10`
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    {t.id === 'dark' && <Moon className="w-4 h-4" />}
+                    {t.id === 'midnight' && <Sparkles className="w-4 h-4" />}
+                    {t.id === 'light' && <Sun className="w-4 h-4" />}
+                    {t.id === 'pastel' && (
+                      // Custom color palette icon from user image
+                      <div className="w-4 h-4 rounded overflow-hidden flex flex-col border border-gray-300/50 opacity-80">
+                        <div className="h-1 bg-[#738A94] w-full"></div>
+                        <div className="h-1 bg-[#E7DACB] w-full"></div>
+                        <div className="h-1 bg-[#DFB446] w-full"></div>
+                        <div className="h-1 bg-[#C26D54] w-full"></div>
+                      </div>
+                    )}
+                    {t.id === 'classic' && (
+                      // Classic Stripe Icon (Red, Black, White, Blue)
+                      <div className="w-4 h-4 rounded overflow-hidden flex flex-col border border-gray-300/50 opacity-90">
+                        <div className="h-1 bg-[#DC2626] w-full"></div>
+                        <div className="h-1 bg-[#000000] w-full"></div>
+                        <div className="h-1 bg-[#FFFFFF] w-full"></div>
+                        <div className="h-1 bg-[#003399] w-full"></div>
+                      </div>
+                    )}
+                    <span>{t.label}</span>
+                  </div>
+                  {currentTheme.id === t.id && <Check className="w-3 h-3" />}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
@@ -395,7 +486,11 @@ const FeaturesSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       
       <div className="grid md:grid-cols-3 gap-8">
         {features.map((f, i) => (
-          <div key={i} className={`group relative p-8 rounded-2xl border backdrop-blur-sm transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 ${theme.colors.cardBg} ${theme.colors.cardBorder} hover:border-cyan-500 hover:shadow-[0_0_40px_rgba(34,211,238,0.15)]`}>
+          <div key={i} className={`group relative p-8 rounded-2xl border backdrop-blur-sm transition-all duration-500 hover:scale-[1.02] hover:-translate-y-2 ${theme.colors.cardBg} ${theme.colors.cardBorder} hover:border-cyan-400/50 hover:shadow-[0_0_50px_rgba(34,211,238,0.25)] overflow-hidden`}>
+             
+             {/* Passing Flash Effect */}
+            <div className="absolute top-0 -left-[100%] w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12 transition-all duration-1000 group-hover:left-[100%]"></div>
+
              {/* Enhanced Glow Effect from Alternate Design */}
             <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
             
@@ -428,6 +523,8 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
       oldPrice: "2,699 лв.",
       discount: "-18%",
       category: "Технологии",
+      store: "Amazon",
+      rating: 4.8,
       icon: <Smartphone className="w-4 h-4" />
     },
     {
@@ -438,6 +535,8 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
       oldPrice: "799 лв.",
       discount: "-21%",
       category: "Технологии",
+      store: "Ozone",
+      rating: 4.9,
       icon: <Headphones className="w-4 h-4" />
     },
     {
@@ -448,6 +547,8 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
       oldPrice: "299 лв.",
       discount: "-36%",
       category: "Мода",
+      store: "Nike",
+      rating: 4.5,
       icon: <ShoppingBag className="w-4 h-4" />
     },
     {
@@ -458,6 +559,8 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
       oldPrice: "1,299 лв.",
       discount: "-34%",
       category: "Дом",
+      store: "Technopolis",
+      rating: 4.7,
       icon: <Monitor className="w-4 h-4" />
     },
     {
@@ -468,6 +571,8 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
       oldPrice: "1,499 лв.",
       discount: "-26%",
       category: "Технологии",
+      store: "Emag",
+      rating: 4.6,
       icon: <Monitor className="w-4 h-4" />
     },
     {
@@ -478,16 +583,20 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
       oldPrice: "360 лв.",
       discount: "-38%",
       category: "Мода",
+      store: "Adidas",
+      rating: 4.8,
       icon: <ShoppingBag className="w-4 h-4" />
     },
     {
       id: 7,
       title: "Dyson V15 Detect",
-      image: "https://images.unsplash.com/photo-1527613426441-4da17471b66d?auto=format&fit=crop&q=80&w=400",
+      image: "https://plus.unsplash.com/premium_photo-1663054460858-246d3097d163?q=80&w=400",
       price: "1,299 лв.",
       oldPrice: "1,599 лв.",
       discount: "-18%",
       category: "Дом",
+      store: "Dyson",
+      rating: 4.9,
       icon: <Home className="w-4 h-4" />
     },
     {
@@ -498,6 +607,8 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
       oldPrice: "1,299 лв.",
       discount: "-23%",
       category: "Спорт",
+      store: "Garmin",
+      rating: 4.9,
       icon: <Watch className="w-4 h-4" />
     }
   ];
@@ -528,9 +639,10 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
 
   return (
     <section id="deals" className="py-24 px-4 relative overflow-hidden">
+      {/* Background - simplified z-index to prevent stacking issues */}
       <div className={`absolute inset-0 -z-10 opacity-50 ${theme.id === 'light' ? 'bg-slate-100' : 'bg-black/20'}`}></div>
       
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto relative z-0">
         {/* Centered Header */}
         <div className="text-center mb-12">
            <span className={`text-sm font-bold uppercase tracking-widest ${theme.colors.accent} mb-2 block`}>Специална селекция</span>
@@ -545,18 +657,16 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
         {/* Controls Row: Tabs Center, Button Right */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
           
-          {/* Empty Spacer to balance flex layout if needed, or just use justify-center on wrapper above if layout changes. 
-              Here using relative positioning wrapper for centering logic.
-          */}
-          <div className="hidden md:block w-40"></div> {/* Spacer */}
+          {/* Spacer for desktop alignment */}
+          <div className="hidden md:block w-40"></div>
 
-          {/* Centered Categories with Gradient Style */}
-          <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar justify-center">
+          {/* Centered Categories with Flex Wrap (Fixes "iframe" look and overflow) */}
+          <div className="flex flex-wrap justify-center gap-3 px-2 py-2">
             {categories.map(cat => (
               <button 
                 key={cat}
                 onClick={() => handleCategoryChange(cat)}
-                className={`px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 border ${
+                className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 border hover:scale-105 active:scale-95 ${
                   activeCategory === cat
                   ? `bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 text-white border-transparent shadow-[0_0_20px_rgba(34,211,238,0.4)]`
                   : `${theme.colors.cardBg} ${theme.colors.cardBorder} ${theme.colors.textSecondary} hover:text-white hover:border-cyan-500/50 hover:bg-white/5`
@@ -567,9 +677,9 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
             ))}
           </div>
 
-          {/* Right Aligned "View All" with Gradient Style */}
+          {/* Right Aligned "View All" */}
           <div className="w-full md:w-auto flex justify-center md:justify-end">
-            <button className={`flex items-center gap-2 text-sm font-bold px-6 py-2 rounded-full transition-all duration-300 border ${theme.colors.cardBg} ${theme.colors.cardBorder} ${theme.colors.textMain} hover:bg-gradient-to-r hover:from-cyan-600 hover:via-blue-600 hover:to-purple-600 hover:text-white hover:border-transparent hover:shadow-[0_0_20px_rgba(34,211,238,0.4)]`}>
+            <button className={`flex items-center gap-2 text-sm font-bold px-6 py-2 rounded-full transition-all duration-300 border hover:scale-105 active:scale-95 ${theme.colors.cardBg} ${theme.colors.cardBorder} ${theme.colors.textMain} hover:bg-gradient-to-r hover:from-cyan-600 hover:via-blue-600 hover:to-purple-600 hover:text-white hover:border-transparent hover:shadow-[0_0_20px_rgba(34,211,238,0.4)]`}>
                Виж всички <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -578,7 +688,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
         <div className="relative group/carousel">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 min-h-[400px]">
             {visibleDeals.length > 0 ? visibleDeals.map((deal) => (
-               <div key={deal.id} className={`group relative rounded-2xl overflow-hidden border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:border-cyan-500/30 ${theme.colors.cardBg} ${theme.colors.cardBorder} animate-in fade-in zoom-in-95 duration-500`}>
+               <div key={deal.id} className={`group relative rounded-2xl overflow-hidden border transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.3)] hover:-translate-y-1 hover:border-cyan-400/50 ${theme.colors.cardBg} ${theme.colors.cardBorder} animate-in fade-in zoom-in-95 duration-500`}>
                   
                   {/* Image Area */}
                   <div className="h-56 relative overflow-hidden bg-slate-800">
@@ -591,9 +701,15 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
                      <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-md shadow-lg">
                        {deal.discount}
                      </div>
+
+                     {/* Store Badge */}
+                     <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md text-slate-900 text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-lg">
+                       <Store className="w-3 h-3" />
+                       {deal.store}
+                     </div>
   
-                     {/* Category Badge */}
-                     <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-md text-white text-xs px-2.5 py-1 rounded-full flex items-center gap-1">
+                     {/* Category Badge (Moved down slightly) */}
+                     <div className="absolute bottom-3 left-3 bg-black/50 backdrop-blur-md text-white text-xs px-2.5 py-1 rounded-full flex items-center gap-1 border border-white/10">
                        {deal.icon}
                        {deal.category}
                      </div>
@@ -603,8 +719,15 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
                      {/* Hover Glow Bottom */}
                      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-purple-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
   
-                     <h3 className={`font-bold text-lg mb-4 line-clamp-2 leading-snug ${theme.colors.textMain}`}>{deal.title}</h3>
+                     <h3 className={`font-bold text-lg mb-3 line-clamp-2 leading-snug ${theme.colors.textMain}`}>{deal.title}</h3>
                      
+                     {/* Rating */}
+                     <div className="flex items-center gap-1 mb-3">
+                        <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                        <span className={`text-sm font-bold ${theme.colors.textMain}`}>{deal.rating}</span>
+                        <span className={`text-xs ${theme.colors.textMuted}`}>(120+ ревюта)</span>
+                     </div>
+
                      <div className="flex items-end justify-between mb-4">
                         <div className="flex flex-col">
                            <span className={`text-xs line-through mb-0.5 ${theme.colors.textMuted}`}>{deal.oldPrice}</span>
@@ -662,9 +785,9 @@ const NewFooter: React.FC<{ theme: Theme }> = ({ theme }) => {
                  <div className="w-8 h-8 rounded-lg flex items-center justify-center">
                     <OfertikoLogo theme={theme} className="w-full h-full" animated={false} />
                  </div>
-                 <span className={`text-xl font-bold ${theme.colors.textMain}`}>
-                   Ofertiko<span className="text-cyan-500">.com</span>
-                 </span>
+                 <div className={`flex items-center text-xl font-bold ${theme.colors.textMain}`}>
+                   <span>Ofertiko<span className="text-cyan-500">.com</span></span>
+                 </div>
               </div>
               <p className={`text-sm mb-4 ${theme.colors.textMuted}`}>
                 Вашият интелигентен помощник за пазаруване. Сравнявайте цени, следете промоции и пестете време.
@@ -742,6 +865,17 @@ const App: React.FC = () => {
   const [fontFamily, setFontFamily] = useState(FONTS.inter);
   const [secretClicks, setSecretClicks] = useState(0);
   const [showSecretMenu, setShowSecretMenu] = useState(false);
+  
+  // Scroll Tracking for Theme Switcher Positioning
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const validateEmail = (email: string) => {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -833,13 +967,19 @@ const App: React.FC = () => {
     setTimeout(() => setSecretClicks(0), 2000);
   };
 
-  const isDark = currentTheme.id !== 'light';
+  const isDark = currentTheme.id !== 'light' && currentTheme.id !== 'pastel' && currentTheme.id !== 'classic';
   
-  const focusGradient = currentTheme.id === 'midnight' 
-    ? 'bg-gradient-to-r from-fuchsia-600 via-purple-600 to-indigo-600'
-    : currentTheme.id === 'light'
-      ? 'bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500'
-      : 'bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500';
+  // Define gradients for inputs
+  let focusGradient = 'bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500';
+  if (currentTheme.id === 'midnight') {
+    focusGradient = 'bg-gradient-to-r from-fuchsia-600 via-purple-600 to-indigo-600';
+  } else if (currentTheme.id === 'light') {
+    focusGradient = 'bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500';
+  } else if (currentTheme.id === 'pastel') {
+    focusGradient = 'bg-gradient-to-r from-[#DFB446] via-[#E7DACB] to-[#C26D54]';
+  } else if (currentTheme.id === 'classic') {
+    focusGradient = 'bg-gradient-to-r from-[#003399] via-[#111111] to-[#DC2626]';
+  }
 
   return (
     <div 
@@ -847,9 +987,10 @@ const App: React.FC = () => {
       style={{ fontFamily: fontFamily }}
     >
       {/* Sticky Header */}
-      <Header theme={currentTheme} onThemeToggle={() => {}} />
+      <Header theme={currentTheme} onThemeToggle={() => {}} scrollY={scrollY} />
 
-      <ThemeSwitcher currentTheme={currentTheme} onThemeChange={setCurrentTheme} />
+      {/* Dynamic Sticky Theme Switcher */}
+      <ThemeSwitcher currentTheme={currentTheme} onThemeChange={setCurrentTheme} scrollY={scrollY} />
 
       <SecretFontMenu 
         isOpen={showSecretMenu} 
@@ -914,52 +1055,58 @@ const App: React.FC = () => {
           {/* Main Cards */}
           <div className="grid md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto mb-12">
             {/* Left: Newsletter */}
-            <div className={`border rounded-2xl p-8 backdrop-blur-sm text-left h-full flex flex-col justify-center transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyan-500/10 ${currentTheme.colors.cardBg} ${currentTheme.colors.cardBorder}`}>
-              <div className="flex items-center gap-3 mb-4">
-                <div className={`p-2 rounded-lg ${isDark ? 'bg-cyan-500/10' : 'bg-cyan-100'}`}>
-                  <Mail className={`w-6 h-6 ${isDark ? 'text-cyan-400' : 'text-cyan-600'}`} />
-                </div>
-                <h3 className={`text-xl font-semibold ${currentTheme.colors.textMain}`}>Бъдете първи</h3>
-              </div>
-              <p className={`mb-6 ${currentTheme.colors.textMuted}`}>
-                Абонирайте се за нашия бюлетин, за да разберете кога Офертико стартира.
-              </p>
+            <div className={`relative overflow-hidden group border rounded-2xl p-8 backdrop-blur-sm text-left h-full flex flex-col justify-center transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyan-500/20 ${currentTheme.colors.cardBg} ${currentTheme.colors.cardBorder}`}>
+              
+              {/* Decorative Blob matching Right Card */}
+              <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-cyan-600/20 rounded-full blur-3xl group-hover:bg-cyan-600/30 transition-all duration-500"></div>
 
-              {!subscribed ? (
-                <form onSubmit={handleSubscribe} className="relative" noValidate>
-                  <div className={`relative ${shakeInput ? 'animate-shake' : ''}`}>
-                    <div className={`absolute -inset-[2px] rounded-xl opacity-0 transition-opacity duration-300 -z-10 ${focusGradient} ${isInputFocused ? 'opacity-100' : ''}`} />
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="твоят@email.com"
-                      value={email}
-                      onChange={handleEmailChange}
-                      onFocus={() => setIsInputFocused(true)}
-                      onBlur={handleEmailBlur}
-                      disabled={isSubmitting}
-                      className={`relative z-10 w-full border rounded-xl py-3 pl-4 pr-12 focus:outline-none transition-all ${currentTheme.colors.inputBg} ${currentTheme.colors.textMain} ${isInputFocused ? 'border-transparent' : `${currentTheme.colors.inputBorder} focus:border-cyan-500`} ${emailError ? 'border-red-500 focus:ring-red-500' : ''} ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
-                    />
-                    <button
-                      type="submit"
-                      disabled={!!emailError || !email || isSubmitting}
-                      className={`absolute right-1 top-1 bottom-1 p-2 rounded-lg transition-colors z-20 flex items-center justify-center ${!!emailError || !email || isSubmitting ? 'bg-slate-500/20 text-slate-400 cursor-not-allowed' : 'bg-cyan-600 hover:bg-cyan-500 text-white'}`}
-                    >
-                      {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <ArrowRight className="w-5 h-5" />}
-                    </button>
+              <div className="relative z-10">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className={`p-2 rounded-lg ${isDark ? 'bg-cyan-500/10' : 'bg-cyan-100'}`}>
+                    <Mail className={`w-6 h-6 ${isDark ? 'text-cyan-400' : 'text-cyan-600'}`} />
                   </div>
-                  {emailError && (
-                    <div className="flex items-center gap-2 text-red-400 bg-red-500/10 p-2 rounded-lg mt-3 border border-red-500/20 animate-in fade-in slide-in-from-top-1">
-                      <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                      <span className="text-sm font-medium">{emailError}</span>
-                    </div>
-                  )}
-                </form>
-              ) : (
-                <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-xl text-green-500 text-center animate-in zoom-in duration-300">
-                  🎉 Благодарим! Ще ви уведомим скоро.
+                  <h3 className={`text-xl font-semibold ${currentTheme.colors.textMain}`}>Бъдете първи</h3>
                 </div>
-              )}
+                <p className={`mb-6 ${currentTheme.colors.textMuted}`}>
+                  Абонирайте се за нашия бюлетин, за да разберете кога Офертико стартира.
+                </p>
+
+                {!subscribed ? (
+                  <form onSubmit={handleSubscribe} className="relative" noValidate>
+                    <div className={`relative ${shakeInput ? 'animate-shake' : ''}`}>
+                      <div className={`absolute -inset-[2px] rounded-xl opacity-0 transition-opacity duration-300 -z-10 ${focusGradient} ${isInputFocused ? 'opacity-100' : ''}`} />
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="твоят@email.com"
+                        value={email}
+                        onChange={handleEmailChange}
+                        onFocus={() => setIsInputFocused(true)}
+                        onBlur={handleEmailBlur}
+                        disabled={isSubmitting}
+                        className={`relative z-10 w-full border rounded-xl py-3 pl-4 pr-12 focus:outline-none transition-all ${currentTheme.colors.inputBg} ${currentTheme.colors.textMain} ${isInputFocused ? 'border-transparent' : `${currentTheme.colors.inputBorder} focus:border-cyan-500`} ${emailError ? 'border-red-500 focus:ring-red-500' : ''} ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+                      />
+                      <button
+                        type="submit"
+                        disabled={!!emailError || !email || isSubmitting}
+                        className={`absolute right-1 top-1 bottom-1 p-2 rounded-lg transition-colors z-20 flex items-center justify-center ${!!emailError || !email || isSubmitting ? 'bg-slate-500/20 text-slate-400 cursor-not-allowed' : 'bg-cyan-600 hover:bg-cyan-500 text-white'}`}
+                      >
+                        {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <ArrowRight className="w-5 h-5" />}
+                      </button>
+                    </div>
+                    {emailError && (
+                      <div className="flex items-center gap-2 text-red-400 bg-red-500/10 p-2 rounded-lg mt-3 border border-red-500/20 animate-in fade-in slide-in-from-top-1">
+                        <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                        <span className="text-sm font-medium">{emailError}</span>
+                      </div>
+                    )}
+                  </form>
+                ) : (
+                  <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-xl text-green-500 text-center animate-in zoom-in duration-300">
+                    🎉 Благодарим! Ще ви уведомим скоро.
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Right: AI Foreman */}
