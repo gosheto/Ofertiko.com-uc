@@ -483,7 +483,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 7,
       title: "Dyson V15 Detect",
-      image: "https://images.unsplash.com/photo-1558317374-a354d5f6d46b?auto=format&fit=crop&q=80&w=400",
+      image: "https://images.unsplash.com/photo-1527613426441-4da17471b66d?auto=format&fit=crop&q=80&w=400",
       price: "1,299 лв.",
       oldPrice: "1,599 лв.",
       discount: "-18%",
