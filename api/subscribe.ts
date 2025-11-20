@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { kv } from '@vercel/kv';
+import Redis from 'ioredis';
 
 export default async function handler(
   request: VercelRequest,
@@ -16,15 +16,26 @@ export default async function handler(
       return response.status(400).json({ error: 'Invalid email address' });
     }
 
-    // Save email to a Set in Redis (Vercel KV) called 'subscribers'
+    if (!process.env.REDIS_URL) {
+      console.error('REDIS_URL environment variable is missing');
+      return response.status(500).json({ error: 'Database configuration error' });
+    }
+
+    // Initialize Redis client with the connection string
+    const client = new Redis(process.env.REDIS_URL);
+
+    // Save email to a Set in Redis called 'subscribers'
     // Using a Set automatically handles duplicates
-    await kv.sadd('subscribers', email);
+    await client.sadd('subscribers', email);
 
     // Optional: Store a timestamp for the user
-    await kv.hset(`subscriber:${email}`, {
+    await client.hset(`subscriber:${email}`, {
       joinedAt: new Date().toISOString(),
       source: 'under-construction-page'
     });
+
+    // Close the connection to prevent serverless function timeouts
+    await client.quit();
 
     return response.status(200).json({ success: true });
   } catch (error) {
