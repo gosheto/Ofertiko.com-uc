@@ -118,6 +118,11 @@ const BACKGROUNDS = {
   sky: 'https://images.unsplash.com/photo-1579033461380-adb47c3eb938?q=80&w=2064&auto=format&fit=crop', // Pastel Sky
   rain: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?q=80&w=2070&auto=format&fit=crop', // Rain
   neon: 'https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=2070&auto=format&fit=crop', // Neon
+  bg1: '/assets/backgrounds/bg-1.jpg',
+  bg2: '/assets/backgrounds/bg-2.jpg',
+  bg3: '/assets/backgrounds/bg-3.jpg',
+  bg4: '/assets/backgrounds/bg-4.jpg',
+  bg5: '/assets/backgrounds/bg-5.jpg',
 };
 
 // --- FONT DEFINITIONS ---
