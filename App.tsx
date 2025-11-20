@@ -277,6 +277,7 @@ const App: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [shakeInput, setShakeInput] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const [touched, setTouched] = useState(false);
   
   // Secret Menu States
   const [fontFamily, setFontFamily] = useState(FONTS.inter);
@@ -289,13 +290,27 @@ const App: React.FC = () => {
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    if (emailError) {
-      setEmailError('');
+    const newValue = e.target.value;
+    setEmail(newValue);
+
+    // Real-time validation logic:
+    // If the field has been touched (validated once), we show feedback immediately.
+    if (touched) {
+      if (validateEmail(newValue)) {
+        setEmailError('');
+      } else {
+        // Don't show error for empty field while typing to avoid aggression
+        if (newValue.length > 0) {
+          setEmailError('Моля, въведете валиден имейл адрес.');
+        } else {
+          setEmailError('');
+        }
+      }
     }
   };
 
   const handleEmailBlur = () => {
+    setTouched(true);
     if (email && !validateEmail(email)) {
       setEmailError('Моля, въведете валиден имейл адрес.');
       setShakeInput(true);
@@ -306,6 +321,7 @@ const App: React.FC = () => {
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
+    setTouched(true);
     
     if (!validateEmail(email)) {
       setEmailError('Моля, въведете валиден имейл адрес.');
@@ -329,9 +345,15 @@ const App: React.FC = () => {
       if (response.ok) {
         setSubscribed(true);
         setEmail("");
+        setTouched(false);
       } else {
         const data = await response.json().catch(() => ({}));
-        if (data && data.error) {
+        // Check for specific status to give better feedback about server config
+        if (response.status === 404) {
+           setEmailError("Грешка 404: API endpoint not found. (Check Vercel deployment)");
+        } else if (response.status === 500) {
+           setEmailError("Грешка 500: Server Error. (Check Vercel DB connection)");
+        } else if (data && data.error) {
           setEmailError(data.error);
         } else {
           setEmailError("Възникна проблем. Моля, опитайте отново.");
