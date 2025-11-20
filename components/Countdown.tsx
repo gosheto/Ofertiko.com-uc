@@ -8,7 +8,7 @@ interface CountdownProps {
 // Extracted TimeUnit to prevent re-renders of static numbers
 const TimeUnit: React.FC<{ value: number; label: string; theme: Theme }> = ({ value, label, theme }) => {
   const formattedValue = value < 10 ? `0${value}` : value;
-  
+
   // Industrial Metal Styles Configuration
   const getMetalStyles = () => {
     if (theme.id === 'light') {
@@ -46,7 +46,7 @@ const TimeUnit: React.FC<{ value: number; label: string; theme: Theme }> = ({ va
       return {
         plate: 'bg-gradient-to-b from-slate-700 via-slate-800 to-slate-900',
         border: 'border-slate-600',
-        borderBottom: 'border-b-black',
+        borderBottom: 'border-b-slate-800',
         text: 'text-cyan-400',
         shadow: 'shadow-[0_10px_30px_-10px_rgba(0,0,0,0.8)]',
         screw: 'bg-slate-700 border-slate-600',
@@ -62,7 +62,7 @@ const TimeUnit: React.FC<{ value: number; label: string; theme: Theme }> = ({ va
         Added 'perspective' for 3D effect 
         Added padding bottom (pb-1) to parent to prevent border cropping
       */}
-      <div 
+      <div
         className={`
           relative w-20 h-24 md:w-28 md:h-32 rounded-xl 
           flex items-center justify-center 
@@ -74,21 +74,21 @@ const TimeUnit: React.FC<{ value: number; label: string; theme: Theme }> = ({ va
       >
         {/* "Screws" in corners */}
         <div className={`absolute top-2 left-2 w-2.5 h-2.5 rounded-full border flex items-center justify-center ${metal.screw} shadow-inner opacity-80`}>
-           <div className="w-1.5 h-[1px] bg-black/30 rotate-45"></div>
+          <div className="w-1.5 h-[1px] bg-black/30 rotate-45"></div>
         </div>
         <div className={`absolute top-2 right-2 w-2.5 h-2.5 rounded-full border flex items-center justify-center ${metal.screw} shadow-inner opacity-80`}>
-           <div className="w-1.5 h-[1px] bg-black/30 rotate-45"></div>
+          <div className="w-1.5 h-[1px] bg-black/30 rotate-45"></div>
         </div>
         <div className={`absolute bottom-2 left-2 w-2.5 h-2.5 rounded-full border flex items-center justify-center ${metal.screw} shadow-inner opacity-80`}>
-           <div className="w-1.5 h-[1px] bg-black/30 rotate-45"></div>
+          <div className="w-1.5 h-[1px] bg-black/30 rotate-45"></div>
         </div>
         <div className={`absolute bottom-2 right-2 w-2.5 h-2.5 rounded-full border flex items-center justify-center ${metal.screw} shadow-inner opacity-80`}>
-           <div className="w-1.5 h-[1px] bg-black/30 rotate-45"></div>
+          <div className="w-1.5 h-[1px] bg-black/30 rotate-45"></div>
         </div>
 
         {/* The Number - Key triggers animation only on change */}
         <div className="relative z-20 overflow-hidden px-1">
-          <span 
+          <span
             key={formattedValue}
             className={`
               block text-5xl md:text-6xl font-bold font-mono tracking-tighter
@@ -101,7 +101,7 @@ const TimeUnit: React.FC<{ value: number; label: string; theme: Theme }> = ({ va
           </span>
         </div>
       </div>
-      
+
       <span className={`text-xs font-bold uppercase tracking-[0.2em] ${theme.colors.textMuted}`}>{label}</span>
     </div>
   );
