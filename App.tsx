@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Hammer, Mail, ArrowRight, Github, Twitter, Instagram, AlertCircle, Palette, Check, Sun, Moon, Sparkles, Type, X, Loader2, Menu, Zap, Search, ShieldCheck, ShoppingBag, Tag, ExternalLink, ChevronRight } from 'lucide-react';
+import { Hammer, Mail, ArrowRight, Github, Twitter, Instagram, AlertCircle, Palette, Check, Sun, Moon, Sparkles, Type, X, Loader2, Menu, Zap, Search, ShieldCheck, ShoppingBag, Tag, ExternalLink, ChevronRight, ChevronLeft, BarChart3, Bell, Smartphone, Watch, Monitor, Headphones, Heart, Home, Trophy } from 'lucide-react';
 import Countdown from './components/Countdown';
 import AiForeman from './components/AiForeman';
 import { Theme } from './types';
@@ -69,6 +69,106 @@ const FONTS = {
   apple: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'"
 };
 
+// --- REUSABLE LOGO COMPONENT ---
+
+const OfertikoLogo: React.FC<{ theme: Theme; onClick?: () => void; className?: string; animated?: boolean }> = ({ theme, onClick, className = "w-32 h-32", animated = true }) => {
+  const isDark = theme.id !== 'light';
+  
+  return (
+    <div 
+      onClick={onClick}
+      className={`relative ${className} ${animated ? 'animate-float' : ''} group cursor-pointer select-none active:scale-95 transition-transform`}
+    >
+      <svg key={theme.id} viewBox="0 0 200 200" className={`w-full h-full transition-transform duration-500 ease-in-out ${animated ? 'group-hover:rotate-6 group-hover:scale-110' : ''} ${isDark ? 'drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]' : 'drop-shadow-[0_0_15px_rgba(6,182,212,0.3)]'}`}>
+        <defs>
+          {/* Glass Gradient for Head */}
+          <linearGradient id={`glass-grad-${theme.id}`} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor={isDark ? "rgba(255, 255, 255, 0.15)" : "rgba(255, 255, 255, 0.8)"} />
+            <stop offset="50%" stopColor={isDark ? "rgba(255, 255, 255, 0.02)" : "rgba(255, 255, 255, 0.4)"} />
+            <stop offset="100%" stopColor={isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.6)"} />
+          </linearGradient>
+
+          {/* Dynamic Sheen Gradient for Moving Reflection */}
+          {animated && (
+            <linearGradient id={`dynamic-sheen-${theme.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="white" stopOpacity="0" />
+              <stop offset="50%" stopColor="white" stopOpacity={isDark ? "0.08" : "0.3"}>
+                 <animate attributeName="stop-opacity" values={isDark ? "0.08;0.2;0.08" : "0.3;0.5;0.3"} dur="4s" repeatCount="indefinite" />
+              </stop>
+              <stop offset="100%" stopColor="white" stopOpacity="0" />
+              
+              <animate attributeName="x1" values="-20%; 120%" dur="7s" repeatCount="indefinite" />
+              <animate attributeName="y1" values="-20%; 120%" dur="7s" repeatCount="indefinite" />
+              <animate attributeName="x2" values="20%; 160%" dur="7s" repeatCount="indefinite" />
+              <animate attributeName="y2" values="20%; 160%" dur="7s" repeatCount="indefinite" />
+            </linearGradient>
+          )}
+
+          {/* Colorful internal reflection with pulsing animation */}
+          <linearGradient id={`inner-glow-${theme.id}`} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#22d3ee" stopOpacity={isDark ? "0.2" : "0.3"}>
+              {animated && <animate attributeName="stop-color" values="#22d3ee;#ec4899;#a855f7;#22d3ee" dur="6s" repeatCount="indefinite" />}
+            </stop>
+            <stop offset="50%" stopColor="#a855f7" stopOpacity={isDark ? "0.15" : "0.2"}>
+              {animated && <animate attributeName="stop-color" values="#a855f7;#22d3ee;#ec4899;#a855f7" dur="6s" repeatCount="indefinite" />}
+            </stop>
+            <stop offset="100%" stopColor="#ec4899" stopOpacity={isDark ? "0.2" : "0.3"}>
+              {animated && <animate attributeName="stop-color" values="#ec4899;#a855f7;#22d3ee;#ec4899" dur="6s" repeatCount="indefinite" />}
+            </stop>
+          </linearGradient>
+        </defs>
+        
+        {/* Antenna */}
+        <line x1="100" y1="10" x2="100" y2="50" stroke="#a855f7" strokeWidth="4" strokeLinecap="round" />
+        <circle cx="100" cy="10" r="6" fill="#ec4899" className={animated ? "animate-pulse" : ""}>
+          {animated && <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite" />}
+        </circle>
+
+        {/* Head Shape (Squircle) */}
+        <rect 
+          x="30" y="40" width="140" height="130" rx="40" 
+          fill={`url(#glass-grad-${theme.id})`} 
+          stroke={`url(#inner-glow-${theme.id})`} 
+          strokeWidth="2"
+          className="backdrop-blur-sm"
+        />
+        
+        {/* Sheen Overlay */}
+        {animated && (
+          <rect 
+            x="30" y="40" width="140" height="130" rx="40" 
+            fill={`url(#dynamic-sheen-${theme.id})`} 
+            pointerEvents="none"
+          />
+        )}
+        
+        {/* Internal Reflection Highlight */}
+        <path d="M 40 80 Q 50 50 80 45" stroke={isDark ? "white" : "#1e293b"} strokeWidth="2" strokeOpacity="0.3" fill="none" />
+
+        {/* Eyes */}
+        <g className={animated ? "animate-blink" : ""}>
+          <ellipse cx="75" cy="95" rx="10" ry="12" fill={isDark ? "white" : "#1e293b"} filter={isDark ? "drop-shadow(0 0 5px #22d3ee)" : ""} />
+          <ellipse cx="125" cy="95" rx="10" ry="12" fill={isDark ? "white" : "#1e293b"} filter={isDark ? "drop-shadow(0 0 5px #22d3ee)" : ""} />
+        </g>
+
+        {/* Cheeks */}
+        <circle cx="60" cy="115" r="6" fill="#ec4899" fillOpacity="0.3" />
+        <circle cx="140" cy="115" r="6" fill="#ec4899" fillOpacity="0.3" />
+
+        {/* Smile */}
+        <path 
+          d="M 75 130 Q 100 150 125 130" 
+          stroke={isDark ? "white" : "#1e293b"} 
+          strokeWidth="4" 
+          strokeLinecap="round" 
+          fill="none" 
+          strokeOpacity="0.8"
+        />
+      </svg>
+    </div>
+  );
+};
+
 // --- HEADER COMPONENT ---
 
 const Header: React.FC<{ theme: Theme; onThemeToggle: () => void }> = ({ theme, onThemeToggle }) => {
@@ -94,24 +194,12 @@ const Header: React.FC<{ theme: Theme; onThemeToggle: () => void }> = ({ theme, 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           
-          {/* Brand */}
+          {/* Brand with 1:1 Logo (Static in Menu) */}
           <div className="flex items-center gap-2 cursor-pointer group">
-            <div className="w-8 h-8 relative">
-               {/* Mini Robot Icon */}
-               <svg viewBox="0 0 128 128" className="w-full h-full">
-                 <defs>
-                    <linearGradient id="mini-grad" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#22d3ee" />
-                      <stop offset="100%" stopColor="#a855f7" />
-                    </linearGradient>
-                  </defs>
-                  <rect x="14" y="28" width="100" height="90" rx="28" fill="url(#mini-grad)" />
-                  <circle cx="45" cy="65" r="8" fill="white" />
-                  <circle cx="83" cy="65" r="8" fill="white" />
-                  <path d="M 45 90 Q 64 105 83 90" stroke="white" strokeWidth="6" strokeLinecap="round" fill="none" />
-               </svg>
+            <div className="relative w-10 h-10">
+              <OfertikoLogo theme={theme} className="w-full h-full" animated={false} />
             </div>
-            <span className={`text-xl font-bold tracking-tight ${theme.colors.textMain}`}>
+            <span className={`text-xl font-bold tracking-tight transition-all duration-300 group-hover:text-cyan-400 group-hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)] ${theme.colors.textMain}`}>
               Ofertiko<span className="text-cyan-500">.com</span>
             </span>
           </div>
@@ -161,104 +249,7 @@ const Header: React.FC<{ theme: Theme; onThemeToggle: () => void }> = ({ theme, 
   );
 };
 
-// --- LOGO COMPONENT ---
-
-const OfertikoLogo: React.FC<{ theme: Theme; onClick: () => void }> = ({ theme, onClick }) => {
-  const isDark = theme.id !== 'light';
-  
-  return (
-    <div 
-      onClick={onClick}
-      className="relative w-32 h-32 mx-auto mb-6 animate-float group cursor-pointer select-none active:scale-95 transition-transform"
-    >
-      <svg key={theme.id} viewBox="0 0 200 200" className={`w-full h-full transition-transform duration-500 ease-in-out group-hover:rotate-6 group-hover:scale-110 ${isDark ? 'drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]' : 'drop-shadow-[0_0_15px_rgba(6,182,212,0.3)]'}`}>
-        <defs>
-          {/* Glass Gradient for Head */}
-          <linearGradient id="glass-grad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor={isDark ? "rgba(255, 255, 255, 0.15)" : "rgba(255, 255, 255, 0.8)"} />
-            <stop offset="50%" stopColor={isDark ? "rgba(255, 255, 255, 0.02)" : "rgba(255, 255, 255, 0.4)"} />
-            <stop offset="100%" stopColor={isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.6)"} />
-          </linearGradient>
-
-          {/* Dynamic Sheen Gradient for Moving Reflection */}
-          <linearGradient id="dynamic-sheen" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="white" stopOpacity="0" />
-            <stop offset="50%" stopColor="white" stopOpacity={isDark ? "0.08" : "0.3"}>
-               <animate attributeName="stop-opacity" values={isDark ? "0.08;0.2;0.08" : "0.3;0.5;0.3"} dur="4s" repeatCount="indefinite" />
-            </stop>
-            <stop offset="100%" stopColor="white" stopOpacity="0" />
-            
-            <animate attributeName="x1" values="-20%; 120%" dur="7s" repeatCount="indefinite" />
-            <animate attributeName="y1" values="-20%; 120%" dur="7s" repeatCount="indefinite" />
-            <animate attributeName="x2" values="20%; 160%" dur="7s" repeatCount="indefinite" />
-            <animate attributeName="y2" values="20%; 160%" dur="7s" repeatCount="indefinite" />
-          </linearGradient>
-
-          {/* Colorful internal reflection with pulsing animation */}
-          <linearGradient id="inner-glow" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#22d3ee" stopOpacity={isDark ? "0.2" : "0.3"}>
-              <animate attributeName="stop-color" values="#22d3ee;#ec4899;#a855f7;#22d3ee" dur="6s" repeatCount="indefinite" />
-            </stop>
-            <stop offset="50%" stopColor="#a855f7" stopOpacity={isDark ? "0.15" : "0.2"}>
-              <animate attributeName="stop-color" values="#a855f7;#22d3ee;#ec4899;#a855f7" dur="6s" repeatCount="indefinite" />
-            </stop>
-            <stop offset="100%" stopColor="#ec4899" stopOpacity={isDark ? "0.2" : "0.3"}>
-              <animate attributeName="stop-color" values="#ec4899;#a855f7;#22d3ee;#ec4899" dur="6s" repeatCount="indefinite" />
-            </stop>
-          </linearGradient>
-        </defs>
-        
-        {/* Antenna */}
-        <line x1="100" y1="10" x2="100" y2="50" stroke="#a855f7" strokeWidth="4" strokeLinecap="round" />
-        <circle cx="100" cy="10" r="6" fill="#ec4899" className="animate-pulse">
-          <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite" />
-        </circle>
-
-        {/* Head Shape (Squircle) */}
-        <rect 
-          x="30" y="40" width="140" height="130" rx="40" 
-          fill="url(#glass-grad)" 
-          stroke="url(#inner-glow)" 
-          strokeWidth="2"
-          className="backdrop-blur-sm"
-        />
-        
-        {/* Sheen Overlay */}
-        <rect 
-          x="30" y="40" width="140" height="130" rx="40" 
-          fill="url(#dynamic-sheen)" 
-          pointerEvents="none"
-        />
-        
-        {/* Internal Reflection Highlight */}
-        <path d="M 40 80 Q 50 50 80 45" stroke={isDark ? "white" : "#1e293b"} strokeWidth="2" strokeOpacity="0.3" fill="none" />
-
-        {/* Eyes */}
-        <g className="animate-blink">
-          <ellipse cx="75" cy="95" rx="10" ry="12" fill={isDark ? "white" : "#1e293b"} filter={isDark ? "drop-shadow(0 0 5px #22d3ee)" : ""} />
-          <ellipse cx="125" cy="95" rx="10" ry="12" fill={isDark ? "white" : "#1e293b"} filter={isDark ? "drop-shadow(0 0 5px #22d3ee)" : ""} />
-        </g>
-
-        {/* Cheeks */}
-        <circle cx="60" cy="115" r="6" fill="#ec4899" fillOpacity="0.3" />
-        <circle cx="140" cy="115" r="6" fill="#ec4899" fillOpacity="0.3" />
-
-        {/* Smile */}
-        <path 
-          d="M 75 130 Q 100 150 125 130" 
-          stroke={isDark ? "white" : "#1e293b"} 
-          strokeWidth="4" 
-          strokeLinecap="round" 
-          fill="none" 
-          strokeOpacity="0.8"
-        />
-      </svg>
-    </div>
-  );
-};
-
 // --- THEME SWITCHER COMPONENT ---
-
 const ThemeSwitcher: React.FC<{ currentTheme: Theme, onThemeChange: (t: Theme) => void }> = ({ currentTheme, onThemeChange }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -304,7 +295,6 @@ const ThemeSwitcher: React.FC<{ currentTheme: Theme, onThemeChange: (t: Theme) =
 };
 
 // --- SECRET FONT MENU COMPONENT ---
-
 const SecretFontMenu: React.FC<{ 
   isOpen: boolean; 
   onClose: () => void; 
@@ -326,9 +316,7 @@ const SecretFontMenu: React.FC<{
             <X className="w-5 h-5" />
           </button>
         </div>
-
         <p className={`text-sm mb-4 ${theme.colors.textMuted}`}>Избери шрифт на сайта:</p>
-
         <div className="space-y-3">
           <button
             onClick={() => onFontChange(FONTS.inter)}
@@ -341,7 +329,6 @@ const SecretFontMenu: React.FC<{
             <span style={{ fontFamily: FONTS.inter }}>Inter (Стандартен)</span>
             {currentFont === FONTS.inter && <Check className="w-4 h-4 text-cyan-500" />}
           </button>
-
           <button
             onClick={() => onFontChange(FONTS.apple)}
             className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all ${
@@ -365,35 +352,60 @@ const FeaturesSection: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       icon: <Search className="w-6 h-6" />,
       title: "AI Търсене",
-      desc: "Нашият алгоритъм намира най-добрите цени за секунди сред хиляди магазини."
+      desc: "Интелигентни алгоритми за прецизно намиране на продукти."
     },
     {
-      icon: <Zap className="w-6 h-6" />,
-      title: "Светкавични Оферти",
-      desc: "Получавайте известия за намаления в реално време, преди да са свършили."
+      icon: <BarChart3 className="w-6 h-6" />,
+      title: "История на Цените",
+      desc: "Проследи как се е променяла цената във времето."
+    },
+    {
+      icon: <Bell className="w-6 h-6" />,
+      title: "Известия",
+      desc: "Получавай сигнал веднага щом цената падне."
     },
     {
       icon: <ShieldCheck className="w-6 h-6" />,
       title: "Проверени Търговци",
-      desc: "Работим само с доказани магазини, за да гарантираме сигурността ви."
+      desc: "Само легитимни магазини с висок рейтинг."
+    },
+    {
+      icon: <Zap className="w-6 h-6" />,
+      title: "Бързо Сравнение",
+      desc: "Сравни оферти от 1000+ магазина с един клик."
+    },
+    {
+      icon: <ShoppingBag className="w-6 h-6" />,
+      title: "Умен Кош",
+      desc: "Събирай и организирай любимите си находки."
     }
   ];
 
   return (
-    <section id="features" className="py-24 max-w-7xl mx-auto px-4">
+    <section id="features" className="py-12 max-w-7xl mx-auto px-4">
       <div className="text-center mb-16">
         <span className={`text-sm font-bold uppercase tracking-widest ${theme.colors.accent} mb-2 block`}>Предимства</span>
-        <h2 className={`text-3xl md:text-4xl font-bold ${theme.colors.textMain}`}>Как Ofertiko пести парите ви?</h2>
+        <h2 className={`text-3xl md:text-4xl font-bold ${theme.colors.textMain} mb-4`}>
+          Как Ofertiko <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">пести парите ти</span>
+        </h2>
+        <p className={`max-w-2xl mx-auto ${theme.colors.textSecondary} text-lg`}>
+          Нашият AI пазарен асистент използва усъвършенствани алгоритми за намиране на най-добрите оферти, проследяване на цени и известяване за възможности за спестявания.
+        </p>
       </div>
       
       <div className="grid md:grid-cols-3 gap-8">
         {features.map((f, i) => (
-          <div key={i} className={`p-8 rounded-2xl border backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-xl ${theme.colors.cardBg} ${theme.colors.cardBorder}`}>
-            <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 shadow-lg ${theme.id === 'light' ? 'bg-cyan-100 text-cyan-600' : 'bg-cyan-500/20 text-cyan-400'}`}>
+          <div key={i} className={`group relative p-8 rounded-2xl border backdrop-blur-sm transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 ${theme.colors.cardBg} ${theme.colors.cardBorder} hover:border-cyan-500 hover:shadow-[0_0_40px_rgba(34,211,238,0.15)]`}>
+             {/* Enhanced Glow Effect from Alternate Design */}
+            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+            
+            {/* Icon Container */}
+            <div className={`relative z-10 w-14 h-14 rounded-xl flex items-center justify-center mb-6 shadow-lg transition-transform group-hover:scale-110 duration-300 ${theme.id === 'light' ? 'bg-gradient-to-br from-cyan-100 to-blue-50 text-cyan-600' : 'bg-gradient-to-br from-cyan-900/30 to-purple-900/30 text-cyan-400'}`}>
               {f.icon}
             </div>
-            <h3 className={`text-xl font-bold mb-3 ${theme.colors.textMain}`}>{f.title}</h3>
-            <p className={`${theme.colors.textSecondary} leading-relaxed`}>{f.desc}</p>
+            
+            <h3 className={`relative z-10 text-xl font-bold mb-3 ${theme.colors.textMain} group-hover:text-cyan-400 transition-colors`}>{f.title}</h3>
+            <p className={`relative z-10 ${theme.colors.textSecondary} leading-relaxed`}>{f.desc}</p>
           </div>
         ))}
       </div>
@@ -403,55 +415,235 @@ const FeaturesSection: React.FC<{ theme: Theme }> = ({ theme }) => {
 
 // --- DEALS PREVIEW SECTION ---
 const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
-  // Mock items
-  const items = [1, 2, 3, 4];
+  const [activeCategory, setActiveCategory] = useState("Всички");
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const categories = ["Всички", "Технологии", "Мода", "Дом", "Спорт"];
+
+  const deals = [
+    {
+      id: 1,
+      title: "Apple iPhone 15 Pro Max",
+      image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=400",
+      price: "2,199 лв.",
+      oldPrice: "2,699 лв.",
+      discount: "-18%",
+      category: "Технологии",
+      icon: <Smartphone className="w-4 h-4" />
+    },
+    {
+      id: 2,
+      title: "Sony WH-1000XM5",
+      image: "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=400",
+      price: "629 лв.",
+      oldPrice: "799 лв.",
+      discount: "-21%",
+      category: "Технологии",
+      icon: <Headphones className="w-4 h-4" />
+    },
+    {
+      id: 3,
+      title: "Nike Air Max 270",
+      image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=400",
+      price: "189 лв.",
+      oldPrice: "299 лв.",
+      discount: "-36%",
+      category: "Мода",
+      icon: <ShoppingBag className="w-4 h-4" />
+    },
+    {
+      id: 4,
+      title: "Philips Espresso Machine",
+      image: "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=400",
+      price: "849 лв.",
+      oldPrice: "1,299 лв.",
+      discount: "-34%",
+      category: "Дом",
+      icon: <Monitor className="w-4 h-4" />
+    },
+    {
+      id: 5,
+      title: "Samsung 4K Smart TV",
+      image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&q=80&w=400",
+      price: "1,099 лв.",
+      oldPrice: "1,499 лв.",
+      discount: "-26%",
+      category: "Технологии",
+      icon: <Monitor className="w-4 h-4" />
+    },
+    {
+      id: 6,
+      title: "Adidas Ultraboost",
+      image: "https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?auto=format&fit=crop&q=80&w=400",
+      price: "220 лв.",
+      oldPrice: "360 лв.",
+      discount: "-38%",
+      category: "Мода",
+      icon: <ShoppingBag className="w-4 h-4" />
+    },
+    {
+      id: 7,
+      title: "Dyson V15 Detect",
+      image: "https://images.unsplash.com/photo-1558317374-a354d5f6d46b?auto=format&fit=crop&q=80&w=400",
+      price: "1,299 лв.",
+      oldPrice: "1,599 лв.",
+      discount: "-18%",
+      category: "Дом",
+      icon: <Home className="w-4 h-4" />
+    },
+    {
+      id: 8,
+      title: "Garmin Fenix 7",
+      image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=400",
+      price: "999 лв.",
+      oldPrice: "1,299 лв.",
+      discount: "-23%",
+      category: "Спорт",
+      icon: <Watch className="w-4 h-4" />
+    }
+  ];
+
+  // Filter deals
+  const filteredDeals = activeCategory === "Всички" 
+    ? deals 
+    : deals.filter(d => d.category === activeCategory);
+
+  const itemsPerPage = 4;
+  const totalPages = Math.ceil(filteredDeals.length / itemsPerPage);
+
+  // Slice for pagination
+  const visibleDeals = filteredDeals.slice(currentSlide * itemsPerPage, (currentSlide + 1) * itemsPerPage);
+
+  const handleNext = () => {
+    setCurrentSlide((prev) => (prev + 1) % totalPages);
+  };
+
+  const handlePrev = () => {
+    setCurrentSlide((prev) => (prev - 1 + totalPages) % totalPages);
+  };
+
+  const handleCategoryChange = (cat: string) => {
+    setActiveCategory(cat);
+    setCurrentSlide(0); // Reset to first page on category change
+  };
 
   return (
     <section id="deals" className="py-24 px-4 relative overflow-hidden">
       <div className={`absolute inset-0 -z-10 opacity-50 ${theme.id === 'light' ? 'bg-slate-100' : 'bg-black/20'}`}></div>
       
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
-           <div>
-             <span className={`text-sm font-bold uppercase tracking-widest ${theme.colors.accent} mb-2 block`}>Sneak Peek</span>
-             <h2 className={`text-3xl md:text-4xl font-bold ${theme.colors.textMain}`}>Актуални оферти в момента</h2>
-           </div>
-           <button className={`flex items-center gap-2 text-sm font-bold ${theme.colors.accent} hover:underline`}>
-             Виж всички <ArrowRight className="w-4 h-4" />
-           </button>
+        {/* Centered Header */}
+        <div className="text-center mb-12">
+           <span className={`text-sm font-bold uppercase tracking-widest ${theme.colors.accent} mb-2 block`}>Специална селекция</span>
+           <h2 className={`text-3xl md:text-4xl font-bold ${theme.colors.textMain} mb-4`}>
+             Актуални оферти <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">в момента</span>
+           </h2>
+           <p className={`max-w-xl mx-auto ${theme.colors.textSecondary} text-lg`}>
+             Открий най-горещите оферти в популярни категории, подбрани от нашия AI, за да ти спестим време и пари.
+           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {items.map((item) => (
-             <div key={item} className={`group relative rounded-2xl overflow-hidden border transition-all hover:shadow-2xl ${theme.colors.cardBg} ${theme.colors.cardBorder}`}>
-                {/* Mock Image Area */}
-                <div className="h-48 bg-slate-500/10 relative overflow-hidden">
-                   <div className={`absolute inset-0 bg-gradient-to-tr ${theme.id === 'light' ? 'from-slate-200 to-white' : 'from-slate-800 to-slate-700'}`}></div>
-                   <div className="absolute inset-0 flex items-center justify-center opacity-30">
-                      <ShoppingBag className={`w-12 h-12 ${theme.colors.textMuted}`} />
-                   </div>
-                   <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md shadow-sm">
-                     -30%
-                   </div>
-                </div>
-                
-                <div className="p-5">
-                   <div className={`h-4 w-24 rounded mb-3 ${theme.id === 'light' ? 'bg-slate-200' : 'bg-slate-700'}`}></div>
-                   <div className={`h-6 w-3/4 rounded mb-4 ${theme.id === 'light' ? 'bg-slate-300' : 'bg-slate-600'}`}></div>
-                   
-                   <div className="flex items-center justify-between mt-4">
-                      <div className="flex flex-col">
-                         <span className={`text-xs line-through ${theme.colors.textMuted}`}>120 лв.</span>
-                         <span className={`text-lg font-bold ${theme.colors.textMain}`}>84 лв.</span>
-                      </div>
-                      <button className={`p-2 rounded-full transition-colors hover:bg-cyan-500 hover:text-white ${theme.colors.inputBg} ${theme.colors.textSecondary}`}>
-                         <ExternalLink className="w-5 h-5" />
-                      </button>
-                   </div>
-                </div>
-             </div>
-          ))}
+        {/* Controls Row: Tabs Center, Button Right */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
+          
+          {/* Empty Spacer to balance flex layout if needed, or just use justify-center on wrapper above if layout changes. 
+              Here using relative positioning wrapper for centering logic.
+          */}
+          <div className="hidden md:block w-40"></div> {/* Spacer */}
+
+          {/* Centered Categories with Gradient Style */}
+          <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar justify-center">
+            {categories.map(cat => (
+              <button 
+                key={cat}
+                onClick={() => handleCategoryChange(cat)}
+                className={`px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 border ${
+                  activeCategory === cat
+                  ? `bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 text-white border-transparent shadow-[0_0_20px_rgba(34,211,238,0.4)]`
+                  : `${theme.colors.cardBg} ${theme.colors.cardBorder} ${theme.colors.textSecondary} hover:text-white hover:border-cyan-500/50 hover:bg-white/5`
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* Right Aligned "View All" with Gradient Style */}
+          <div className="w-full md:w-auto flex justify-center md:justify-end">
+            <button className={`flex items-center gap-2 text-sm font-bold px-6 py-2 rounded-full transition-all duration-300 border ${theme.colors.cardBg} ${theme.colors.cardBorder} ${theme.colors.textMain} hover:bg-gradient-to-r hover:from-cyan-600 hover:via-blue-600 hover:to-purple-600 hover:text-white hover:border-transparent hover:shadow-[0_0_20px_rgba(34,211,238,0.4)]`}>
+               Виж всички <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
+
+        <div className="relative group/carousel">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 min-h-[400px]">
+            {visibleDeals.length > 0 ? visibleDeals.map((deal) => (
+               <div key={deal.id} className={`group relative rounded-2xl overflow-hidden border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:border-cyan-500/30 ${theme.colors.cardBg} ${theme.colors.cardBorder} animate-in fade-in zoom-in-95 duration-500`}>
+                  
+                  {/* Image Area */}
+                  <div className="h-56 relative overflow-hidden bg-slate-800">
+                     <img src={deal.image} alt={deal.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                     
+                     {/* Overlay Gradient */}
+                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
+  
+                     {/* Discount Badge */}
+                     <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-md shadow-lg">
+                       {deal.discount}
+                     </div>
+  
+                     {/* Category Badge */}
+                     <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-md text-white text-xs px-2.5 py-1 rounded-full flex items-center gap-1">
+                       {deal.icon}
+                       {deal.category}
+                     </div>
+                  </div>
+                  
+                  <div className="p-5 relative">
+                     {/* Hover Glow Bottom */}
+                     <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-purple-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+  
+                     <h3 className={`font-bold text-lg mb-4 line-clamp-2 leading-snug ${theme.colors.textMain}`}>{deal.title}</h3>
+                     
+                     <div className="flex items-end justify-between mb-4">
+                        <div className="flex flex-col">
+                           <span className={`text-xs line-through mb-0.5 ${theme.colors.textMuted}`}>{deal.oldPrice}</span>
+                           <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">{deal.price}</span>
+                        </div>
+                     </div>
+  
+                     <button className={`w-full py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-all ${theme.id === 'light' ? 'bg-slate-100 hover:bg-slate-200 text-slate-900' : 'bg-slate-800 hover:bg-slate-700 text-white'}`}>
+                        Виж оферта <ExternalLink className="w-4 h-4" />
+                     </button>
+                  </div>
+               </div>
+            )) : (
+              <div className={`col-span-4 flex flex-col items-center justify-center h-64 text-center ${theme.colors.textMuted}`}>
+                <Search className="w-12 h-12 mb-4 opacity-50" />
+                <p>Няма намерени оферти в тази категория.</p>
+              </div>
+            )}
+          </div>
+
+          {/* Carousel Controls */}
+          {totalPages > 1 && (
+            <>
+              <button 
+                onClick={handlePrev}
+                className={`absolute top-1/2 -left-4 md:-left-12 -translate-y-1/2 p-3 rounded-full shadow-xl backdrop-blur-md border transition-all hover:scale-110 ${theme.colors.cardBg} ${theme.colors.cardBorder} ${theme.colors.textMain} hover:text-cyan-400 z-10`}
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <button 
+                onClick={handleNext}
+                className={`absolute top-1/2 -right-4 md:-right-12 -translate-y-1/2 p-3 rounded-full shadow-xl backdrop-blur-md border transition-all hover:scale-110 ${theme.colors.cardBg} ${theme.colors.cardBorder} ${theme.colors.textMain} hover:text-cyan-400 z-10`}
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            </>
+          )}
+        </div>
+        
       </div>
     </section>
   );
@@ -467,10 +659,12 @@ const NewFooter: React.FC<{ theme: Theme }> = ({ theme }) => {
             {/* Brand Col */}
             <div className="col-span-2 md:col-span-1">
               <div className="flex items-center gap-2 mb-4">
-                 <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-lg flex items-center justify-center text-white">
-                    <Tag className="w-5 h-5" />
+                 <div className="w-8 h-8 rounded-lg flex items-center justify-center">
+                    <OfertikoLogo theme={theme} className="w-full h-full" animated={false} />
                  </div>
-                 <span className={`text-xl font-bold ${theme.colors.textMain}`}>Ofertiko</span>
+                 <span className={`text-xl font-bold ${theme.colors.textMain}`}>
+                   Ofertiko<span className="text-cyan-500">.com</span>
+                 </span>
               </div>
               <p className={`text-sm mb-4 ${theme.colors.textMuted}`}>
                 Вашият интелигентен помощник за пазаруване. Сравнявайте цени, следете промоции и пестете време.
@@ -521,7 +715,8 @@ const NewFooter: React.FC<{ theme: Theme }> = ({ theme }) => {
               <span>&copy; {new Date().getFullYear()} ofertiko.com. Всички права запазени.</span>
             </div>
             <div className={`flex items-center gap-1 text-xs ${theme.colors.textMuted}`}>
-              <span>Made with</span>
+              <span className="bg-gradient-to-r from-red-500 via-yellow-500 to-blue-500 text-transparent bg-clip-text font-bold">Made with</span>
+              <Heart className="w-3 h-3 mx-1 text-red-500 fill-red-500" />
               <Hammer className="w-3 h-3 mx-1" />
               <span>by AI & Humans</span>
             </div>
@@ -684,10 +879,12 @@ const App: React.FC = () => {
       <div className={`fixed inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] -z-10 ${isDark ? 'opacity-20' : 'opacity-10 invert'} pointer-events-none`}></div>
 
       {/* Hero Content */}
-      <main className="flex-grow flex flex-col items-center justify-center px-4 pt-32 pb-20">
+      <main className="flex-grow flex flex-col items-center justify-center px-4 pt-32 pb-12">
         <div className="max-w-4xl w-full mx-auto text-center">
           
-          <OfertikoLogo theme={currentTheme} onClick={handleLogoClick} />
+          <div className="mx-auto mb-6 w-32">
+            <OfertikoLogo theme={currentTheme} onClick={handleLogoClick} />
+          </div>
 
           {/* Badge */}
           <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-8 backdrop-blur-sm shadow-xl ${currentTheme.colors.cardBg} ${currentTheme.colors.cardBorder}`}>
@@ -706,8 +903,8 @@ const App: React.FC = () => {
             </span>
           </h1>
           
-          <p className={`text-lg md:text-xl mb-12 max-w-2xl mx-auto leading-relaxed ${currentTheme.colors.textMuted}`}>
-            Аз съм вашият нов AI помощник за най-добрите оферти. Моите дигитални архитекти все още ме сглобяват, но скоро ще бъда готов да ви помогна да пазарувате умно!
+          <p className={`text-lg md:text-xl mb-12 max-w-3xl mx-auto leading-relaxed ${currentTheme.colors.textMuted}`}>
+            Аз съм вашият нов AI помощник за откриване на най-добрите оферти. Всички оферти на едно място, сравнявай цени и спестявай пари от хиляди онлайн магазини.
           </p>
 
           <div className="mb-16">
@@ -715,7 +912,7 @@ const App: React.FC = () => {
           </div>
 
           {/* Main Cards */}
-          <div className="grid md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto mb-24">
+          <div className="grid md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto mb-12">
             {/* Left: Newsletter */}
             <div className={`border rounded-2xl p-8 backdrop-blur-sm text-left h-full flex flex-col justify-center transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyan-500/10 ${currentTheme.colors.cardBg} ${currentTheme.colors.cardBorder}`}>
               <div className="flex items-center gap-3 mb-4">
