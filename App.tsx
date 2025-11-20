@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Hammer, Mail, ArrowRight, Github, Twitter, Instagram, AlertCircle, Palette, Check, Sun, Moon, Sparkles, Type, X, Loader2 } from 'lucide-react';
+import { Hammer, Mail, ArrowRight, Github, Twitter, Instagram, AlertCircle, Palette, Check, Sun, Moon, Sparkles, Type, X, Loader2, Menu, Zap, Search, ShieldCheck, ShoppingBag, Tag, ExternalLink, ChevronRight } from 'lucide-react';
 import Countdown from './components/Countdown';
 import AiForeman from './components/AiForeman';
 import { Theme } from './types';
@@ -67,6 +67,98 @@ const themes = [darkTheme, midnightTheme, lightTheme];
 const FONTS = {
   inter: "'Inter', sans-serif",
   apple: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'"
+};
+
+// --- HEADER COMPONENT ---
+
+const Header: React.FC<{ theme: Theme; onThemeToggle: () => void }> = ({ theme, onThemeToggle }) => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <header 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled 
+          ? `backdrop-blur-lg border-b ${theme.colors.cardBg} ${theme.colors.divider} shadow-lg` 
+          : 'bg-transparent border-b border-transparent py-4'
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          
+          {/* Brand */}
+          <div className="flex items-center gap-2 cursor-pointer group">
+            <div className="w-8 h-8 relative">
+               {/* Mini Robot Icon */}
+               <svg viewBox="0 0 128 128" className="w-full h-full">
+                 <defs>
+                    <linearGradient id="mini-grad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#22d3ee" />
+                      <stop offset="100%" stopColor="#a855f7" />
+                    </linearGradient>
+                  </defs>
+                  <rect x="14" y="28" width="100" height="90" rx="28" fill="url(#mini-grad)" />
+                  <circle cx="45" cy="65" r="8" fill="white" />
+                  <circle cx="83" cy="65" r="8" fill="white" />
+                  <path d="M 45 90 Q 64 105 83 90" stroke="white" strokeWidth="6" strokeLinecap="round" fill="none" />
+               </svg>
+            </div>
+            <span className={`text-xl font-bold tracking-tight ${theme.colors.textMain}`}>
+              Ofertiko<span className="text-cyan-500">.com</span>
+            </span>
+          </div>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-8">
+            <a href="#" className={`text-sm font-medium hover:text-cyan-500 transition-colors ${theme.colors.textSecondary}`}>Начало</a>
+            <a href="#features" className={`text-sm font-medium hover:text-cyan-500 transition-colors ${theme.colors.textSecondary}`}>Как работи</a>
+            <a href="#deals" className={`text-sm font-medium hover:text-cyan-500 transition-colors ${theme.colors.textSecondary}`}>Оферти</a>
+            <a href="#contact" className={`text-sm font-medium hover:text-cyan-500 transition-colors ${theme.colors.textSecondary}`}>Контакти</a>
+          </nav>
+
+          {/* Actions */}
+          <div className="hidden md:flex items-center gap-4">
+            <button className={`text-sm font-medium px-4 py-2 rounded-lg border transition-colors hover:bg-white/5 ${theme.colors.textMain} ${theme.colors.cardBorder}`}>
+              Вход
+            </button>
+            <button className={`text-sm font-medium px-4 py-2 rounded-lg text-white shadow-lg hover:opacity-90 transition-opacity ${theme.colors.buttonGradient}`}>
+              Регистрация
+            </button>
+          </div>
+
+          {/* Mobile Toggle */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className={`md:hidden p-2 rounded-lg ${theme.colors.textMain}`}
+          >
+            {isMobileMenuOpen ? <X /> : <Menu />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className={`md:hidden absolute top-full left-0 w-full border-b shadow-xl backdrop-blur-xl animate-in slide-in-from-top-5 ${theme.colors.cardBg} ${theme.colors.divider}`}>
+          <div className="px-4 py-6 space-y-4 flex flex-col">
+            <a href="#" className={`text-lg font-medium ${theme.colors.textMain}`}>Начало</a>
+            <a href="#features" className={`text-lg font-medium ${theme.colors.textSecondary}`}>Как работи</a>
+            <a href="#deals" className={`text-lg font-medium ${theme.colors.textSecondary}`}>Оферти</a>
+            <hr className={`${theme.colors.divider}`} />
+            <button className={`w-full py-3 rounded-lg border font-medium ${theme.colors.textMain} ${theme.colors.cardBorder}`}>Вход</button>
+            <button className={`w-full py-3 rounded-lg font-medium text-white ${theme.colors.buttonGradient}`}>Регистрация</button>
+          </div>
+        </div>
+      )}
+    </header>
+  );
 };
 
 // --- LOGO COMPONENT ---
@@ -171,7 +263,7 @@ const ThemeSwitcher: React.FC<{ currentTheme: Theme, onThemeChange: (t: Theme) =
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="absolute top-6 right-6 z-50">
+    <div className="absolute top-24 right-6 z-40">
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className={`p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-105 ${currentTheme.colors.cardBg} ${currentTheme.colors.cardBorder} border backdrop-blur-md`}
@@ -267,6 +359,178 @@ const SecretFontMenu: React.FC<{
   );
 };
 
+// --- FEATURES SECTION ---
+const FeaturesSection: React.FC<{ theme: Theme }> = ({ theme }) => {
+  const features = [
+    {
+      icon: <Search className="w-6 h-6" />,
+      title: "AI Търсене",
+      desc: "Нашият алгоритъм намира най-добрите цени за секунди сред хиляди магазини."
+    },
+    {
+      icon: <Zap className="w-6 h-6" />,
+      title: "Светкавични Оферти",
+      desc: "Получавайте известия за намаления в реално време, преди да са свършили."
+    },
+    {
+      icon: <ShieldCheck className="w-6 h-6" />,
+      title: "Проверени Търговци",
+      desc: "Работим само с доказани магазини, за да гарантираме сигурността ви."
+    }
+  ];
+
+  return (
+    <section id="features" className="py-24 max-w-7xl mx-auto px-4">
+      <div className="text-center mb-16">
+        <span className={`text-sm font-bold uppercase tracking-widest ${theme.colors.accent} mb-2 block`}>Предимства</span>
+        <h2 className={`text-3xl md:text-4xl font-bold ${theme.colors.textMain}`}>Как Ofertiko пести парите ви?</h2>
+      </div>
+      
+      <div className="grid md:grid-cols-3 gap-8">
+        {features.map((f, i) => (
+          <div key={i} className={`p-8 rounded-2xl border backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-xl ${theme.colors.cardBg} ${theme.colors.cardBorder}`}>
+            <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 shadow-lg ${theme.id === 'light' ? 'bg-cyan-100 text-cyan-600' : 'bg-cyan-500/20 text-cyan-400'}`}>
+              {f.icon}
+            </div>
+            <h3 className={`text-xl font-bold mb-3 ${theme.colors.textMain}`}>{f.title}</h3>
+            <p className={`${theme.colors.textSecondary} leading-relaxed`}>{f.desc}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+// --- DEALS PREVIEW SECTION ---
+const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
+  // Mock items
+  const items = [1, 2, 3, 4];
+
+  return (
+    <section id="deals" className="py-24 px-4 relative overflow-hidden">
+      <div className={`absolute inset-0 -z-10 opacity-50 ${theme.id === 'light' ? 'bg-slate-100' : 'bg-black/20'}`}></div>
+      
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+           <div>
+             <span className={`text-sm font-bold uppercase tracking-widest ${theme.colors.accent} mb-2 block`}>Sneak Peek</span>
+             <h2 className={`text-3xl md:text-4xl font-bold ${theme.colors.textMain}`}>Актуални оферти в момента</h2>
+           </div>
+           <button className={`flex items-center gap-2 text-sm font-bold ${theme.colors.accent} hover:underline`}>
+             Виж всички <ArrowRight className="w-4 h-4" />
+           </button>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {items.map((item) => (
+             <div key={item} className={`group relative rounded-2xl overflow-hidden border transition-all hover:shadow-2xl ${theme.colors.cardBg} ${theme.colors.cardBorder}`}>
+                {/* Mock Image Area */}
+                <div className="h-48 bg-slate-500/10 relative overflow-hidden">
+                   <div className={`absolute inset-0 bg-gradient-to-tr ${theme.id === 'light' ? 'from-slate-200 to-white' : 'from-slate-800 to-slate-700'}`}></div>
+                   <div className="absolute inset-0 flex items-center justify-center opacity-30">
+                      <ShoppingBag className={`w-12 h-12 ${theme.colors.textMuted}`} />
+                   </div>
+                   <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md shadow-sm">
+                     -30%
+                   </div>
+                </div>
+                
+                <div className="p-5">
+                   <div className={`h-4 w-24 rounded mb-3 ${theme.id === 'light' ? 'bg-slate-200' : 'bg-slate-700'}`}></div>
+                   <div className={`h-6 w-3/4 rounded mb-4 ${theme.id === 'light' ? 'bg-slate-300' : 'bg-slate-600'}`}></div>
+                   
+                   <div className="flex items-center justify-between mt-4">
+                      <div className="flex flex-col">
+                         <span className={`text-xs line-through ${theme.colors.textMuted}`}>120 лв.</span>
+                         <span className={`text-lg font-bold ${theme.colors.textMain}`}>84 лв.</span>
+                      </div>
+                      <button className={`p-2 rounded-full transition-colors hover:bg-cyan-500 hover:text-white ${theme.colors.inputBg} ${theme.colors.textSecondary}`}>
+                         <ExternalLink className="w-5 h-5" />
+                      </button>
+                   </div>
+                </div>
+             </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// --- NEW FOOTER ---
+const NewFooter: React.FC<{ theme: Theme }> = ({ theme }) => {
+  return (
+    <footer className={`pt-16 pb-8 border-t backdrop-blur-md z-10 ${theme.colors.divider} ${theme.colors.background}`}>
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+            
+            {/* Brand Col */}
+            <div className="col-span-2 md:col-span-1">
+              <div className="flex items-center gap-2 mb-4">
+                 <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-lg flex items-center justify-center text-white">
+                    <Tag className="w-5 h-5" />
+                 </div>
+                 <span className={`text-xl font-bold ${theme.colors.textMain}`}>Ofertiko</span>
+              </div>
+              <p className={`text-sm mb-4 ${theme.colors.textMuted}`}>
+                Вашият интелигентен помощник за пазаруване. Сравнявайте цени, следете промоции и пестете време.
+              </p>
+              <div className="flex gap-4">
+                <a href="#" className={`${theme.colors.textMuted} hover:text-cyan-500 transition-colors`}><Twitter className="w-5 h-5" /></a>
+                <a href="#" className={`${theme.colors.textMuted} hover:text-pink-500 transition-colors`}><Instagram className="w-5 h-5" /></a>
+                <a href="#" className={`${theme.colors.textMuted} hover:${theme.colors.textMain} transition-colors`}><Github className="w-5 h-5" /></a>
+              </div>
+            </div>
+
+            {/* Links 1 */}
+            <div>
+               <h4 className={`font-bold mb-4 ${theme.colors.textMain}`}>Продукт</h4>
+               <ul className="space-y-2 text-sm">
+                 <li><a href="#" className={`${theme.colors.textSecondary} hover:${theme.colors.accent}`}>Всички Оферти</a></li>
+                 <li><a href="#" className={`${theme.colors.textSecondary} hover:${theme.colors.accent}`}>Категории</a></li>
+                 <li><a href="#" className={`${theme.colors.textSecondary} hover:${theme.colors.accent}`}>Магазини</a></li>
+                 <li><a href="#" className={`${theme.colors.textSecondary} hover:${theme.colors.accent}`}>Мобилно Приложение</a></li>
+               </ul>
+            </div>
+
+            {/* Links 2 */}
+            <div>
+               <h4 className={`font-bold mb-4 ${theme.colors.textMain}`}>Компания</h4>
+               <ul className="space-y-2 text-sm">
+                 <li><a href="#" className={`${theme.colors.textSecondary} hover:${theme.colors.accent}`}>За Нас</a></li>
+                 <li><a href="#" className={`${theme.colors.textSecondary} hover:${theme.colors.accent}`}>Кариери</a></li>
+                 <li><a href="#" className={`${theme.colors.textSecondary} hover:${theme.colors.accent}`}>Контакти</a></li>
+                 <li><a href="#" className={`${theme.colors.textSecondary} hover:${theme.colors.accent}`}>Партньори</a></li>
+               </ul>
+            </div>
+
+            {/* Links 3 */}
+            <div>
+               <h4 className={`font-bold mb-4 ${theme.colors.textMain}`}>Помощ</h4>
+               <ul className="space-y-2 text-sm">
+                 <li><a href="#" className={`${theme.colors.textSecondary} hover:${theme.colors.accent}`}>Чести въпроси</a></li>
+                 <li><a href="#" className={`${theme.colors.textSecondary} hover:${theme.colors.accent}`}>Условия за ползване</a></li>
+                 <li><a href="#" className={`${theme.colors.textSecondary} hover:${theme.colors.accent}`}>Политика за поверителност</a></li>
+               </ul>
+            </div>
+
+          </div>
+
+          <div className={`pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-4 ${theme.colors.divider}`}>
+            <div className={`flex items-center gap-2 text-sm ${theme.colors.textMuted}`}>
+              <span>&copy; {new Date().getFullYear()} ofertiko.com. Всички права запазени.</span>
+            </div>
+            <div className={`flex items-center gap-1 text-xs ${theme.colors.textMuted}`}>
+              <span>Made with</span>
+              <Hammer className="w-3 h-3 mx-1" />
+              <span>by AI & Humans</span>
+            </div>
+          </div>
+        </div>
+    </footer>
+  );
+};
+
 // --- MAIN APP COMPONENT ---
 
 const App: React.FC = () => {
@@ -293,13 +557,10 @@ const App: React.FC = () => {
     const newValue = e.target.value;
     setEmail(newValue);
 
-    // Real-time validation logic:
-    // If the field has been touched (validated once), we show feedback immediately.
     if (touched) {
       if (validateEmail(newValue)) {
         setEmailError('');
       } else {
-        // Don't show error for empty field while typing to avoid aggression
         if (newValue.length > 0) {
           setEmailError('Моля, въведете валиден имейл адрес.');
         } else {
@@ -333,7 +594,6 @@ const App: React.FC = () => {
     setIsSubmitting(true);
     
     try {
-      // Send request to our Vercel API function
       const response = await fetch('/api/subscribe', {
         method: 'POST',
         headers: {
@@ -348,7 +608,6 @@ const App: React.FC = () => {
         setTouched(false);
       } else {
         const data = await response.json().catch(() => ({}));
-        // Check for specific status to give better feedback about server config
         if (response.status === 404) {
            setEmailError("Грешка 404: API endpoint not found. (Check Vercel deployment)");
         } else if (response.status === 500) {
@@ -376,8 +635,6 @@ const App: React.FC = () => {
       }
       return newCount;
     });
-
-    // Reset clicks if inactive for 2 seconds
     setTimeout(() => setSecretClicks(0), 2000);
   };
 
@@ -387,14 +644,16 @@ const App: React.FC = () => {
     ? 'bg-gradient-to-r from-fuchsia-600 via-purple-600 to-indigo-600'
     : currentTheme.id === 'light'
       ? 'bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500'
-      : 'bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500'; // dark default
+      : 'bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500';
 
   return (
     <div 
-      className={`min-h-screen w-full relative overflow-hidden flex flex-col transition-colors duration-500 ${currentTheme.colors.background}`}
+      className={`min-h-screen w-full relative overflow-x-hidden flex flex-col transition-colors duration-500 ${currentTheme.colors.background}`}
       style={{ fontFamily: fontFamily }}
     >
-      
+      {/* Sticky Header */}
+      <Header theme={currentTheme} onThemeToggle={() => {}} />
+
       <ThemeSwitcher currentTheme={currentTheme} onThemeChange={setCurrentTheme} />
 
       <SecretFontMenu 
@@ -405,8 +664,8 @@ const App: React.FC = () => {
         theme={currentTheme}
       />
 
-      {/* Animated Background blobs - Adjusted for Light/Dark Modes */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+      {/* Animated Background blobs */}
+      <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
         <div 
           className={`absolute top-0 -left-4 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl animate-blob ${isDark ? 'bg-purple-600 opacity-20' : 'bg-purple-300 opacity-40'}`}
           style={{ animationDuration: '20s' }}
@@ -422,16 +681,15 @@ const App: React.FC = () => {
       </div>
 
       {/* Grid Overlay */}
-      <div className={`absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] -z-10 ${isDark ? 'opacity-20' : 'opacity-10 invert'}`}></div>
+      <div className={`fixed inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] -z-10 ${isDark ? 'opacity-20' : 'opacity-10 invert'} pointer-events-none`}></div>
 
-      {/* Main Content */}
-      <main className="flex-grow flex items-center justify-center px-4 py-20">
+      {/* Hero Content */}
+      <main className="flex-grow flex flex-col items-center justify-center px-4 pt-32 pb-20">
         <div className="max-w-4xl w-full mx-auto text-center">
           
-          {/* Logo */}
           <OfertikoLogo theme={currentTheme} onClick={handleLogoClick} />
 
-          {/* Header Badge */}
+          {/* Badge */}
           <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-8 backdrop-blur-sm shadow-xl ${currentTheme.colors.cardBg} ${currentTheme.colors.cardBorder}`}>
             <span className="relative flex h-3 w-3">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
@@ -440,7 +698,6 @@ const App: React.FC = () => {
             <span className={`text-sm font-medium tracking-wide uppercase ${currentTheme.colors.textSecondary}`}>Work in Progress</span>
           </div>
 
-          {/* Hero Text */}
           <h1 className={`text-5xl md:text-7xl font-extrabold mb-6 tracking-tight animate-fade-in-up ${currentTheme.colors.textMain}`}>
             <span className={`block text-3xl md:text-4xl font-light mb-2 ${currentTheme.colors.textSecondary}`}>Здравейте, аз съм Офертико!</span>
             Готвим нещо <br />
@@ -453,14 +710,12 @@ const App: React.FC = () => {
             Аз съм вашият нов AI помощник за най-добрите оферти. Моите дигитални архитекти все още ме сглобяват, но скоро ще бъда готов да ви помогна да пазарувате умно!
           </p>
 
-          {/* Countdown Section */}
           <div className="mb-16">
             <Countdown theme={currentTheme} />
           </div>
 
-          {/* Two Column Layout for Features */}
-          <div className="grid md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto">
-            
+          {/* Main Cards */}
+          <div className="grid md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto mb-24">
             {/* Left: Newsletter */}
             <div className={`border rounded-2xl p-8 backdrop-blur-sm text-left h-full flex flex-col justify-center transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyan-500/10 ${currentTheme.colors.cardBg} ${currentTheme.colors.cardBorder}`}>
               <div className="flex items-center gap-3 mb-4">
@@ -476,9 +731,7 @@ const App: React.FC = () => {
               {!subscribed ? (
                 <form onSubmit={handleSubscribe} className="relative" noValidate>
                   <div className={`relative ${shakeInput ? 'animate-shake' : ''}`}>
-                    {/* Gradient Border Background - Visible on focus */}
                     <div className={`absolute -inset-[2px] rounded-xl opacity-0 transition-opacity duration-300 -z-10 ${focusGradient} ${isInputFocused ? 'opacity-100' : ''}`} />
-                    
                     <input
                       type="email"
                       name="email"
@@ -488,28 +741,14 @@ const App: React.FC = () => {
                       onFocus={() => setIsInputFocused(true)}
                       onBlur={handleEmailBlur}
                       disabled={isSubmitting}
-                      className={`relative z-10 w-full border rounded-xl py-3 pl-4 pr-12 focus:outline-none transition-all 
-                        ${currentTheme.colors.inputBg} 
-                        ${currentTheme.colors.textMain} 
-                        ${isInputFocused ? 'border-transparent' : `${currentTheme.colors.inputBorder} focus:border-cyan-500`}
-                        ${emailError ? 'border-red-500 focus:ring-red-500' : ''}
-                        ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}
-                      `}
+                      className={`relative z-10 w-full border rounded-xl py-3 pl-4 pr-12 focus:outline-none transition-all ${currentTheme.colors.inputBg} ${currentTheme.colors.textMain} ${isInputFocused ? 'border-transparent' : `${currentTheme.colors.inputBorder} focus:border-cyan-500`} ${emailError ? 'border-red-500 focus:ring-red-500' : ''} ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
                     />
                     <button
                       type="submit"
                       disabled={!!emailError || !email || isSubmitting}
-                      className={`absolute right-1 top-1 bottom-1 p-2 rounded-lg transition-colors z-20 flex items-center justify-center ${
-                        !!emailError || !email || isSubmitting
-                          ? 'bg-slate-500/20 text-slate-400 cursor-not-allowed' 
-                          : 'bg-cyan-600 hover:bg-cyan-500 text-white'
-                      }`}
+                      className={`absolute right-1 top-1 bottom-1 p-2 rounded-lg transition-colors z-20 flex items-center justify-center ${!!emailError || !email || isSubmitting ? 'bg-slate-500/20 text-slate-400 cursor-not-allowed' : 'bg-cyan-600 hover:bg-cyan-500 text-white'}`}
                     >
-                      {isSubmitting ? (
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                      ) : (
-                        <ArrowRight className="w-5 h-5" />
-                      )}
+                      {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <ArrowRight className="w-5 h-5" />}
                     </button>
                   </div>
                   {emailError && (
@@ -531,31 +770,15 @@ const App: React.FC = () => {
               <AiForeman theme={currentTheme} />
             </div>
           </div>
-
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className={`py-8 border-t backdrop-blur-md z-10 ${currentTheme.colors.divider} ${currentTheme.colors.cardBg}`}>
-        <div className="max-w-4xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className={`flex items-center gap-2 text-sm ${currentTheme.colors.textMuted}`}>
-            <Hammer className="w-4 h-4" />
-            <span>&copy; {new Date().getFullYear()} ofertiko.com. Всички права запазени.</span>
-          </div>
-          
-          <div className="flex items-center gap-6">
-            <a href="#" className={`${currentTheme.colors.textMuted} hover:${currentTheme.colors.textMain} transition-colors transform hover:scale-110`}>
-              <Github className="w-5 h-5" />
-            </a>
-            <a href="#" className={`${currentTheme.colors.textMuted} hover:text-cyan-500 transition-colors transform hover:scale-110`}>
-              <Twitter className="w-5 h-5" />
-            </a>
-            <a href="#" className={`${currentTheme.colors.textMuted} hover:text-pink-500 transition-colors transform hover:scale-110`}>
-              <Instagram className="w-5 h-5" />
-            </a>
-          </div>
-        </div>
-      </footer>
+      {/* New Sections */}
+      <FeaturesSection theme={currentTheme} />
+      <DealsPreview theme={currentTheme} />
+
+      {/* New Expanded Footer */}
+      <NewFooter theme={currentTheme} />
     </div>
   );
 };
