@@ -25,21 +25,23 @@ const AiForeman: React.FC<AiForemanProps> = ({ theme }) => {
     }
   };
 
+  const isDark = theme.id !== 'light' && theme.id !== 'pastel' && theme.id !== 'classic';
+
   return (
-    <div className={`w-full h-full flex flex-col justify-center rounded-2xl p-6 backdrop-blur-sm relative overflow-hidden group transition-all duration-300 border hover:scale-[1.02] hover:shadow-2xl ${theme.colors.cardBg} ${theme.colors.cardBorder} hover:shadow-indigo-500/20`}>
+    <div className={`w-full h-full flex flex-col justify-center rounded-2xl p-8 backdrop-blur-sm relative overflow-hidden group transition-all duration-300 border hover:scale-[1.02] hover:shadow-2xl ${theme.colors.cardBg} ${theme.colors.cardBorder} hover:shadow-indigo-500/20`}>
       
       {/* Decorative gradient background */}
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-indigo-600/20 rounded-full blur-3xl group-hover:bg-indigo-600/30 transition-all duration-500"></div>
 
       <div className="relative z-10">
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-indigo-600 rounded-lg shadow-md">
-            <Bot className="w-6 h-6 text-white" />
+          <div className={`p-2 rounded-lg ${isDark ? 'bg-indigo-500/10' : 'bg-indigo-100'}`}>
+            <Bot className={`w-6 h-6 ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`} />
           </div>
-          <h3 className={`text-lg font-semibold ${theme.colors.textMain}`}>AI Бригадир</h3>
+          <h3 className={`text-xl font-semibold ${theme.colors.textMain}`}>AI Бригадир</h3>
         </div>
         
-        <p className={`text-sm mb-6 ${theme.colors.textSecondary}`}>
+        <p className={`mb-6 ${theme.colors.textSecondary}`}>
           Любопитни сте защо се бавим? Попитайте нашия изкуствен интелект за причината.
         </p>
 

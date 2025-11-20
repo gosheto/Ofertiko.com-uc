@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { Hammer, Mail, ArrowRight, Github, Twitter, Instagram, AlertCircle, Palette, Check, Sun, Moon, Sparkles, Type, X, Loader2, Menu, Zap, Search, ShieldCheck, ShoppingBag, Tag, ExternalLink, ChevronRight, ChevronLeft, BarChart3, Bell, Smartphone, Watch, Monitor, Headphones, Heart, Home, Trophy, Star, Store } from 'lucide-react';
+import { Hammer, Mail, ArrowRight, Github, Twitter, Instagram, AlertCircle, Palette, Check, Sun, Moon, Sparkles, Type, X, Loader2, Menu, Zap, Search, ShieldCheck, ShoppingBag, Tag, ExternalLink, ChevronRight, ChevronLeft, BarChart3, Bell, Smartphone, Watch, Monitor, Headphones, Heart, Home, Trophy, Star, Store, Image as ImageIcon, Square, Circle } from 'lucide-react';
 import Countdown from './components/Countdown';
 import AiForeman from './components/AiForeman';
 import { Theme } from './types';
@@ -108,11 +109,26 @@ const classicTheme: Theme = {
 
 const themes = [darkTheme, midnightTheme, lightTheme, pastelTheme, classicTheme];
 
+// --- BACKGROUND DEFINITIONS ---
+const BACKGROUNDS = {
+  solid: 'solid',
+  tech: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop',
+  mesh: 'https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2070&auto=format&fit=crop',
+  geo: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop',
+  sky: 'https://images.unsplash.com/photo-1579033461380-adb47c3eb938?q=80&w=2064&auto=format&fit=crop', // Pastel Sky
+  rain: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?q=80&w=2070&auto=format&fit=crop', // Rain
+  neon: 'https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=2070&auto=format&fit=crop', // Neon
+};
+
 // --- FONT DEFINITIONS ---
 
 const FONTS = {
   inter: "'Inter', sans-serif",
-  apple: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'"
+  apple: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
+  satoshi: "'Satoshi', sans-serif",
+  roboto: "'Roboto', sans-serif",
+  manrope: "'Manrope', sans-serif",
+  bricolage: "'Bricolage Grotesque', sans-serif",
 };
 
 // --- REUSABLE LOGO COMPONENT ---
@@ -251,7 +267,10 @@ const Header: React.FC<{ theme: Theme; onThemeToggle: () => void; scrollY: numbe
             <div className="relative w-10 h-10">
               <OfertikoLogo theme={theme} className="w-full h-full" animated={false} />
             </div>
-            <div className={`flex items-center text-xl font-bold tracking-tight transition-all duration-300 group-hover:text-cyan-400 group-hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)] ${theme.colors.textMain}`}>
+            <div 
+              className={`flex items-center text-xl font-bold tracking-tight transition-all duration-300 group-hover:text-cyan-400 group-hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)] ${theme.colors.textMain}`}
+              style={{ fontFamily: FONTS.bricolage }}
+            >
               <span>Ofertiko<span className="text-cyan-500">.com</span></span>
             </div>
           </div>
@@ -307,18 +326,23 @@ const Header: React.FC<{ theme: Theme; onThemeToggle: () => void; scrollY: numbe
 };
 
 // --- THEME SWITCHER COMPONENT ---
-const ThemeSwitcher: React.FC<{ currentTheme: Theme, onThemeChange: (t: Theme) => void, scrollY: number }> = ({ currentTheme, onThemeChange, scrollY }) => {
+const ThemeSwitcher: React.FC<{ 
+  currentTheme: Theme, 
+  onThemeChange: (t: Theme) => void, 
+  scrollY: number,
+  backgroundMode: string,
+  onBackgroundChange: (bg: string) => void,
+  radiusMode: string,
+  onRadiusChange: (mode: string) => void
+}> = ({ currentTheme, onThemeChange, scrollY, backgroundMode, onBackgroundChange, radiusMode, onRadiusChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const isDocked = scrollY > 50;
 
-  // Logic for sticky positioning
-  // Desktop: Always fixed to right-6 (or similar), moves vertically.
-  // Mobile: Fixed to the LEFT of the hamburger menu (hamburger is usually right-4).
   return (
     <div 
       className="fixed z-[60] transition-all duration-500 ease-in-out"
       style={{
-        top: isDocked ? '0.6rem' : '6rem', // Adjusted from 1rem to 0.6rem for better vertical centering
+        top: isDocked ? '0.6rem' : '6rem',
       }}
     >
       <div 
@@ -335,14 +359,15 @@ const ThemeSwitcher: React.FC<{ currentTheme: Theme, onThemeChange: (t: Theme) =
         </button>
 
         {isOpen && (
-          <div className={`absolute right-0 mt-2 w-48 rounded-xl border shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 ${currentTheme.colors.cardBg} ${currentTheme.colors.cardBorder}`}>
-            <div className="p-2">
+          <div className={`absolute right-0 mt-2 w-64 rounded-xl border shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 ${currentTheme.colors.cardBg} ${currentTheme.colors.cardBorder}`}>
+            {/* Themes List */}
+            <div className="p-2 border-b border-slate-500/20">
+              <p className={`text-xs font-bold uppercase px-3 py-1 mb-1 ${currentTheme.colors.textMuted}`}>Тема</p>
               {themes.map((t) => (
                 <button
                   key={t.id}
                   onClick={() => {
                     onThemeChange(t);
-                    setIsOpen(false);
                   }}
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
                     currentTheme.id === t.id 
@@ -355,7 +380,6 @@ const ThemeSwitcher: React.FC<{ currentTheme: Theme, onThemeChange: (t: Theme) =
                     {t.id === 'midnight' && <Sparkles className="w-4 h-4" />}
                     {t.id === 'light' && <Sun className="w-4 h-4" />}
                     {t.id === 'pastel' && (
-                      // Custom color palette icon from user image
                       <div className="w-4 h-4 rounded overflow-hidden flex flex-col border border-gray-300/50 opacity-80">
                         <div className="h-1 bg-[#738A94] w-full"></div>
                         <div className="h-1 bg-[#E7DACB] w-full"></div>
@@ -364,7 +388,6 @@ const ThemeSwitcher: React.FC<{ currentTheme: Theme, onThemeChange: (t: Theme) =
                       </div>
                     )}
                     {t.id === 'classic' && (
-                      // Classic Stripe Icon (Red, Black, White, Blue)
                       <div className="w-4 h-4 rounded overflow-hidden flex flex-col border border-gray-300/50 opacity-90">
                         <div className="h-1 bg-[#DC2626] w-full"></div>
                         <div className="h-1 bg-[#000000] w-full"></div>
@@ -377,6 +400,59 @@ const ThemeSwitcher: React.FC<{ currentTheme: Theme, onThemeChange: (t: Theme) =
                   {currentTheme.id === t.id && <Check className="w-3 h-3" />}
                 </button>
               ))}
+            </div>
+            
+            {/* Radius (Corner) Style Switcher */}
+            <div className="p-2 border-b border-slate-500/20">
+              <p className={`text-xs font-bold uppercase px-3 py-1 mb-2 ${currentTheme.colors.textMuted}`}>Дизайн на ъглите</p>
+              <div className="grid grid-cols-2 gap-2 px-1">
+                 <button
+                    onClick={() => onRadiusChange('rounded')}
+                    className={`flex flex-col items-center gap-1 p-2 rounded-lg border transition-all ${
+                      radiusMode === 'rounded' 
+                        ? 'border-cyan-500 bg-cyan-500/10 text-cyan-500' 
+                        : 'border-transparent hover:bg-slate-500/10'
+                    }`}
+                 >
+                    <div className={`w-8 h-8 rounded-xl border-2 ${radiusMode === 'rounded' ? 'border-cyan-500' : 'border-gray-400'}`}></div>
+                    <span className={`text-xs ${currentTheme.colors.textSecondary}`}>Заоблен</span>
+                 </button>
+                 <button
+                    onClick={() => onRadiusChange('square')}
+                    className={`flex flex-col items-center gap-1 p-2 rounded-lg border transition-all ${
+                      radiusMode === 'square' 
+                        ? 'border-cyan-500 bg-cyan-500/10 text-cyan-500' 
+                        : 'border-transparent hover:bg-slate-500/10'
+                    }`}
+                 >
+                    <div className={`w-8 h-8 rounded-none border-2 ${radiusMode === 'square' ? 'border-cyan-500' : 'border-gray-400'}`}></div>
+                    <span className={`text-xs ${currentTheme.colors.textSecondary}`}>Квадратен</span>
+                 </button>
+              </div>
+            </div>
+
+            {/* Background Switcher */}
+            <div className="p-2 bg-black/5">
+              <p className={`text-xs font-bold uppercase px-3 py-1 mb-2 ${currentTheme.colors.textMuted}`}>Фон на сайта</p>
+              <div className="grid grid-cols-4 gap-2 px-1 max-h-64 overflow-y-auto custom-scrollbar">
+                {Object.entries(BACKGROUNDS).map(([key, url]) => (
+                  <button
+                    key={key}
+                    onClick={() => onBackgroundChange(key)}
+                    className={`w-full aspect-square rounded-md border-2 transition-all flex items-center justify-center relative overflow-hidden ${
+                      backgroundMode === key ? 'border-cyan-500' : 'border-transparent hover:border-gray-400'
+                    }`}
+                    title={key}
+                  >
+                    {key === 'solid' ? (
+                       <div className={`w-full h-full ${currentTheme.id === 'light' ? 'bg-slate-100' : 'bg-slate-800'}`}></div>
+                    ) : (
+                       <img src={url} alt={key} className="w-full h-full object-cover" />
+                    )}
+                    {backgroundMode === key && <div className="absolute inset-0 flex items-center justify-center bg-black/20"><Check className="w-4 h-4 text-white drop-shadow-md" /></div>}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         )}
@@ -395,6 +471,15 @@ const SecretFontMenu: React.FC<{
 }> = ({ isOpen, onClose, currentFont, onFontChange, theme }) => {
   if (!isOpen) return null;
 
+  const fontOptions = [
+    { name: 'Inter (Стандартен)', value: FONTS.inter },
+    { name: 'Apple System (SF)', value: FONTS.apple },
+    { name: 'Satoshi (Geometric)', value: FONTS.satoshi },
+    { name: 'Roboto (Google)', value: FONTS.roboto },
+    { name: 'Manrope (Modern)', value: FONTS.manrope },
+    { name: 'Bricolage (Grotesque)', value: FONTS.bricolage },
+  ];
+
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div className={`w-80 rounded-2xl p-6 shadow-2xl border animate-in zoom-in-95 duration-200 ${theme.colors.cardBg} ${theme.colors.cardBorder}`}>
@@ -408,29 +493,21 @@ const SecretFontMenu: React.FC<{
           </button>
         </div>
         <p className={`text-sm mb-4 ${theme.colors.textMuted}`}>Избери шрифт на сайта:</p>
-        <div className="space-y-3">
-          <button
-            onClick={() => onFontChange(FONTS.inter)}
-            className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all ${
-              currentFont === FONTS.inter 
-                ? `border-cyan-500 bg-cyan-500/10 ${theme.colors.textMain}` 
-                : `${theme.colors.cardBorder} hover:bg-white/5 ${theme.colors.textSecondary}`
-            }`}
-          >
-            <span style={{ fontFamily: FONTS.inter }}>Inter (Стандартен)</span>
-            {currentFont === FONTS.inter && <Check className="w-4 h-4 text-cyan-500" />}
-          </button>
-          <button
-            onClick={() => onFontChange(FONTS.apple)}
-            className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all ${
-              currentFont === FONTS.apple 
-                ? `border-cyan-500 bg-cyan-500/10 ${theme.colors.textMain}` 
-                : `${theme.colors.cardBorder} hover:bg-white/5 ${theme.colors.textSecondary}`
-            }`}
-          >
-            <span style={{ fontFamily: FONTS.apple }}>Apple System (SF)</span>
-            {currentFont === FONTS.apple && <Check className="w-4 h-4 text-cyan-500" />}
-          </button>
+        <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+          {fontOptions.map((font) => (
+            <button
+              key={font.name}
+              onClick={() => onFontChange(font.value)}
+              className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all ${
+                currentFont === font.value 
+                  ? `border-cyan-500 bg-cyan-500/10 ${theme.colors.textMain}` 
+                  : `${theme.colors.cardBorder} hover:bg-white/5 ${theme.colors.textSecondary}`
+              }`}
+            >
+              <span style={{ fontFamily: font.value }}>{font.name}</span>
+              {currentFont === font.value && <Check className="w-4 h-4 text-cyan-500" />}
+            </button>
+          ))}
         </div>
       </div>
     </div>
@@ -691,7 +768,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
                <div key={deal.id} className={`group relative rounded-2xl overflow-hidden border transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.3)] hover:-translate-y-1 hover:border-cyan-400/50 ${theme.colors.cardBg} ${theme.colors.cardBorder} animate-in fade-in zoom-in-95 duration-500`}>
                   
                   {/* Image Area */}
-                  <div className="h-56 relative overflow-hidden bg-slate-800">
+                  <div className="h-56 relative overflow-hidden bg-slate-800 transition-all duration-500 ease-in-out">
                      <img src={deal.image} alt={deal.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                      
                      {/* Overlay Gradient */}
@@ -785,7 +862,10 @@ const NewFooter: React.FC<{ theme: Theme }> = ({ theme }) => {
                  <div className="w-8 h-8 rounded-lg flex items-center justify-center">
                     <OfertikoLogo theme={theme} className="w-full h-full" animated={false} />
                  </div>
-                 <div className={`flex items-center text-xl font-bold ${theme.colors.textMain}`}>
+                 <div 
+                   className={`flex items-center text-xl font-bold ${theme.colors.textMain}`}
+                   style={{ fontFamily: FONTS.bricolage }}
+                 >
                    <span>Ofertiko<span className="text-cyan-500">.com</span></span>
                  </div>
               </div>
@@ -852,7 +932,31 @@ const NewFooter: React.FC<{ theme: Theme }> = ({ theme }) => {
 // --- MAIN APP COMPONENT ---
 
 const App: React.FC = () => {
-  const [currentTheme, setCurrentTheme] = useState<Theme>(darkTheme);
+  // Theme State with Persistence
+  const [currentTheme, setCurrentTheme] = useState<Theme>(() => {
+    const savedThemeId = localStorage.getItem('ofertiko-theme-id');
+    if (savedThemeId) {
+      const foundTheme = themes.find(t => t.id === savedThemeId);
+      if (foundTheme) return foundTheme;
+    }
+    return darkTheme;
+  });
+
+  // Font State with Persistence
+  const [fontFamily, setFontFamily] = useState(() => {
+    return localStorage.getItem('ofertiko-font-family') || FONTS.manrope;
+  });
+
+  // Background State with Persistence
+  const [backgroundMode, setBackgroundMode] = useState(() => {
+    return localStorage.getItem('ofertiko-bg-mode') || 'solid';
+  });
+
+  // Radius Mode State with Persistence
+  const [radiusMode, setRadiusMode] = useState(() => {
+    return localStorage.getItem('ofertiko-radius') || 'rounded';
+  });
+
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
   const [subscribed, setSubscribed] = useState(false);
@@ -862,11 +966,10 @@ const App: React.FC = () => {
   const [touched, setTouched] = useState(false);
   
   // Secret Menu States
-  const [fontFamily, setFontFamily] = useState(FONTS.inter);
   const [secretClicks, setSecretClicks] = useState(0);
   const [showSecretMenu, setShowSecretMenu] = useState(false);
   
-  // Scroll Tracking for Theme Switcher Positioning
+  // Scroll Tracking
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
@@ -876,6 +979,26 @@ const App: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleThemeChange = (newTheme: Theme) => {
+    setCurrentTheme(newTheme);
+    localStorage.setItem('ofertiko-theme-id', newTheme.id);
+  };
+
+  const handleFontChange = (newFont: string) => {
+    setFontFamily(newFont);
+    localStorage.setItem('ofertiko-font-family', newFont);
+  };
+
+  const handleBackgroundChange = (newBg: string) => {
+    setBackgroundMode(newBg);
+    localStorage.setItem('ofertiko-bg-mode', newBg);
+  };
+
+  const handleRadiusChange = (mode: string) => {
+    setRadiusMode(mode);
+    localStorage.setItem('ofertiko-radius', mode);
+  };
 
   const validateEmail = (email: string) => {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -981,26 +1104,51 @@ const App: React.FC = () => {
     focusGradient = 'bg-gradient-to-r from-[#003399] via-[#111111] to-[#DC2626]';
   }
 
+  // Background Image Styles
+  const getBackgroundStyle = () => {
+    if (backgroundMode === 'solid') return {};
+    const url = BACKGROUNDS[backgroundMode as keyof typeof BACKGROUNDS];
+    return { 
+      backgroundImage: `url(${url})`, 
+      backgroundSize: 'cover', 
+      backgroundPosition: 'center', 
+      backgroundAttachment: 'fixed' 
+    };
+  };
+
   return (
     <div 
-      className={`min-h-screen w-full relative overflow-x-hidden flex flex-col transition-colors duration-500 ${currentTheme.colors.background}`}
-      style={{ fontFamily: fontFamily }}
+      className={`min-h-screen w-full relative overflow-x-hidden flex flex-col transition-colors duration-500 ${currentTheme.colors.background} ${radiusMode === 'square' ? 'radius-square' : ''}`}
+      style={{ fontFamily: fontFamily, ...getBackgroundStyle() }}
     >
+      {/* Background Overlay for readability if image is active */}
+      {backgroundMode !== 'solid' && (
+        <div className={`absolute inset-0 z-0 pointer-events-none ${currentTheme.id === 'light' ? 'bg-white/80' : 'bg-black/70'} backdrop-blur-sm`}></div>
+      )}
+
       {/* Sticky Header */}
       <Header theme={currentTheme} onThemeToggle={() => {}} scrollY={scrollY} />
 
       {/* Dynamic Sticky Theme Switcher */}
-      <ThemeSwitcher currentTheme={currentTheme} onThemeChange={setCurrentTheme} scrollY={scrollY} />
+      <ThemeSwitcher 
+        currentTheme={currentTheme} 
+        onThemeChange={handleThemeChange} 
+        scrollY={scrollY}
+        backgroundMode={backgroundMode}
+        onBackgroundChange={handleBackgroundChange}
+        radiusMode={radiusMode}
+        onRadiusChange={handleRadiusChange}
+      />
 
       <SecretFontMenu 
         isOpen={showSecretMenu} 
         onClose={() => setShowSecretMenu(false)} 
         currentFont={fontFamily} 
-        onFontChange={setFontFamily} 
+        onFontChange={handleFontChange} 
         theme={currentTheme}
       />
 
-      {/* Animated Background blobs */}
+      {/* Animated Background blobs (Only visible on solid background or faintly behind) */}
       <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
         <div 
           className={`absolute top-0 -left-4 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl animate-blob ${isDark ? 'bg-purple-600 opacity-20' : 'bg-purple-300 opacity-40'}`}
@@ -1020,7 +1168,7 @@ const App: React.FC = () => {
       <div className={`fixed inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] -z-10 ${isDark ? 'opacity-20' : 'opacity-10 invert'} pointer-events-none`}></div>
 
       {/* Hero Content */}
-      <main className="flex-grow flex flex-col items-center justify-center px-4 pt-32 pb-12">
+      <main className="flex-grow flex flex-col items-center justify-center px-4 pt-32 pb-12 relative z-10">
         <div className="max-w-4xl w-full mx-auto text-center">
           
           <div className="mx-auto mb-6 w-32">
@@ -1118,8 +1266,10 @@ const App: React.FC = () => {
       </main>
 
       {/* New Sections */}
-      <FeaturesSection theme={currentTheme} />
-      <DealsPreview theme={currentTheme} />
+      <div className="relative z-10">
+        <FeaturesSection theme={currentTheme} />
+        <DealsPreview theme={currentTheme} />
+      </div>
 
       {/* New Expanded Footer */}
       <NewFooter theme={currentTheme} />
