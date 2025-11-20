@@ -1,6 +1,6 @@
 
-import React, { useState, useEffect } from 'react';
-import { Hammer, Mail, ArrowRight, Github, Twitter, Instagram, AlertCircle, Palette, Check, Sun, Moon, Sparkles, Type, X, Loader2, Menu, Zap, Search, ShieldCheck, ShoppingBag, Tag, ExternalLink, ChevronRight, ChevronLeft, BarChart3, Bell, Smartphone, Watch, Monitor, Headphones, Heart, Home, Trophy, Star, Store, Image as ImageIcon, Square, Circle } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Hammer, Mail, ArrowRight, Github, Twitter, Instagram, AlertCircle, Palette, Check, Sun, Moon, Sparkles, Type, X, Loader2, Menu, Zap, Search, ShieldCheck, ShoppingBag, Tag, ExternalLink, ChevronRight, ChevronLeft, BarChart3, Bell, Smartphone, Watch, Monitor, Headphones, Heart, Home, Trophy, Star, Store, Image as ImageIcon, Square, Circle, ArrowDown } from 'lucide-react';
 import Countdown from './components/Countdown';
 import AiForeman from './components/AiForeman';
 import { Theme } from './types';
@@ -258,7 +258,7 @@ const Header: React.FC<{ theme: Theme; onThemeToggle: () => void; scrollY: numbe
 
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 gravity-target ${
         isScrolled 
           ? `backdrop-blur-lg border-b ${theme.colors.cardBg} ${theme.colors.divider} shadow-lg` 
           : 'bg-transparent border-b border-transparent py-4'
@@ -268,7 +268,7 @@ const Header: React.FC<{ theme: Theme; onThemeToggle: () => void; scrollY: numbe
         <div className="flex items-center justify-between h-16 relative">
           
           {/* Brand */}
-          <div className="flex items-center gap-2 cursor-pointer group">
+          <div className="flex items-center gap-2 cursor-pointer group gravity-target">
             <div className="relative w-10 h-10">
               <OfertikoLogo theme={theme} className="w-full h-full" animated={false} />
             </div>
@@ -281,7 +281,7 @@ const Header: React.FC<{ theme: Theme; onThemeToggle: () => void; scrollY: numbe
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-4">
+          <nav className="hidden md:flex items-center gap-4 gravity-target">
             <a href="#" className={navLinkClass}>Начало</a>
             <a href="#features" className={navLinkClass}>Как работи</a>
             <a href="#deals" className={navLinkClass}>Оферти</a>
@@ -289,7 +289,7 @@ const Header: React.FC<{ theme: Theme; onThemeToggle: () => void; scrollY: numbe
           </nav>
 
           {/* Actions */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4 gravity-target">
             <button className={`text-sm font-medium px-4 py-2 rounded-lg border transition-colors hover:bg-white/5 ${theme.colors.textMain} ${theme.colors.cardBorder}`}>
               Вход
             </button>
@@ -473,7 +473,8 @@ const SecretFontMenu: React.FC<{
   currentFont: string; 
   onFontChange: (font: string) => void;
   theme: Theme;
-}> = ({ isOpen, onClose, currentFont, onFontChange, theme }) => {
+  onGravityToggle: () => void;
+}> = ({ isOpen, onClose, currentFont, onFontChange, theme, onGravityToggle }) => {
   if (!isOpen) return null;
 
   const fontOptions = [
@@ -498,7 +499,7 @@ const SecretFontMenu: React.FC<{
           </button>
         </div>
         <p className={`text-sm mb-4 ${theme.colors.textMuted}`}>Избери шрифт на сайта:</p>
-        <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+        <div className="space-y-3 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar mb-6">
           {fontOptions.map((font) => (
             <button
               key={font.name}
@@ -513,6 +514,17 @@ const SecretFontMenu: React.FC<{
               {currentFont === font.value && <Check className="w-4 h-4 text-cyan-500" />}
             </button>
           ))}
+        </div>
+
+        <div className="pt-4 border-t border-gray-500/20">
+           <button 
+             onClick={onGravityToggle}
+             className={`w-full py-3 rounded-xl font-bold text-white shadow-lg transition-all hover:scale-[1.02] flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-red-600`}
+           >
+             <ArrowDown className="w-5 h-5" />
+             Gravity Experiment
+           </button>
+           <p className="text-xs text-center mt-2 opacity-60">Warning: May break the universe.</p>
         </div>
       </div>
     </div>
@@ -556,7 +568,7 @@ const FeaturesSection: React.FC<{ theme: Theme }> = ({ theme }) => {
 
   return (
     <section id="features" className="py-12 max-w-7xl mx-auto px-4">
-      <div className="text-center mb-16">
+      <div className="text-center mb-16 gravity-target">
         <span className={`text-sm font-bold uppercase tracking-widest ${theme.colors.accent} mb-2 block`}>Предимства</span>
         <h2 className={`text-3xl md:text-4xl font-bold ${theme.colors.textMain} mb-4`}>
           Как Ofertiko <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">пести парите ти</span>
@@ -568,7 +580,7 @@ const FeaturesSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       
       <div className="grid md:grid-cols-3 gap-8">
         {features.map((f, i) => (
-          <div key={i} className={`group relative p-8 rounded-2xl border backdrop-blur-sm transition-all duration-500 hover:scale-[1.02] hover:-translate-y-2 ${theme.colors.cardBg} ${theme.colors.cardBorder} hover:border-cyan-400/50 hover:shadow-[0_0_50px_rgba(34,211,238,0.25)] overflow-hidden`}>
+          <div key={i} className={`gravity-target group relative p-8 rounded-2xl border backdrop-blur-sm transition-all duration-500 hover:scale-[1.02] hover:-translate-y-2 ${theme.colors.cardBg} ${theme.colors.cardBorder} hover:border-cyan-400/50 hover:shadow-[0_0_50px_rgba(34,211,238,0.25)] overflow-hidden`}>
              
              {/* Passing Flash Effect */}
             <div className="absolute top-0 -left-[100%] w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12 transition-all duration-1000 group-hover:left-[100%]"></div>
@@ -672,7 +684,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 7,
       title: "Dyson V15 Detect",
-      image: "https://plus.unsplash.com/premium_photo-1663054460858-246d3097d163?q=80&w=400",
+      image: "https://images.unsplash.com/photo-1626221700716-67835d847725?q=80&w=400", // Updated secure Unsplash link
       price: "1,299 лв.",
       oldPrice: "1,599 лв.",
       discount: "-18%",
@@ -726,7 +738,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
       
       <div className="max-w-7xl mx-auto relative z-0">
         {/* Centered Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 gravity-target">
            <span className={`text-sm font-bold uppercase tracking-widest ${theme.colors.accent} mb-2 block`}>Специална селекция</span>
            <h2 className={`text-3xl md:text-4xl font-bold ${theme.colors.textMain} mb-4`}>
              Актуални оферти <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">в момента</span>
@@ -743,7 +755,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
           <div className="hidden md:block w-40"></div>
 
           {/* Centered Categories with Flex Wrap (Fixes "iframe" look and overflow) */}
-          <div className="flex flex-wrap justify-center gap-3 px-2 py-2">
+          <div className="flex flex-wrap justify-center gap-3 px-2 py-2 gravity-target">
             {categories.map(cat => (
               <button 
                 key={cat}
@@ -760,7 +772,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
           </div>
 
           {/* Right Aligned "View All" */}
-          <div className="w-full md:w-auto flex justify-center md:justify-end">
+          <div className="w-full md:w-auto flex justify-center md:justify-end gravity-target">
             <button className={`flex items-center gap-2 text-sm font-bold px-6 py-2 rounded-full transition-all duration-300 border hover:scale-105 active:scale-95 ${theme.colors.cardBg} ${theme.colors.cardBorder} ${theme.colors.textMain} hover:bg-gradient-to-r hover:from-cyan-600 hover:via-blue-600 hover:to-purple-600 hover:text-white hover:border-transparent hover:shadow-[0_0_20px_rgba(34,211,238,0.4)]`}>
                Виж всички <ArrowRight className="w-4 h-4" />
             </button>
@@ -770,7 +782,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
         <div className="relative group/carousel">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 min-h-[400px]">
             {visibleDeals.length > 0 ? visibleDeals.map((deal) => (
-               <div key={deal.id} className={`group relative rounded-2xl overflow-hidden border transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.3)] hover:-translate-y-1 hover:border-cyan-400/50 ${theme.colors.cardBg} ${theme.colors.cardBorder} animate-in fade-in zoom-in-95 duration-500`}>
+               <div key={deal.id} className={`gravity-target group relative rounded-2xl overflow-hidden border transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.3)] hover:-translate-y-1 hover:border-cyan-400/50 ${theme.colors.cardBg} ${theme.colors.cardBorder} animate-in fade-in zoom-in-95 duration-500`}>
                   
                   {/* Image Area */}
                   <div className="h-56 relative overflow-hidden bg-slate-800 transition-all duration-500 ease-in-out">
@@ -857,12 +869,12 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
 // --- NEW FOOTER ---
 const NewFooter: React.FC<{ theme: Theme }> = ({ theme }) => {
   return (
-    <footer className={`pt-16 pb-8 border-t backdrop-blur-md z-10 ${theme.colors.divider} ${theme.colors.background}`}>
+    <footer className={`pt-16 pb-8 border-t backdrop-blur-md z-10 gravity-target ${theme.colors.divider} ${theme.colors.background}`}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
             
             {/* Brand Col */}
-            <div className="col-span-2 md:col-span-1">
+            <div className="col-span-2 md:col-span-1 gravity-target">
               <div className="flex items-center gap-2 mb-4">
                  <div className="w-8 h-8 rounded-lg flex items-center justify-center">
                     <OfertikoLogo theme={theme} className="w-full h-full" animated={false} />
@@ -885,7 +897,7 @@ const NewFooter: React.FC<{ theme: Theme }> = ({ theme }) => {
             </div>
 
             {/* Links 1 */}
-            <div>
+            <div className="gravity-target">
                <h4 className={`font-bold mb-4 ${theme.colors.textMain}`}>Продукт</h4>
                <ul className="space-y-2 text-sm">
                  <li><a href="#" className={`${theme.colors.textSecondary} hover:${theme.colors.accent}`}>Всички Оферти</a></li>
@@ -896,7 +908,7 @@ const NewFooter: React.FC<{ theme: Theme }> = ({ theme }) => {
             </div>
 
             {/* Links 2 */}
-            <div>
+            <div className="gravity-target">
                <h4 className={`font-bold mb-4 ${theme.colors.textMain}`}>Компания</h4>
                <ul className="space-y-2 text-sm">
                  <li><a href="#" className={`${theme.colors.textSecondary} hover:${theme.colors.accent}`}>За Нас</a></li>
@@ -907,7 +919,7 @@ const NewFooter: React.FC<{ theme: Theme }> = ({ theme }) => {
             </div>
 
             {/* Links 3 */}
-            <div>
+            <div className="gravity-target">
                <h4 className={`font-bold mb-4 ${theme.colors.textMain}`}>Помощ</h4>
                <ul className="space-y-2 text-sm">
                  <li><a href="#" className={`${theme.colors.textSecondary} hover:${theme.colors.accent}`}>Чести въпроси</a></li>
@@ -974,6 +986,9 @@ const App: React.FC = () => {
   const [secretClicks, setSecretClicks] = useState(0);
   const [showSecretMenu, setShowSecretMenu] = useState(false);
   
+  // Gravity Mode State
+  const [gravityEnabled, setGravityEnabled] = useState(false);
+  
   // Scroll Tracking
   const [scrollY, setScrollY] = useState(0);
 
@@ -984,6 +999,78 @@ const App: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // --- PHYSICS ENGINE LOGIC (Simplified Gravity) ---
+  useEffect(() => {
+    if (!gravityEnabled) return;
+
+    // Select targets
+    const targets = document.querySelectorAll('.gravity-target');
+    const bodies: { el: HTMLElement, x: number, y: number, vx: number, vy: number, rot: number, vRot: number }[] = [];
+
+    // Initial Setup
+    targets.forEach((el) => {
+       const rect = el.getBoundingClientRect();
+       const element = el as HTMLElement;
+       
+       // Prepare element for physics
+       element.style.position = 'fixed';
+       element.style.left = `${rect.left}px`;
+       element.style.top = `${rect.top}px`;
+       element.style.width = `${rect.width}px`;
+       element.style.zIndex = '1000';
+       
+       bodies.push({
+         el: element,
+         x: rect.left,
+         y: rect.top,
+         vx: (Math.random() - 0.5) * 4, // Random horizontal Push
+         vy: Math.random() * 2, // Initial drop speed
+         rot: 0,
+         vRot: (Math.random() - 0.5) * 2
+       });
+    });
+
+    let animationId: number;
+    
+    const update = () => {
+       const gravity = 0.5;
+       const friction = 0.98;
+       const floor = window.innerHeight;
+
+       bodies.forEach(b => {
+          b.vy += gravity;
+          b.x += b.vx;
+          b.y += b.vy;
+          b.rot += b.vRot;
+
+          // Floor Collision
+          if (b.y + b.el.offsetHeight > floor) {
+             b.y = floor - b.el.offsetHeight;
+             b.vy *= -0.6; // Bounce
+             b.vx *= friction;
+             b.vRot *= friction;
+          }
+
+          // Wall Collision
+          if (b.x < 0) {
+             b.x = 0;
+             b.vx *= -0.8;
+          } else if (b.x + b.el.offsetWidth > window.innerWidth) {
+             b.x = window.innerWidth - b.el.offsetWidth;
+             b.vx *= -0.8;
+          }
+
+          b.el.style.transform = `translate(${b.x - b.el.offsetLeft}px, ${b.y - b.el.offsetTop}px) rotate(${b.rot}deg)`;
+       });
+
+       animationId = requestAnimationFrame(update);
+    };
+
+    update();
+
+    return () => cancelAnimationFrame(animationId);
+  }, [gravityEnabled]);
 
   const handleThemeChange = (newTheme: Theme) => {
     setCurrentTheme(newTheme);
@@ -1095,6 +1182,11 @@ const App: React.FC = () => {
     setTimeout(() => setSecretClicks(0), 2000);
   };
 
+  const handleGravityToggle = () => {
+     setGravityEnabled(true);
+     setShowSecretMenu(false);
+  };
+
   const isDark = currentTheme.id !== 'light' && currentTheme.id !== 'pastel' && currentTheme.id !== 'classic';
   
   // Define gradients for inputs
@@ -1151,6 +1243,7 @@ const App: React.FC = () => {
         currentFont={fontFamily} 
         onFontChange={handleFontChange} 
         theme={currentTheme}
+        onGravityToggle={handleGravityToggle}
       />
 
       {/* Animated Background blobs (Only visible on solid background or faintly behind) */}
@@ -1176,12 +1269,12 @@ const App: React.FC = () => {
       <main className="flex-grow flex flex-col items-center justify-center px-4 pt-32 pb-12 relative z-10">
         <div className="max-w-4xl w-full mx-auto text-center">
           
-          <div className="mx-auto mb-6 w-32">
+          <div className="mx-auto mb-6 w-32 gravity-target">
             <OfertikoLogo theme={currentTheme} onClick={handleLogoClick} />
           </div>
 
           {/* Badge */}
-          <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-8 backdrop-blur-sm shadow-xl ${currentTheme.colors.cardBg} ${currentTheme.colors.cardBorder}`}>
+          <div className={`gravity-target inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-8 backdrop-blur-sm shadow-xl ${currentTheme.colors.cardBg} ${currentTheme.colors.cardBorder}`}>
             <span className="relative flex h-3 w-3">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
@@ -1189,7 +1282,7 @@ const App: React.FC = () => {
             <span className={`text-sm font-medium tracking-wide uppercase ${currentTheme.colors.textSecondary}`}>Work in Progress</span>
           </div>
 
-          <h1 className={`text-5xl md:text-7xl font-extrabold mb-6 tracking-tight animate-fade-in-up ${currentTheme.colors.textMain}`}>
+          <h1 className={`gravity-target text-5xl md:text-7xl font-extrabold mb-6 tracking-tight animate-fade-in-up ${currentTheme.colors.textMain}`}>
             <span className={`block text-3xl md:text-4xl font-light mb-2 ${currentTheme.colors.textSecondary}`}>Здравейте, аз съм Офертико!</span>
             Готвим нещо <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 animate-text-shimmer">
@@ -1197,18 +1290,18 @@ const App: React.FC = () => {
             </span>
           </h1>
           
-          <p className={`text-lg md:text-xl mb-12 max-w-3xl mx-auto leading-relaxed ${currentTheme.colors.textMuted}`}>
+          <p className={`gravity-target text-lg md:text-xl mb-12 max-w-3xl mx-auto leading-relaxed ${currentTheme.colors.textMuted}`}>
             Аз съм вашият нов AI помощник за откриване на най-добрите оферти. Всички оферти на едно място, сравнявай цени и спестявай пари от хиляди онлайн магазини.
           </p>
 
-          <div className="mb-16">
+          <div className="mb-16 gravity-target">
             <Countdown theme={currentTheme} />
           </div>
 
           {/* Main Cards */}
           <div className="grid md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto mb-12">
             {/* Left: Newsletter */}
-            <div className={`relative overflow-hidden group border rounded-2xl p-8 backdrop-blur-sm text-left h-full flex flex-col justify-center transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyan-500/20 ${currentTheme.colors.cardBg} ${currentTheme.colors.cardBorder}`}>
+            <div className={`gravity-target relative overflow-hidden group border rounded-2xl p-8 backdrop-blur-sm text-left h-full flex flex-col justify-center transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyan-500/20 ${currentTheme.colors.cardBg} ${currentTheme.colors.cardBorder}`}>
               
               {/* Decorative Blob matching Right Card */}
               <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-cyan-600/20 rounded-full blur-3xl group-hover:bg-cyan-600/30 transition-all duration-500"></div>
@@ -1263,7 +1356,7 @@ const App: React.FC = () => {
             </div>
 
             {/* Right: AI Foreman */}
-            <div className="h-full">
+            <div className="h-full gravity-target">
               <AiForeman theme={currentTheme} />
             </div>
           </div>
