@@ -1023,6 +1023,270 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
       store: "Garmin",
       rating: 4.9,
       icon: <Watch className="w-4 h-4" />
+    },
+    {
+      id: 9,
+      title: "MacBook Air M2",
+      image: "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&q=80&w=400",
+      price: "2,199 лв.",
+      oldPrice: "2,499 лв.",
+      discount: "-12%",
+      category: "Технологии",
+      store: "Apple",
+      rating: 4.9,
+      icon: <Monitor className="w-4 h-4" />
+    },
+    {
+      id: 10,
+      title: "The North Face Jacket",
+      image: "https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&q=80&w=400", // Ski jacket
+      price: "459 лв.",
+      oldPrice: "629 лв.",
+      discount: "-27%",
+      category: "Мода",
+      store: "Sport Depot",
+      rating: 4.7,
+      icon: <ShoppingBag className="w-4 h-4" />
+    },
+    {
+      id: 11,
+      title: "Tefal OptiGrill Elite",
+      image: "https://images.unsplash.com/photo-1544030288-e6e6108867f6?auto=format&fit=crop&q=80&w=400",
+      price: "389 лв.",
+      oldPrice: "599 лв.",
+      discount: "-35%",
+      category: "Дом",
+      store: "Emag",
+      rating: 4.6,
+      icon: <Home className="w-4 h-4" />
+    },
+    {
+      id: 12,
+      title: "Yoga Mat Pro",
+      image: "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?auto=format&fit=crop&q=80&w=400",
+      price: "45 лв.",
+      oldPrice: "89 лв.",
+      discount: "-49%",
+      category: "Спорт",
+      store: "Decathlon",
+      rating: 4.5,
+      icon: <Watch className="w-4 h-4" />
+    },
+    {
+      id: 13,
+      title: "PlayStation 5 Slim",
+      image: "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&q=80&w=400",
+      price: "949 лв.",
+      oldPrice: "1,099 лв.",
+      discount: "-14%",
+      category: "Технологии",
+      store: "Ozone",
+      rating: 4.9,
+      icon: <Monitor className="w-4 h-4" />
+    },
+    {
+      id: 14,
+      title: "Levi's 501 Original",
+      image: "https://images.unsplash.com/photo-1542272617-08f086302542?auto=format&fit=crop&q=80&w=400",
+      price: "119 лв.",
+      oldPrice: "189 лв.",
+      discount: "-37%",
+      category: "Мода",
+      store: "Fashion Days",
+      rating: 4.6,
+      icon: <ShoppingBag className="w-4 h-4" />
+    },
+    {
+      id: 15,
+      title: "Nutribullet Pro",
+      image: "https://images.unsplash.com/photo-1570222094114-28a9d8895272?auto=format&fit=crop&q=80&w=400",
+      price: "159 лв.",
+      oldPrice: "229 лв.",
+      discount: "-30%",
+      category: "Дом",
+      store: "Technomarket",
+      rating: 4.7,
+      icon: <Home className="w-4 h-4" />
+    },
+    {
+      id: 16,
+      title: "Dumbbells Set 20kg",
+      image: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&q=80&w=400",
+      price: "129 лв.",
+      oldPrice: "199 лв.",
+      discount: "-35%",
+      category: "Спорт",
+      store: "Sport Depot",
+      rating: 4.8,
+      icon: <Watch className="w-4 h-4" />
+    },
+    {
+      id: 17,
+      title: "iPad Air 5",
+      image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400",
+      price: "1,299 лв.",
+      oldPrice: "1,499 лв.",
+      discount: "-13%",
+      category: "Технологии",
+      store: "Apple",
+      rating: 4.8,
+      icon: <Monitor className="w-4 h-4" />
+    },
+    {
+      id: 18,
+      title: "Ray-Ban Aviator",
+      image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&q=80&w=400",
+      price: "189 лв.",
+      oldPrice: "289 лв.",
+      discount: "-34%",
+      category: "Мода",
+      store: "Opticlasa",
+      rating: 4.7,
+      icon: <ShoppingBag className="w-4 h-4" />
+    },
+    {
+      id: 19,
+      title: "Philips Airfryer XXL",
+      image: "https://images.unsplash.com/photo-1626162978724-320eae50396c?auto=format&fit=crop&q=80&w=400", // Airfryer-like
+      price: "429 лв.",
+      oldPrice: "649 лв.",
+      discount: "-33%",
+      category: "Дом",
+      store: "Philips",
+      rating: 4.9,
+      icon: <Home className="w-4 h-4" />
+    },
+    {
+      id: 20,
+      title: "Mountain Bike Cross",
+      image: "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?auto=format&fit=crop&q=80&w=400",
+      price: "899 лв.",
+      oldPrice: "1,299 лв.",
+      discount: "-30%",
+      category: "Спорт",
+      store: "Bike Center",
+      rating: 4.6,
+      icon: <Watch className="w-4 h-4" />
+    },
+    {
+      id: 21,
+      title: "Samsung Galaxy Watch 6",
+      image: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?auto=format&fit=crop&q=80&w=400",
+      price: "489 лв.",
+      oldPrice: "649 лв.",
+      discount: "-25%",
+      category: "Технологии",
+      store: "Samsung",
+      rating: 4.7,
+      icon: <Smartphone className="w-4 h-4" />
+    },
+    {
+      id: 22,
+      title: "Zara Wool Coat",
+      image: "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?auto=format&fit=crop&q=80&w=400",
+      price: "199 лв.",
+      oldPrice: "299 лв.",
+      discount: "-33%",
+      category: "Мода",
+      store: "Zara",
+      rating: 4.5,
+      icon: <ShoppingBag className="w-4 h-4" />
+    },
+    {
+      id: 23,
+      title: "Makita Cordless Drill",
+      image: "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&q=80&w=400",
+      price: "249 лв.",
+      oldPrice: "389 лв.",
+      discount: "-36%",
+      category: "Дом",
+      store: "Praktiker",
+      rating: 4.8,
+      icon: <Home className="w-4 h-4" />
+    },
+    {
+      id: 24,
+      title: "Wilson Tennis Racket",
+      image: "https://images.unsplash.com/photo-1617083934555-563404543d35?auto=format&fit=crop&q=80&w=400",
+      price: "289 лв.",
+      oldPrice: "399 лв.",
+      discount: "-27%",
+      category: "Спорт",
+      store: "Sport Depot",
+      rating: 4.7,
+      icon: <Watch className="w-4 h-4" />
+    },
+    {
+      id: 25,
+      title: "GoPro Hero 12",
+      image: "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?auto=format&fit=crop&q=80&w=400",
+      price: "799 лв.",
+      oldPrice: "999 лв.",
+      discount: "-20%",
+      category: "Технологии",
+      store: "GoPro",
+      rating: 4.8,
+      icon: <Monitor className="w-4 h-4" />
+    },
+    {
+      id: 26,
+      title: "H&M Hoodie",
+      image: "https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&q=80&w=400",
+      price: "39 лв.",
+      oldPrice: "69 лв.",
+      discount: "-43%",
+      category: "Мода",
+      store: "H&M",
+      rating: 4.4,
+      icon: <ShoppingBag className="w-4 h-4" />
+    },
+    {
+      id: 27,
+      title: "IKEA Strandmon Chair",
+      image: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&q=80&w=400",
+      price: "399 лв.",
+      oldPrice: "499 лв.",
+      discount: "-20%",
+      category: "Дом",
+      store: "IKEA",
+      rating: 4.9,
+      icon: <Home className="w-4 h-4" />
+    },
+    {
+      id: 28,
+      title: "Nike Running Shorts",
+      image: "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?auto=format&fit=crop&q=80&w=400",
+      price: "49 лв.",
+      oldPrice: "79 лв.",
+      discount: "-38%",
+      category: "Спорт",
+      store: "Nike",
+      rating: 4.6,
+      icon: <Watch className="w-4 h-4" />
+    },
+    {
+      id: 29,
+      title: "Nintendo Switch OLED",
+      image: "https://images.unsplash.com/photo-1612287230217-8c7c6c170b95?auto=format&fit=crop&q=80&w=400",
+      price: "649 лв.",
+      oldPrice: "799 лв.",
+      discount: "-19%",
+      category: "Технологии",
+      store: "Nintendo",
+      rating: 4.9,
+      icon: <Monitor className="w-4 h-4" />
+    },
+    {
+      id: 30,
+      title: "Protein Whey Gold",
+      image: "https://images.unsplash.com/photo-1593095948071-474c5cc2989d?auto=format&fit=crop&q=80&w=400",
+      price: "109 лв.",
+      oldPrice: "159 лв.",
+      discount: "-31%",
+      category: "Спорт",
+      store: "Sila BG",
+      rating: 4.8,
+      icon: <Watch className="w-4 h-4" />
     }
   ];
 
@@ -1142,77 +1406,80 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
           </div>
         </div>
 
-        {/* Carousel Container with Overflow Hidden */}
-        <div
-          className="relative group/carousel touch-pan-y cursor-grab active:cursor-grabbing overflow-hidden"
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-          onMouseDown={(e) => setTouchStart(e.clientX)}
-          onMouseMove={(e) => { if (touchStart) setTouchEnd(e.clientX); }}
-          onMouseUp={() => { handleTouchEnd(); setTouchStart(0); }}
-          onMouseLeave={() => { if (touchStart) { handleTouchEnd(); setTouchStart(0); } }}
-        >
-          {/* Sliding Track */}
+        {/* Relative Wrapper for Carousel and Controls */}
+        <div className="relative">
+          {/* Carousel Container with Overflow Hidden */}
           <div
-            className="flex transition-transform duration-500 ease-out"
-            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+            className="relative group/carousel touch-pan-y cursor-grab active:cursor-grabbing overflow-hidden"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onMouseDown={(e) => setTouchStart(e.clientX)}
+            onMouseMove={(e) => { if (touchStart) setTouchEnd(e.clientX); }}
+            onMouseUp={() => { handleTouchEnd(); setTouchStart(0); }}
+            onMouseLeave={() => { if (touchStart) { handleTouchEnd(); setTouchStart(0); } }}
           >
-            {/* We group items into 'pages' for the slide effect */}
-            {Array.from({ length: totalPages }).map((_, pageIndex) => (
-              <div key={pageIndex} className="min-w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-1">
-                {filteredDeals.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage).map((deal) => (
-                  <div key={deal.id} className={`gravity-target group relative rounded-2xl overflow-hidden border transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.3)] hover:-translate-y-1 hover:border-cyan-400/50 ${theme.colors.cardBg} ${theme.colors.cardBorder}`}>
-                    {/* Image Area */}
-                    <div className="h-56 relative overflow-hidden bg-slate-800 transition-all duration-500 ease-in-out">
-                      <img src={deal.image} alt={deal.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 pointer-events-none" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
-                      <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-md shadow-lg">{deal.discount}</div>
-                      <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md text-slate-900 text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-lg">
-                        <Store className="w-3 h-3" />
-                        {deal.store}
-                      </div>
-                      <div className="absolute bottom-3 left-3 bg-black/50 backdrop-blur-md text-white text-xs px-2.5 py-1 rounded-full flex items-center gap-1 border border-white/10">
-                        {deal.icon}
-                        {deal.category}
-                      </div>
-                    </div>
-
-                    <div className="p-5 relative">
-                      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-purple-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-                      <h3 className={`font-bold text-lg mb-3 line-clamp-2 leading-snug ${theme.colors.textMain}`}>{deal.title}</h3>
-                      <div className="flex items-center gap-1 mb-3">
-                        <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                        <span className={`text-sm font-bold ${theme.colors.textMain}`}>{deal.rating}</span>
-                        <span className={`text-xs ${theme.colors.textMuted}`}>(120+ ревюта)</span>
-                      </div>
-                      <div className="flex items-end justify-between mb-4">
-                        <div className="flex flex-col">
-                          <span className={`text-xs line-through mb-0.5 ${theme.colors.textMuted}`}>{deal.oldPrice}</span>
-                          <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">{deal.price}</span>
+            {/* Sliding Track */}
+            <div
+              className="flex transition-transform duration-500 ease-out"
+              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+            >
+              {/* We group items into 'pages' for the slide effect */}
+              {Array.from({ length: totalPages }).map((_, pageIndex) => (
+                <div key={pageIndex} className="min-w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-1">
+                  {filteredDeals.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage).map((deal) => (
+                    <div key={deal.id} className={`gravity-target group relative rounded-2xl overflow-hidden border transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.3)] hover:-translate-y-1 hover:border-cyan-400/50 ${theme.colors.cardBg} ${theme.colors.cardBorder}`}>
+                      {/* Image Area */}
+                      <div className="h-56 relative overflow-hidden bg-slate-800 transition-all duration-500 ease-in-out">
+                        <img src={deal.image} alt={deal.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 pointer-events-none" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
+                        <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-md shadow-lg">{deal.discount}</div>
+                        <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md text-slate-900 text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-lg">
+                          <Store className="w-3 h-3" />
+                          {deal.store}
+                        </div>
+                        <div className="absolute bottom-3 left-3 bg-black/50 backdrop-blur-md text-white text-xs px-2.5 py-1 rounded-full flex items-center gap-1 border border-white/10">
+                          {deal.icon}
+                          {deal.category}
                         </div>
                       </div>
-                      <button className={`w-full py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-all ${theme.id === 'light' ? 'bg-slate-100 hover:bg-slate-200 text-slate-900' : 'bg-slate-800 hover:bg-slate-700 text-white'}`}>
-                        Виж оферта <ExternalLink className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-                {/* Fill empty slots if last page is not full */}
-                {filteredDeals.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage).length < itemsPerPage &&
-                  Array.from({ length: itemsPerPage - filteredDeals.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage).length }).map((_, i) => (
-                    <div key={`empty-${i}`} className="hidden lg:block"></div>
-                  ))
-                }
-              </div>
-            ))}
 
-            {filteredDeals.length === 0 && (
-              <div className={`min-w-full flex flex-col items-center justify-center h-64 text-center ${theme.colors.textMuted}`}>
-                <Search className="w-12 h-12 mb-4 opacity-50" />
-                <p>Няма намерени оферти в тази категория.</p>
-              </div>
-            )}
+                      <div className="p-5 relative">
+                        <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-purple-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                        <h3 className={`font-bold text-lg mb-3 line-clamp-2 leading-snug ${theme.colors.textMain}`}>{deal.title}</h3>
+                        <div className="flex items-center gap-1 mb-3">
+                          <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                          <span className={`text-sm font-bold ${theme.colors.textMain}`}>{deal.rating}</span>
+                          <span className={`text-xs ${theme.colors.textMuted}`}>(120+ ревюта)</span>
+                        </div>
+                        <div className="flex items-end justify-between mb-4">
+                          <div className="flex flex-col">
+                            <span className={`text-xs line-through mb-0.5 ${theme.colors.textMuted}`}>{deal.oldPrice}</span>
+                            <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">{deal.price}</span>
+                          </div>
+                        </div>
+                        <button className={`w-full py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-all ${theme.id === 'light' ? 'bg-slate-100 hover:bg-slate-200 text-slate-900' : 'bg-slate-800 hover:bg-slate-700 text-white'}`}>
+                          Виж оферта <ExternalLink className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                  {/* Fill empty slots if last page is not full */}
+                  {filteredDeals.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage).length < itemsPerPage &&
+                    Array.from({ length: itemsPerPage - filteredDeals.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage).length }).map((_, i) => (
+                      <div key={`empty-${i}`} className="hidden lg:block"></div>
+                    ))
+                  }
+                </div>
+              ))}
+
+              {filteredDeals.length === 0 && (
+                <div className={`min-w-full flex flex-col items-center justify-center h-64 text-center ${theme.colors.textMuted}`}>
+                  <Search className="w-12 h-12 mb-4 opacity-50" />
+                  <p>Няма намерени оферти в тази категория.</p>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Carousel Controls - Visible on Mobile too now */}
@@ -1297,22 +1564,6 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       likes: 456,
       comments: 123,
       shares: 78,
-      isHot: true
-    },
-    {
-      id: 4,
-      foundBy: "Deal_Hunter",
-      foundDate: "Днес 16:20",
-      title: "Dyson V15 Detect Прахосмукачка с лазерна технология, HEPA филтър, 60 минути работа, безжична",
-      image: "https://images.unsplash.com/photo-1558317374-a354d5f6d4da?auto=format&fit=crop&q=80&w=400",
-      price: "1,199 лв.",
-      oldPrice: "1,599 лв.",
-      discount: "-25%",
-      extraInfo: "Безплатна доставка",
-      store: "Dyson",
-      likes: 312,
-      comments: 98,
-      shares: 56,
       isHot: true
     },
     {
@@ -1409,6 +1660,326 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       shares: 42,
       isHot: true,
       extraInfo: "Безплатна доставка"
+    },
+    {
+      id: 11,
+      foundBy: "Fashion_Icon",
+      foundDate: "Днес 10:00",
+      title: "Ray-Ban Wayfarer Classic Слънчеви очила с поляризация, UV защита, класически дизайн, черен цвят",
+      image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&q=80&w=400",
+      price: "189 лв.",
+      oldPrice: "259 лв.",
+      discount: "-27%",
+      extraInfo: "Безплатна доставка",
+      store: "Opticlasa",
+      likes: 145,
+      comments: 34,
+      shares: 12,
+      isHot: false
+    },
+    {
+      id: 12,
+      foundBy: "Home_Expert",
+      foundDate: "Вчера 16:45",
+      title: "Philips Airfryer XXL Фритюрник с горещ въздух, 1.4кг капацитет, цифров дисплей, Smart Sensing технология",
+      image: "https://images.unsplash.com/photo-1626162978724-320eae50396c?auto=format&fit=crop&q=80&w=400",
+      price: "429 лв.",
+      oldPrice: "649 лв.",
+      discount: "-33%",
+      extraInfo: "Безплатна доставка",
+      store: "Philips",
+      likes: 312,
+      comments: 89,
+      shares: 56,
+      isHot: true
+    },
+    {
+      id: 13,
+      foundBy: "Sport_Fan",
+      foundDate: "Днес 09:15",
+      title: "Garmin Instinct 2 Solar GPS часовник с неограничен живот на батерията, удароустойчив, водоустойчив до 100м",
+      image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=400",
+      price: "599 лв.",
+      oldPrice: "799 лв.",
+      discount: "-25%",
+      extraInfo: "Безплатна доставка",
+      store: "Garmin",
+      likes: 234,
+      comments: 56,
+      shares: 23,
+      isHot: true
+    },
+    {
+      id: 14,
+      foundBy: "Gamer_Pro",
+      foundDate: "Вчера 21:30",
+      title: "Razer BlackWidow V4 Pro Механична геймърска клавиатура с RGB подсветка, макро бутони, wrist rest",
+      image: "https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&q=80&w=400",
+      price: "349 лв.",
+      oldPrice: "459 лв.",
+      discount: "-24%",
+      extraInfo: "Безплатна доставка",
+      store: "Razer",
+      likes: 189,
+      comments: 45,
+      shares: 34,
+      isHot: true
+    },
+    {
+      id: 15,
+      foundBy: "Coffee_Lover",
+      foundDate: "Днес 08:50",
+      title: "De'Longhi Magnifica S Кафеавтомат с мелачка, 15 бара налягане, капучино система, черен",
+      image: "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=400",
+      price: "599 лв.",
+      oldPrice: "899 лв.",
+      discount: "-33%",
+      extraInfo: "Безплатна доставка",
+      store: "Technopolis",
+      likes: 456,
+      comments: 123,
+      shares: 89,
+      isHot: true
+    },
+    {
+      id: 16,
+      foundBy: "Sneaker_Head",
+      foundDate: "Днес 13:20",
+      title: "Adidas Yeezy Boost 350 V2 Обувки с Boost технология, Primeknit горна част, лимитирана серия",
+      image: "https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?auto=format&fit=crop&q=80&w=400",
+      price: "489 лв.",
+      oldPrice: "599 лв.",
+      discount: "-18%",
+      extraInfo: "Безплатна доставка",
+      store: "Adidas",
+      likes: 678,
+      comments: 234,
+      shares: 156,
+      isHot: true
+    },
+    {
+      id: 17,
+      foundBy: "Tech_Geek",
+      foundDate: "Вчера 19:10",
+      title: "GoPro Hero 12 Black Екшън камера с 5.3K видео, HyperSmooth 6.0, водоустойчива, гласов контрол",
+      image: "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?auto=format&fit=crop&q=80&w=400",
+      price: "799 лв.",
+      oldPrice: "999 лв.",
+      discount: "-20%",
+      extraInfo: "Безплатна доставка",
+      store: "GoPro",
+      likes: 345,
+      comments: 89,
+      shares: 45,
+      isHot: true
+    },
+    {
+      id: 18,
+      foundBy: "Book_Worm",
+      foundDate: "Днес 11:45",
+      title: "Amazon Kindle Paperwhite Електронен четец с 6.8\" дисплей, регулируема топла светлина, водоустойчив",
+      image: "https://images.unsplash.com/photo-1592496431122-2349e0fbc666?auto=format&fit=crop&q=80&w=400",
+      price: "289 лв.",
+      oldPrice: "349 лв.",
+      discount: "-17%",
+      extraInfo: "Безплатна доставка",
+      store: "Amazon",
+      likes: 234,
+      comments: 56,
+      shares: 23,
+      isHot: false
+    },
+    {
+      id: 19,
+      foundBy: "Music_Fan",
+      foundDate: "Днес 15:30",
+      title: "JBL Flip 6 Портативна Bluetooth колонка с мощен звук, водоустойчива IP67, 12 часа батерия",
+      image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&q=80&w=400",
+      price: "199 лв.",
+      oldPrice: "269 лв.",
+      discount: "-26%",
+      extraInfo: "Безплатна доставка",
+      store: "JBL",
+      likes: 189,
+      comments: 45,
+      shares: 12,
+      isHot: true
+    },
+    {
+      id: 20,
+      foundBy: "Photo_Pro",
+      foundDate: "Вчера 17:20",
+      title: "DJI Mini 4 Pro Дрон с 4K камера, 34 минути полет, сензори за препятствия, лек и компактен",
+      image: "https://images.unsplash.com/photo-1579829366248-204fe8413f31?auto=format&fit=crop&q=80&w=400",
+      price: "1,499 лв.",
+      oldPrice: "1,799 лв.",
+      discount: "-17%",
+      extraInfo: "Безплатна доставка",
+      store: "DJI",
+      likes: 456,
+      comments: 123,
+      shares: 89,
+      isHot: true
+    },
+    {
+      id: 21,
+      foundBy: "Fitness_Guru",
+      foundDate: "Днес 07:30",
+      title: "Bowflex SelectTech 552 Регулируеми дъмбели (чифт), 2-24 кг, компактен дизайн, заместител на 15 чифта",
+      image: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&q=80&w=400",
+      price: "799 лв.",
+      oldPrice: "1,099 лв.",
+      discount: "-27%",
+      extraInfo: "Безплатна доставка",
+      store: "Bowflex",
+      likes: 234,
+      comments: 67,
+      shares: 34,
+      isHot: true
+    },
+    {
+      id: 22,
+      foundBy: "Style_Expert",
+      foundDate: "Днес 12:15",
+      title: "Tommy Hilfiger Мъжки часовник с кожена каишка, кварцов механизъм, водоустойчив 5ATM",
+      image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=400",
+      price: "249 лв.",
+      oldPrice: "389 лв.",
+      discount: "-36%",
+      extraInfo: "Безплатна доставка",
+      store: "Fashion Days",
+      likes: 156,
+      comments: 34,
+      shares: 12,
+      isHot: false
+    },
+    {
+      id: 23,
+      foundBy: "Home_Chef",
+      foundDate: "Вчера 18:40",
+      title: "Le Creuset Чугунена тенджера 24см, емайлирана, подходяща за всички котлони, доживотна гаранция",
+      image: "https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?auto=format&fit=crop&q=80&w=400",
+      price: "459 лв.",
+      oldPrice: "599 лв.",
+      discount: "-23%",
+      extraInfo: "Безплатна доставка",
+      store: "Le Creuset",
+      likes: 289,
+      comments: 78,
+      shares: 45,
+      isHot: true
+    },
+    {
+      id: 24,
+      foundBy: "Tech_Addict",
+      foundDate: "Днес 14:50",
+      title: "Logitech MX Master 3S Безжична мишка с ергономичен дизайн, 8K DPI сензор, тихи бутони",
+      image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&q=80&w=400",
+      price: "189 лв.",
+      oldPrice: "229 лв.",
+      discount: "-17%",
+      extraInfo: "Безплатна доставка",
+      store: "Logitech",
+      likes: 345,
+      comments: 89,
+      shares: 56,
+      isHot: true
+    },
+    {
+      id: 25,
+      foundBy: "Outdoor_Life",
+      foundDate: "Днес 09:30",
+      title: "Patagonia Nano Puff Яке с изолация PrimaLoft, ветроустойчиво, водоотблъскващо, рециклирани материали",
+      image: "https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&q=80&w=400",
+      price: "389 лв.",
+      oldPrice: "499 лв.",
+      discount: "-22%",
+      extraInfo: "Безплатна доставка",
+      store: "Patagonia",
+      likes: 234,
+      comments: 56,
+      shares: 23,
+      isHot: true
+    },
+    {
+      id: 26,
+      foundBy: "Smart_Home",
+      foundDate: "Вчера 20:10",
+      title: "Google Nest Learning Thermostat 3rd Gen Смарт термостат, пести енергия, учи графика, дистанционно управление",
+      image: "https://images.unsplash.com/photo-1567789884554-0b844b597180?auto=format&fit=crop&q=80&w=400",
+      price: "429 лв.",
+      oldPrice: "549 лв.",
+      discount: "-22%",
+      extraInfo: "Безплатна доставка",
+      store: "Google",
+      likes: 189,
+      comments: 45,
+      shares: 23,
+      isHot: true
+    },
+    {
+      id: 27,
+      foundBy: "Audio_Phile",
+      foundDate: "Днес 11:15",
+      title: "Sennheiser Momentum 4 Wireless Слушалки с 60 часа батерия, аудиофилски звук, активно шумопоглъщане",
+      image: "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=400",
+      price: "549 лв.",
+      oldPrice: "699 лв.",
+      discount: "-21%",
+      extraInfo: "Безплатна доставка",
+      store: "Sennheiser",
+      likes: 278,
+      comments: 67,
+      shares: 34,
+      isHot: true
+    },
+    {
+      id: 28,
+      foundBy: "Gadget_Freak",
+      foundDate: "Днес 16:00",
+      title: "Anker 737 Power Bank (PowerCore 24K) Външна батерия 24000mAh, 140W изход, дисплей, зарежда лаптопи",
+      image: "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?auto=format&fit=crop&q=80&w=400",
+      price: "249 лв.",
+      oldPrice: "329 лв.",
+      discount: "-24%",
+      extraInfo: "Безплатна доставка",
+      store: "Anker",
+      likes: 345,
+      comments: 89,
+      shares: 45,
+      isHot: true
+    },
+    {
+      id: 29,
+      foundBy: "Run_Fast",
+      foundDate: "Вчера 18:20",
+      title: "Hoka One One Clifton 9 Маратонки за бягане с максимално омекотяване, леки, дишащи, за дълги разстояния",
+      image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=400",
+      price: "269 лв.",
+      oldPrice: "329 лв.",
+      discount: "-18%",
+      extraInfo: "Безплатна доставка",
+      store: "Hoka",
+      likes: 234,
+      comments: 56,
+      shares: 23,
+      isHot: true
+    },
+    {
+      id: 30,
+      foundBy: "Clean_Freak",
+      foundDate: "Днес 10:40",
+      title: "Karcher K5 Power Control Водоструйка с приложение, 145 бара, 500 л/ч, за почистване на автомобили и тераси",
+      image: "https://images.unsplash.com/photo-1626221700716-67835d847725?q=80&w=400",
+      price: "649 лв.",
+      oldPrice: "849 лв.",
+      discount: "-24%",
+      extraInfo: "Безплатна доставка",
+      store: "Karcher",
+      likes: 189,
+      comments: 45,
+      shares: 23,
+      isHot: true
     }
   ];
 
