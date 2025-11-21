@@ -11,6 +11,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
+    publicDir: 'public',
     define: {
       // This ensures process.env variables work in the browser after build
       'process.env.API_KEY': JSON.stringify(apiKey),

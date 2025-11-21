@@ -1,164 +1,265 @@
-
 <!DOCTYPE html>
 <html lang="bg">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Офертико | Очаквайте Скоро</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    
-    <!-- Font Loading -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <!-- Google Fonts: Inter, Roboto, Manrope, Bricolage Grotesque -->
-    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter:wght@300;400;600;700&family=Manrope:wght@200..800&family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
-    
-    <!-- Fontshare: Satoshi -->
-    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&display=swap" rel="stylesheet">
 
-    <!-- Keeping Tailwind CDN for simplicity in this specific setup -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      body {
-        font-family: 'Inter', sans-serif;
-      }
-      .animate-blob {
-        animation: blob 20s infinite;
-      }
-      .animation-delay-2000 {
-        animation-delay: 2s;
-      }
-      .animation-delay-4000 {
-        animation-delay: 4s;
-      }
-      /* New longer delays for the slower animation */
-      .animation-delay-long {
-        animation-delay: 7s;
-      }
-      .animation-delay-extra-long {
-        animation-delay: 13s;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Favicon Configuration - MUST BE EARLY IN HEAD -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  
+  <meta name="description" content="Ofertiko.com - Вашият AI помощник за откриване на най-добрите оферти от хиляди онлайн магазини. Сравнявайте цени и спестявайте пари." />
+  <meta name="keywords" content="оферти, промоции, сравнение на цени, онлайн магазини, AI помощник" />
+  <meta name="author" content="Ofertiko" />
+  <title>Офертико | Очаквайте Скоро</title>
+  
+  <!-- Additional Icons -->
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon/web-app-manifest-192x192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/favicon/web-app-manifest-512x512.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+  <link rel="manifest" href="/favicon/site.webmanifest" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="msapplication-TileColor" content="#0f172a" />
+  <meta name="msapplication-TileImage" content="/favicon/web-app-manifest-192x192.png" />
+  <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
 
-      @keyframes blob {
-        0% { transform: translate(0px, 0px) scale(1); opacity: 0.2; }
-        33% { transform: translate(50px, -50px) scale(1.2); opacity: 0.4; }
-        66% { transform: translate(-40px, 40px) scale(0.8); opacity: 0.25; }
-        100% { transform: translate(0px, 0px) scale(1); opacity: 0.2; }
-      }
-      
-      /* Custom Text Animations */
-      @keyframes text-shimmer {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-      }
-      .animate-text-shimmer {
-        background-size: 200% auto;
-        animation: text-shimmer 3s linear infinite;
-      }
+  <!-- Font Loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      .animate-fade-in-up {
-        animation: fadeInUp 1s ease-out forwards;
-      }
+  <!-- Google Fonts: Inter, Roboto, Manrope, Bricolage Grotesque -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter:wght@300;400;600;700&family=Manrope:wght@200..800&family=Roboto:wght@100;300;400;500;700;900&display=swap"
+    rel="stylesheet">
 
-      /* Logo Animations */
-      @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-15px); }
-      }
-      .animate-float {
-        animation: float 4s ease-in-out infinite;
+  <!-- Fontshare: Satoshi -->
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&display=swap" rel="stylesheet">
+
+  <!-- Keeping Tailwind CDN for simplicity in this specific setup -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .animate-blob {
+      animation: blob 20s infinite;
+    }
+
+    .animation-delay-2000 {
+      animation-delay: 2s;
+    }
+
+    .animation-delay-4000 {
+      animation-delay: 4s;
+    }
+
+    /* New longer delays for the slower animation */
+    .animation-delay-long {
+      animation-delay: 7s;
+    }
+
+    .animation-delay-extra-long {
+      animation-delay: 13s;
+    }
+
+    @keyframes blob {
+      0% {
+        transform: translate(0px, 0px) scale(1);
+        opacity: 0.2;
       }
 
-      @keyframes blink {
-        0%, 90%, 100% { transform: scaleY(1); }
-        95% { transform: scaleY(0.1); }
-      }
-      .animate-blink {
-        animation: blink 4s infinite;
-        transform-origin: center;
+      33% {
+        transform: translate(50px, -50px) scale(1.2);
+        opacity: 0.4;
       }
 
-      /* Mechanical Flip Animation */
-      @keyframes flipCard {
-        0% {
-          transform: rotateX(0deg);
-          opacity: 1;
-        }
-        45% {
-          transform: rotateX(-90deg);
-          opacity: 0.5;
-        }
-        55% {
-          transform: rotateX(90deg);
-          opacity: 0.5;
-        }
-        100% {
-          transform: rotateX(0deg);
-          opacity: 1;
-        }
-      }
-      
-      .animate-flip-card {
-        animation: flipCard 0.6s cubic-bezier(0.45, 0.05, 0.55, 0.95);
-        transform-style: preserve-3d;
-        backface-visibility: hidden;
+      66% {
+        transform: translate(-40px, 40px) scale(0.8);
+        opacity: 0.25;
       }
 
-      /* Shake Animation for Error Feedback */
-      @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
-        20%, 40%, 60%, 80% { transform: translateX(4px); }
+      100% {
+        transform: translate(0px, 0px) scale(1);
+        opacity: 0.2;
       }
-      .animate-shake {
-        animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    }
+
+    /* Custom Text Animations */
+    @keyframes text-shimmer {
+      0% {
+        background-position: 0% 50%;
       }
 
-      /* Metallic Shine Effect */
-      .metal-shine {
-        background: linear-gradient(45deg, rgba(255,255,255,0) 40%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 60%);
-        background-size: 200% 200%;
-        animation: metalShine 3s infinite;
-      }
-      @keyframes metalShine {
-        0% { background-position: 0% 50%; }
-        100% { background-position: 100% 50%; }
+      50% {
+        background-position: 100% 50%;
       }
 
-      /* GLOBAL RADIUS OVERRIDE FOR SQUARE MODE */
-      /* This targets any element with a class containing 'rounded-' when inside the radius-square container */
-      .radius-square [class*="rounded-"] {
-        border-radius: 0px !important;
+      100% {
+        background-position: 0% 50%;
       }
-      .radius-square .rounded-full {
-        border-radius: 0px !important;
+    }
+
+    .animate-text-shimmer {
+      background-size: 200% auto;
+      animation: text-shimmer 3s linear infinite;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
       }
-      .radius-square .rounded-xl {
-        border-radius: 0px !important;
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
-      .radius-square .rounded-2xl {
-        border-radius: 0px !important;
+    }
+
+    .animate-fade-in-up {
+      animation: fadeInUp 1s ease-out forwards;
+    }
+
+    /* Logo Animations */
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0px);
       }
-      .radius-square .rounded-lg {
-        border-radius: 0px !important;
+
+      50% {
+        transform: translateY(-15px);
       }
-      .radius-square .rounded-md {
-        border-radius: 0px !important;
+    }
+
+    .animate-float {
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      90%,
+      100% {
+        transform: scaleY(1);
       }
-    </style>
-    <script type="importmap">
+
+      95% {
+        transform: scaleY(0.1);
+      }
+    }
+
+    .animate-blink {
+      animation: blink 4s infinite;
+      transform-origin: center;
+    }
+
+    /* Mechanical Flip Animation */
+    @keyframes flipCard {
+      0% {
+        transform: rotateX(0deg);
+        opacity: 1;
+      }
+
+      45% {
+        transform: rotateX(-90deg);
+        opacity: 0.5;
+      }
+
+      55% {
+        transform: rotateX(90deg);
+        opacity: 0.5;
+      }
+
+      100% {
+        transform: rotateX(0deg);
+        opacity: 1;
+      }
+    }
+
+    .animate-flip-card {
+      animation: flipCard 0.6s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+      transform-style: preserve-3d;
+      backface-visibility: hidden;
+    }
+
+    /* Shake Animation for Error Feedback */
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      10%,
+      30%,
+      50%,
+      70%,
+      90% {
+        transform: translateX(-4px);
+      }
+
+      20%,
+      40%,
+      60%,
+      80% {
+        transform: translateX(4px);
+      }
+    }
+
+    .animate-shake {
+      animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+    }
+
+    /* Metallic Shine Effect */
+    .metal-shine {
+      background: linear-gradient(45deg, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 60%);
+      background-size: 200% 200%;
+      animation: metalShine 3s infinite;
+    }
+
+    @keyframes metalShine {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      100% {
+        background-position: 100% 50%;
+      }
+    }
+
+    /* GLOBAL RADIUS OVERRIDE FOR SQUARE MODE */
+    /* This targets any element with a class containing 'rounded-' when inside the radius-square container */
+    .radius-square [class*="rounded-"] {
+      border-radius: 0px !important;
+    }
+
+    .radius-square .rounded-full {
+      border-radius: 0px !important;
+    }
+
+    .radius-square .rounded-xl {
+      border-radius: 0px !important;
+    }
+
+    .radius-square .rounded-2xl {
+      border-radius: 0px !important;
+    }
+
+    .radius-square .rounded-lg {
+      border-radius: 0px !important;
+    }
+
+    .radius-square .rounded-md {
+      border-radius: 0px !important;
+    }
+  </style>
+  <script type="importmap">
     {
       "imports": {
         "react": "https://aistudiocdn.com/react@^19.2.0",
@@ -173,9 +274,11 @@
       }
     }
     </script>
-  </head>
-  <body class="antialiased selection:bg-purple-500 selection:text-white">
-    <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
-  </body>
+</head>
+
+<body class="antialiased selection:bg-purple-500 selection:text-white">
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+
 </html>
