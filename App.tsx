@@ -763,8 +763,38 @@ const PopularPartnersSection: React.FC<{ theme: Theme }> = ({ theme }) => {
     { name: "Epic Games", domain: "epicgames.com" },
   ];
 
+  // Mobile 3D Carousel State
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [dragY, setDragY] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    setDragY(clientY);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent | React.MouseEvent) => {
+    if (dragY === 0) return;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    const diff = dragY - clientY;
+
+    // Sensitivity threshold
+    if (Math.abs(diff) > 30) {
+      if (diff > 0) {
+        setActiveIndex(prev => Math.min(prev + 1, partners.length - 1));
+      } else {
+        setActiveIndex(prev => Math.max(prev - 1, 0));
+      }
+      setDragY(clientY); // Reset drag anchor for continuous scrolling
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setDragY(0);
+  };
+
   return (
-    <section className="py-20 px-4 relative">
+    <section className="py-20 px-4 relative overflow-hidden">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12 gravity-target">
@@ -776,30 +806,105 @@ const PopularPartnersSection: React.FC<{ theme: Theme }> = ({ theme }) => {
           </p>
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        {/* Desktop Grid (Smaller Cards) */}
+        <div className="hidden md:grid grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-3">
           {partners.map((partner, index) => (
             <div
               key={index}
-              className={`gravity-target group flex flex-row items-center justify-start p-3 rounded-xl border transition-all duration-300 hover:scale-105 hover:-translate-y-1 hover:shadow-lg cursor-pointer ${theme.colors.cardBg} ${theme.colors.cardBorder} hover:border-cyan-400/30`}
+              className={`gravity-target group flex flex-row items-center justify-start p-2 rounded-lg border transition-all duration-300 hover:scale-105 hover:-translate-y-1 hover:shadow-md cursor-pointer ${theme.colors.cardBg} ${theme.colors.cardBorder} hover:border-cyan-400/30`}
             >
-              <div className={`w-12 h-12 mr-4 rounded-lg bg-white p-1.5 flex-shrink-0 flex items-center justify-center shadow-sm overflow-hidden transition-transform group-hover:scale-110`}>
+              <div className={`w-8 h-8 mr-3 rounded-md bg-white p-1 flex-shrink-0 flex items-center justify-center shadow-sm overflow-hidden transition-transform group-hover:scale-110`}>
                 <img
                   src={`https://logo.clearbit.com/${partner.domain}`}
                   alt={partner.name}
                   className="w-full h-full object-contain"
                   onError={(e) => {
-                    // Fallback if logo fails
                     (e.target as HTMLImageElement).style.display = 'none';
-                    (e.target as HTMLImageElement).parentElement!.innerHTML = `<span class="text-xs font-bold text-slate-900">${partner.name.substring(0, 2).toUpperCase()}</span>`;
+                    (e.target as HTMLImageElement).parentElement!.innerHTML = `<span class="text-[10px] font-bold text-slate-900">${partner.name.substring(0, 2).toUpperCase()}</span>`;
                   }}
                 />
               </div>
-              <span className={`text-sm font-bold text-left truncate ${theme.colors.textMain} group-hover:text-cyan-400 transition-colors`}>
+              <span className={`text-xs font-bold text-left truncate ${theme.colors.textMain} group-hover:text-cyan-400 transition-colors`}>
                 {partner.name}
               </span>
             </div>
           ))}
+        </div>
+
+        {/* Mobile 3D Stack Carousel */}
+        <div
+          className="md:hidden relative h-[300px] w-full perspective-1000 touch-none"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onMouseDown={handleTouchStart}
+          onMouseMove={handleTouchMove}
+          onMouseUp={handleTouchEnd}
+          onMouseLeave={handleTouchEnd}
+        >
+          {partners.map((partner, index) => {
+            const offset = index - activeIndex;
+            const isActive = offset === 0;
+
+            // Only render cards within a visible range to improve performance
+            if (Math.abs(offset) > 3) return null;
+
+            let transform = '';
+            let zIndex = 0;
+            let opacity = 0;
+
+            // 3D Stack Logic (Safari Tabs Style)
+            if (offset === 0) {
+              transform = 'translateY(0) scale(1) rotateX(0deg)';
+              zIndex = 50;
+              opacity = 1;
+            } else if (offset > 0) {
+              // Cards below
+              transform = `translateY(${offset * 40}px) scale(${1 - offset * 0.05}) rotateX(-${offset * 5}deg)`;
+              zIndex = 50 - offset;
+              opacity = 1 - offset * 0.2;
+            } else {
+              // Cards above
+              transform = `translateY(${offset * 40}px) scale(${1 + offset * 0.05}) rotateX(${offset * 5}deg)`;
+              zIndex = 50 + offset; // Lower z-index for items above (behind)
+              opacity = 1 + offset * 0.2;
+            }
+
+            return (
+              <div
+                key={index}
+                className={`absolute left-0 right-0 mx-auto w-[80%] h-20 p-4 rounded-xl border shadow-xl transition-all duration-500 ease-out flex items-center gap-4 ${theme.colors.cardBg} ${theme.colors.cardBorder} backdrop-blur-md`}
+                style={{
+                  top: '40%', // Center vertically
+                  transform: `${transform} translateZ(0)`, // Force GPU
+                  zIndex,
+                  opacity: Math.max(0, opacity),
+                  marginTop: '-40px' // Half height to center
+                }}
+              >
+                <div className={`w-10 h-10 rounded-lg bg-white p-1.5 flex-shrink-0 flex items-center justify-center shadow-sm overflow-hidden`}>
+                  <img
+                    src={`https://logo.clearbit.com/${partner.domain}`}
+                    alt={partner.name}
+                    className="w-full h-full object-contain"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                      (e.target as HTMLImageElement).parentElement!.innerHTML = `<span class="text-xs font-bold text-slate-900">${partner.name.substring(0, 2).toUpperCase()}</span>`;
+                    }}
+                  />
+                </div>
+                <span className={`text-lg font-bold ${theme.colors.textMain}`}>
+                  {partner.name}
+                </span>
+                {isActive && <div className="ml-auto text-cyan-400 animate-pulse">●</div>}
+              </div>
+            );
+          })}
+
+          {/* Helper Text */}
+          <div className={`absolute bottom-4 left-0 right-0 text-center text-xs ${theme.colors.textMuted} animate-pulse`}>
+            Плъзнете нагоре/надолу
+          </div>
         </div>
 
         {/* View All Button */}
@@ -817,6 +922,9 @@ const PopularPartnersSection: React.FC<{ theme: Theme }> = ({ theme }) => {
 const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
   const [activeCategory, setActiveCategory] = useState("Всички");
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+
   const categories = ["Всички", "Технологии", "Мода", "Дом", "Спорт"];
 
   const deals = [
@@ -894,14 +1002,14 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     },
     {
       id: 7,
-      title: "Dyson V15 Detect",
-      image: "https://images.unsplash.com/photo-1626221700716-67835d847725?q=80&w=400", // Updated secure Unsplash link
-      price: "1,299 лв.",
-      oldPrice: "1,599 лв.",
-      discount: "-18%",
+      title: "iRobot Roomba j7+",
+      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=400",
+      price: "1,399 лв.",
+      oldPrice: "1,799 лв.",
+      discount: "-22%",
       category: "Дом",
-      store: "Dyson",
-      rating: 4.9,
+      store: "iRobot",
+      rating: 4.8,
       icon: <Home className="w-4 h-4" />
     },
     {
@@ -923,11 +1031,29 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     ? deals
     : deals.filter(d => d.category === activeCategory);
 
-  const itemsPerPage = 4;
+  // Responsive items per page
+  const [itemsPerPage, setItemsPerPage] = useState(4);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        setItemsPerPage(1);
+      } else if (window.innerWidth < 1024) {
+        setItemsPerPage(2);
+      } else {
+        setItemsPerPage(4);
+      }
+    };
+
+    handleResize(); // Init
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const totalPages = Math.ceil(filteredDeals.length / itemsPerPage);
 
-  // Slice for pagination
-  const visibleDeals = filteredDeals.slice(currentSlide * itemsPerPage, (currentSlide + 1) * itemsPerPage);
+  // NOTE: We are NOT slicing here anymore for the sliding effect.
+  // We render all items and translate the container.
 
   const handleNext = () => {
     setCurrentSlide((prev) => (prev + 1) % totalPages);
@@ -940,6 +1066,33 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
   const handleCategoryChange = (cat: string) => {
     setActiveCategory(cat);
     setCurrentSlide(0); // Reset to first page on category change
+  };
+
+  // Swipe Handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe) {
+      handleNext();
+    }
+    if (isRightSwipe) {
+      handlePrev();
+    }
+
+    // Reset
+    setTouchEnd(0);
+    setTouchStart(0);
   };
 
   return (
@@ -989,81 +1142,91 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
           </div>
         </div>
 
-        <div className="relative group/carousel">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 min-h-[400px]">
-            {visibleDeals.length > 0 ? visibleDeals.map((deal) => (
-              <div key={deal.id} className={`gravity-target group relative rounded-2xl overflow-hidden border transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.3)] hover:-translate-y-1 hover:border-cyan-400/50 ${theme.colors.cardBg} ${theme.colors.cardBorder} animate-in fade-in zoom-in-95 duration-500`}>
+        {/* Carousel Container with Overflow Hidden */}
+        <div
+          className="relative group/carousel touch-pan-y cursor-grab active:cursor-grabbing overflow-hidden"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onMouseDown={(e) => setTouchStart(e.clientX)}
+          onMouseMove={(e) => { if (touchStart) setTouchEnd(e.clientX); }}
+          onMouseUp={() => { handleTouchEnd(); setTouchStart(0); }}
+          onMouseLeave={() => { if (touchStart) { handleTouchEnd(); setTouchStart(0); } }}
+        >
+          {/* Sliding Track */}
+          <div
+            className="flex transition-transform duration-500 ease-out"
+            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+          >
+            {/* We group items into 'pages' for the slide effect */}
+            {Array.from({ length: totalPages }).map((_, pageIndex) => (
+              <div key={pageIndex} className="min-w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-1">
+                {filteredDeals.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage).map((deal) => (
+                  <div key={deal.id} className={`gravity-target group relative rounded-2xl overflow-hidden border transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.3)] hover:-translate-y-1 hover:border-cyan-400/50 ${theme.colors.cardBg} ${theme.colors.cardBorder}`}>
+                    {/* Image Area */}
+                    <div className="h-56 relative overflow-hidden bg-slate-800 transition-all duration-500 ease-in-out">
+                      <img src={deal.image} alt={deal.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
+                      <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-md shadow-lg">{deal.discount}</div>
+                      <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md text-slate-900 text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-lg">
+                        <Store className="w-3 h-3" />
+                        {deal.store}
+                      </div>
+                      <div className="absolute bottom-3 left-3 bg-black/50 backdrop-blur-md text-white text-xs px-2.5 py-1 rounded-full flex items-center gap-1 border border-white/10">
+                        {deal.icon}
+                        {deal.category}
+                      </div>
+                    </div>
 
-                {/* Image Area */}
-                <div className="h-56 relative overflow-hidden bg-slate-800 transition-all duration-500 ease-in-out">
-                  <img src={deal.image} alt={deal.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-
-                  {/* Overlay Gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
-
-                  {/* Discount Badge */}
-                  <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-md shadow-lg">
-                    {deal.discount}
-                  </div>
-
-                  {/* Store Badge */}
-                  <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md text-slate-900 text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-lg">
-                    <Store className="w-3 h-3" />
-                    {deal.store}
-                  </div>
-
-                  {/* Category Badge (Moved down slightly) */}
-                  <div className="absolute bottom-3 left-3 bg-black/50 backdrop-blur-md text-white text-xs px-2.5 py-1 rounded-full flex items-center gap-1 border border-white/10">
-                    {deal.icon}
-                    {deal.category}
-                  </div>
-                </div>
-
-                <div className="p-5 relative">
-                  {/* Hover Glow Bottom */}
-                  <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-purple-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-
-                  <h3 className={`font-bold text-lg mb-3 line-clamp-2 leading-snug ${theme.colors.textMain}`}>{deal.title}</h3>
-
-                  {/* Rating */}
-                  <div className="flex items-center gap-1 mb-3">
-                    <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                    <span className={`text-sm font-bold ${theme.colors.textMain}`}>{deal.rating}</span>
-                    <span className={`text-xs ${theme.colors.textMuted}`}>(120+ ревюта)</span>
-                  </div>
-
-                  <div className="flex items-end justify-between mb-4">
-                    <div className="flex flex-col">
-                      <span className={`text-xs line-through mb-0.5 ${theme.colors.textMuted}`}>{deal.oldPrice}</span>
-                      <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">{deal.price}</span>
+                    <div className="p-5 relative">
+                      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-purple-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                      <h3 className={`font-bold text-lg mb-3 line-clamp-2 leading-snug ${theme.colors.textMain}`}>{deal.title}</h3>
+                      <div className="flex items-center gap-1 mb-3">
+                        <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                        <span className={`text-sm font-bold ${theme.colors.textMain}`}>{deal.rating}</span>
+                        <span className={`text-xs ${theme.colors.textMuted}`}>(120+ ревюта)</span>
+                      </div>
+                      <div className="flex items-end justify-between mb-4">
+                        <div className="flex flex-col">
+                          <span className={`text-xs line-through mb-0.5 ${theme.colors.textMuted}`}>{deal.oldPrice}</span>
+                          <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">{deal.price}</span>
+                        </div>
+                      </div>
+                      <button className={`w-full py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-all ${theme.id === 'light' ? 'bg-slate-100 hover:bg-slate-200 text-slate-900' : 'bg-slate-800 hover:bg-slate-700 text-white'}`}>
+                        Виж оферта <ExternalLink className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
-
-                  <button className={`w-full py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-all ${theme.id === 'light' ? 'bg-slate-100 hover:bg-slate-200 text-slate-900' : 'bg-slate-800 hover:bg-slate-700 text-white'}`}>
-                    Виж оферта <ExternalLink className="w-4 h-4" />
-                  </button>
-                </div>
+                ))}
+                {/* Fill empty slots if last page is not full */}
+                {filteredDeals.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage).length < itemsPerPage &&
+                  Array.from({ length: itemsPerPage - filteredDeals.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage).length }).map((_, i) => (
+                    <div key={`empty-${i}`} className="hidden lg:block"></div>
+                  ))
+                }
               </div>
-            )) : (
-              <div className={`col-span-4 flex flex-col items-center justify-center h-64 text-center ${theme.colors.textMuted}`}>
+            ))}
+
+            {filteredDeals.length === 0 && (
+              <div className={`min-w-full flex flex-col items-center justify-center h-64 text-center ${theme.colors.textMuted}`}>
                 <Search className="w-12 h-12 mb-4 opacity-50" />
                 <p>Няма намерени оферти в тази категория.</p>
               </div>
             )}
           </div>
 
-          {/* Carousel Controls */}
+          {/* Carousel Controls - Visible on Mobile too now */}
           {totalPages > 1 && (
             <>
               <button
                 onClick={handlePrev}
-                className={`absolute top-1/2 -left-4 md:-left-12 -translate-y-1/2 p-3 rounded-full shadow-xl backdrop-blur-md border transition-all hover:scale-110 ${theme.colors.cardBg} ${theme.colors.cardBorder} ${theme.colors.textMain} hover:text-cyan-400 z-10`}
+                className={`absolute top-1/2 -left-2 md:-left-12 -translate-y-1/2 p-3 rounded-full shadow-xl backdrop-blur-md border transition-all hover:scale-110 ${theme.colors.cardBg} ${theme.colors.cardBorder} ${theme.colors.textMain} hover:text-cyan-400 z-10`}
               >
                 <ChevronLeft className="w-6 h-6" />
               </button>
               <button
                 onClick={handleNext}
-                className={`absolute top-1/2 -right-4 md:-right-12 -translate-y-1/2 p-3 rounded-full shadow-xl backdrop-blur-md border transition-all hover:scale-110 ${theme.colors.cardBg} ${theme.colors.cardBorder} ${theme.colors.textMain} hover:text-cyan-400 z-10`}
+                className={`absolute top-1/2 -right-2 md:-right-12 -translate-y-1/2 p-3 rounded-full shadow-xl backdrop-blur-md border transition-all hover:scale-110 ${theme.colors.cardBg} ${theme.colors.cardBorder} ${theme.colors.textMain} hover:text-cyan-400 z-10`}
               >
                 <ChevronRight className="w-6 h-6" />
               </button>
@@ -1080,6 +1243,11 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
 const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
+
+  // Drag to scroll state
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
   // Sample personalized deals data
   const personalizedDeals = [
@@ -1136,7 +1304,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Deal_Hunter",
       foundDate: "Днес 16:20",
       title: "Dyson V15 Detect Прахосмукачка с лазерна технология, HEPA филтър, 60 минути работа, безжична",
-      image: "https://images.unsplash.com/photo-1626221700716-67835d847725?q=80&w=400",
+      image: "https://images.unsplash.com/photo-1558317374-a354d5f6d4da?auto=format&fit=crop&q=80&w=400",
       price: "1,199 лв.",
       oldPrice: "1,599 лв.",
       discount: "-25%",
@@ -1235,93 +1403,12 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       image: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=400",
       price: "799 лв.",
       oldPrice: "1,099 лв.",
-      discount: "-27%",
-      extraInfo: "Безплатна доставка",
       store: "KitchenAid",
       likes: 187,
       comments: 65,
       shares: 42,
-      isHot: true
-    },
-    {
-      id: 11,
-      foundBy: "Gadget_Guru",
-      foundDate: "Вчера 19:20",
-      title: "iPad Pro 12.9\" M2 чип, 256GB, Liquid Retina XDR дисплей, Face ID, Apple Pencil съвместим, 5G опция",
-      image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400",
-      price: "1,599 лв.",
-      oldPrice: "1,999 лв.",
-      discount: "-20%",
-      extraInfo: "Безплатна доставка",
-      store: "Apple",
-      likes: 389,
-      comments: 145,
-      shares: 98,
-      isHot: true
-    },
-    {
-      id: 12,
-      foundBy: "Best_Deals",
-      foundDate: "Днес 10:15",
-      title: "Nintendo Switch OLED Конзола с 7-инчов OLED екран, 64GB памет, Joy-Con контролери, портативен и стационарен режим",
-      image: "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&q=80&w=400",
-      price: "449 лв.",
-      oldPrice: "599 лв.",
-      discount: "-25%",
-      extraInfo: "Безплатна доставка",
-      store: "Nintendo",
-      likes: 512,
-      comments: 198,
-      shares: 124,
-      isHot: true
-    },
-    {
-      id: 13,
-      foundBy: "Sale_Hunter",
-      foundDate: "Днес 09:45",
-      title: "Philips Hue Starter Kit Смарт осветление с 3 цветни лампи, Bridge, HomeKit, Alexa, Google Home съвместимост",
-      image: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?auto=format&fit=crop&q=80&w=400",
-      price: "299 лв.",
-      oldPrice: "449 лв.",
-      discount: "-33%",
-      extraInfo: "Безплатна доставка",
-      store: "Philips",
-      likes: 234,
-      comments: 87,
-      shares: 56,
-      isHot: true
-    },
-    {
-      id: 14,
-      foundBy: "Price_Pro",
-      foundDate: "Вчера 18:00",
-      title: "Garmin Fenix 7 Pro Спортен часовник с GPS, GLONASS, сърдечен ритъм, батерия 18 дни, топографски карти, водонепроницаем",
-      image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=400",
-      price: "1,199 лв.",
-      oldPrice: "1,599 лв.",
-      discount: "-25%",
-      extraInfo: "Безплатна доставка",
-      store: "Garmin",
-      likes: 345,
-      comments: 134,
-      shares: 78,
-      isHot: true
-    },
-    {
-      id: 15,
-      foundBy: "Deal_Seeker",
-      foundDate: "Днес 08:20",
-      title: "Sonos Beam Gen 2 Soundbar с Dolby Atmos, HDMI eARC, Alexa вградена, AirPlay 2, компактен дизайн, 5.0 система",
-      image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&q=80&w=400",
-      price: "699 лв.",
-      oldPrice: "899 лв.",
-      discount: "-22%",
-      extraInfo: "Безплатна доставка",
-      store: "Sonos",
-      likes: 267,
-      comments: 98,
-      shares: 61,
-      isHot: true
+      isHot: true,
+      extraInfo: "Безплатна доставка"
     }
   ];
 
@@ -1345,6 +1432,30 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       const maxIndex = Math.max(0, personalizedDeals.length - 4);
       return prev <= 0 ? maxIndex : prev - 1;
     });
+  };
+
+  // Mouse Drag Handlers
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!carouselRef.current) return;
+    setIsDragging(true);
+    setStartX(e.pageX - carouselRef.current.offsetLeft);
+    setScrollLeft(carouselRef.current.scrollLeft);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !carouselRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - carouselRef.current.offsetLeft;
+    const walk = (x - startX) * 2; // Scroll-fast
+    carouselRef.current.scrollLeft = scrollLeft - walk;
   };
 
   // Show all deals in carousel, not just 4
@@ -1390,13 +1501,17 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
         <div className="relative">
           <div
             ref={carouselRef}
-            className="flex gap-2 overflow-x-auto scrollbar-hide scroll-smooth py-6"
+            className={`flex gap-2 overflow-x-auto scrollbar-hide scroll-smooth py-6 ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            onMouseDown={handleMouseDown}
+            onMouseLeave={handleMouseLeave}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
           >
             {visibleDeals.map((deal) => (
               <div
                 key={deal.id}
-                className={`flex-shrink-0 w-56 rounded-xl border transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.3)] hover:-translate-y-1 hover:border-cyan-400/50 group relative ${theme.colors.cardBg} ${theme.colors.cardBorder} backdrop-blur-sm flex flex-col overflow-visible`}
+                className={`flex-shrink-0 w-56 rounded-xl border transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.3)] hover:-translate-y-1 hover:border-cyan-400/50 group relative ${theme.colors.cardBg} ${theme.colors.cardBorder} backdrop-blur-sm flex flex-col overflow-visible select-none`}
               >
                 {/* Card Header - Found by info */}
                 <div className={`px-3 pt-2.5 pb-2 ${theme.colors.textMuted} text-[10px]`}>
@@ -1416,7 +1531,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
                   <img
                     src={deal.image}
                     alt={deal.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 pointer-events-none"
                   />
                   {deal.isHot && (
                     <div className="absolute top-2 right-2">
