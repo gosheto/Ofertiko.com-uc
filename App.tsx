@@ -112,12 +112,12 @@ const themes = [darkTheme, midnightTheme, lightTheme, pastelTheme, classicTheme]
 // --- BACKGROUND DEFINITIONS ---
 const BACKGROUNDS = {
   solid: 'solid',
-  tech: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop',
-  mesh: 'https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2070&auto=format&fit=crop',
-  geo: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop',
-  sky: 'https://images.unsplash.com/photo-1579033461380-adb47c3eb938?q=80&w=2064&auto=format&fit=crop', // Pastel Sky
-  rain: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?q=80&w=2070&auto=format&fit=crop', // Rain
-  neon: 'https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=2070&auto=format&fit=crop', // Neon
+  tech: 'https://picsum.photos/seed/100/400/300',
+  mesh: 'https://picsum.photos/seed/101/400/300',
+  geo: 'https://picsum.photos/seed/102/400/300',
+  sky: 'https://picsum.photos/seed/103/400/300', // Pastel Sky
+  rain: 'https://picsum.photos/seed/104/400/300', // Rain
+  neon: 'https://picsum.photos/seed/105/400/300', // Neon
   bg1: '/assets/backgrounds/bg-1.jpg',
   bg2: '/assets/backgrounds/bg-2.jpg',
   bg3: '/assets/backgrounds/bg-3.jpg',
@@ -140,9 +140,44 @@ const FONTS = {
 
 const OfertikoLogo: React.FC<{ theme: Theme; onClick?: () => void; className?: string; animated?: boolean }> = ({ theme, onClick, className = "w-32 h-32", animated = true }) => {
   const isDark = theme.id !== 'light' && theme.id !== 'pastel' && theme.id !== 'classic';
+  const logoRef = useRef<HTMLDivElement>(null);
+  const [eyePosition, setEyePosition] = useState({ x: 0, y: 0 });
+  const [isTracking, setIsTracking] = useState(false);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!logoRef.current) return;
+
+      const rect = logoRef.current.getBoundingClientRect();
+      const logoCenterX = rect.left + rect.width / 2;
+      const logoCenterY = rect.top + rect.height / 2;
+
+      const deltaX = e.clientX - logoCenterX;
+      const deltaY = e.clientY - logoCenterY;
+      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+      // Track mouse if within 500px radius (increased from 300px)
+      if (distance < 500) {
+        setIsTracking(true);
+        // Calculate eye position (more aggressive movement)
+        const maxOffset = 6; // Maximum eye movement in pixels (increased from 3)
+        const angle = Math.atan2(deltaY, deltaX);
+        const offsetX = Math.cos(angle) * Math.min(distance / 30, maxOffset); // Changed from /50 to /30 for more sensitivity
+        const offsetY = Math.sin(angle) * Math.min(distance / 30, maxOffset);
+        setEyePosition({ x: offsetX, y: offsetY });
+      } else {
+        setIsTracking(false);
+        setEyePosition({ x: 0, y: 0 });
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   return (
     <div
+      ref={logoRef}
       onClick={onClick}
       className={`relative ${className} ${animated ? 'animate-float' : ''} group cursor-pointer select-none active:scale-95 transition-transform`}
     >
@@ -212,10 +247,26 @@ const OfertikoLogo: React.FC<{ theme: Theme; onClick?: () => void; className?: s
         {/* Internal Reflection Highlight */}
         <path d="M 40 80 Q 50 50 80 45" stroke={isDark ? "white" : "#1e293b"} strokeWidth="2" strokeOpacity="0.5" fill="none" />
 
-        {/* Eyes */}
+        {/* Eyes with mouse tracking */}
         <g className={animated ? "animate-blink" : ""}>
-          <ellipse cx="75" cy="95" rx="10" ry="12" fill={isDark ? "white" : "#1e293b"} filter={isDark ? "drop-shadow(0 0 5px #22d3ee)" : ""} />
-          <ellipse cx="125" cy="95" rx="10" ry="12" fill={isDark ? "white" : "#1e293b"} filter={isDark ? "drop-shadow(0 0 5px #22d3ee)" : ""} />
+          <ellipse
+            cx={75 + eyePosition.x}
+            cy={95 + eyePosition.y}
+            rx="10"
+            ry="12"
+            fill={isDark ? "white" : "#1e293b"}
+            filter={isDark ? "drop-shadow(0 0 5px #22d3ee)" : ""}
+            style={{ transition: isTracking ? 'none' : 'cx 0.3s ease-out, cy 0.3s ease-out' }}
+          />
+          <ellipse
+            cx={125 + eyePosition.x}
+            cy={95 + eyePosition.y}
+            rx="10"
+            ry="12"
+            fill={isDark ? "white" : "#1e293b"}
+            filter={isDark ? "drop-shadow(0 0 5px #22d3ee)" : ""}
+            style={{ transition: isTracking ? 'none' : 'cx 0.3s ease-out, cy 0.3s ease-out' }}
+          />
         </g>
 
         {/* Cheeks */}
@@ -236,13 +287,88 @@ const OfertikoLogo: React.FC<{ theme: Theme; onClick?: () => void; className?: s
   );
 };
 
-// --- HEADER COMPONENT ---
+// --- INK FLOW ANIMATION COMPONENT ---
+const InkFlowAnimation: React.FC<{ theme: Theme }> = ({ theme }) => {
+  const isDark = theme.id !== 'light' && theme.id !== 'pastel' && theme.id !== 'classic';
 
+  // Colors based on theme
+  const colors = isDark
+    ? ['bg-cyan-600', 'bg-purple-600', 'bg-pink-600', 'bg-blue-600']
+    : ['bg-cyan-300', 'bg-purple-300', 'bg-pink-300', 'bg-blue-300'];
+
+  return (
+    <div className="absolute top-0 left-0 w-full h-[120vh] overflow-hidden pointer-events-none z-0">
+      {/* Gradient Mask to fade out at the bottom near the text */}
+      <div className={`absolute inset-0 z-10`} style={{ background: `linear-gradient(to bottom, transparent 60%, ${theme.id === 'light' ? 'rgba(248,250,252,1)' : theme.id === 'classic' ? '#F3F4F6' : theme.id === 'pastel' ? '#F5F0EB' : theme.id === 'midnight' ? 'rgba(30, 27, 75, 1)' : 'rgba(2, 6, 23, 1)'} 95%)` }}></div>
+
+      {/* Flowing Blobs - Larger and more visible on mobile */}
+      <div className={`absolute top-[-20%] left-[10%] w-[60vw] md:w-[40vw] h-[60vw] md:h-[40vw] rounded-full mix-blend-multiply filter blur-[80px] md:blur-[80px] opacity-60 md:opacity-40 animate-flow-down ${colors[0]}`} style={{ animationDuration: '25s', animationDelay: '0s' }}></div>
+      <div className={`absolute top-[-20%] right-[10%] w-[55vw] md:w-[35vw] h-[55vw] md:h-[35vw] rounded-full mix-blend-multiply filter blur-[80px] md:blur-[80px] opacity-60 md:opacity-40 animate-flow-down ${colors[1]}`} style={{ animationDuration: '30s', animationDelay: '5s' }}></div>
+      <div className={`absolute top-[-30%] left-[40%] w-[65vw] md:w-[45vw] h-[65vw] md:h-[45vw] rounded-full mix-blend-multiply filter blur-[80px] md:blur-[80px] opacity-60 md:opacity-40 animate-flow-down ${colors[2]}`} style={{ animationDuration: '28s', animationDelay: '2s' }}></div>
+
+      {/* Additional floating blobs for depth */}
+      <div className={`absolute top-[10%] left-[20%] w-[30vw] md:w-[20vw] h-[30vw] md:h-[20vw] rounded-full mix-blend-multiply filter blur-[60px] opacity-50 md:opacity-30 animate-blob ${colors[3]}`} style={{ animationDuration: '20s' }}></div>
+      <div className={`absolute top-[20%] right-[20%] w-[35vw] md:w-[25vw] h-[35vw] md:h-[25vw] rounded-full mix-blend-multiply filter blur-[60px] opacity-50 md:opacity-30 animate-blob animation-delay-4000 ${colors[0]}`} style={{ animationDuration: '24s' }}></div>
+    </div>
+  );
+};
+
+// --- HEADER COMPONENT ---
 const Header: React.FC<{ theme: Theme; onThemeToggle: () => void; scrollY: number }> = ({ theme, onThemeToggle, scrollY }) => {
   const isScrolled = scrollY > 20;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
 
   const navLinkClass = `text-sm font-medium px-4 py-2 rounded-full transition-all duration-300 ${theme.colors.textSecondary} hover:bg-white/10 hover:text-cyan-400 hover:shadow-[0_0_10px_rgba(34,211,238,0.2)]`;
+  const activeLinkClass = `text-sm font-medium px-4 py-2 rounded-full transition-all duration-300 bg-white/10 text-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.2)]`;
+
+  // Smooth scroll handler
+  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault();
+
+    if (targetId === '#') {
+      // Scroll to top for home
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setIsMobileMenuOpen(false);
+      return;
+    }
+
+    const element = document.querySelector(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setIsMobileMenuOpen(false);
+    }
+  };
+
+  // Track active section on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['features', 'deals', 'just-for-you', 'partners'];
+      const scrollPosition = window.scrollY + 200; // Offset for header
+
+      // Check each section from bottom to top to get the most accurate one
+      let foundSection = '';
+
+      for (const sectionId of sections) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          const elementTop = window.scrollY + rect.top;
+
+          // If we've scrolled past the start of this section
+          if (scrollPosition >= elementTop) {
+            foundSection = sectionId;
+          }
+        }
+      }
+
+      setActiveSection(foundSection);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Initial check
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -267,12 +393,12 @@ const Header: React.FC<{ theme: Theme; onThemeToggle: () => void; scrollY: numbe
         <div className="flex items-center justify-between h-16 relative">
 
           {/* Brand */}
-          <div className="flex items-center gap-2 cursor-pointer group gravity-target">
-            <div className="relative w-10 h-10">
+          <div className="flex items-center gap-3 cursor-pointer group gravity-target">
+            <div className="relative w-12 h-12">
               <OfertikoLogo theme={theme} className="w-full h-full" animated={false} />
             </div>
             <div
-              className={`flex items-center text-xl font-bold tracking-tight transition-all duration-300 group-hover:text-cyan-400 group-hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)] ${theme.colors.textMain}`}
+              className={`flex items-center text-2xl font-bold tracking-tight transition-all duration-300 group-hover:text-cyan-400 group-hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)] ${theme.colors.textMain}`}
               style={{ fontFamily: FONTS.bricolage }}
             >
               <span>Ofertiko<span className="text-cyan-500">.com</span></span>
@@ -281,10 +407,11 @@ const Header: React.FC<{ theme: Theme; onThemeToggle: () => void; scrollY: numbe
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-4 gravity-target">
-            <a href="#" className={navLinkClass}>Начало</a>
-            <a href="#features" className={navLinkClass}>Как работи</a>
-            <a href="#deals" className={navLinkClass}>Оферти</a>
-            <a href="#contact" className={navLinkClass}>Контакти</a>
+            <a href="#" onClick={(e) => handleSmoothScroll(e, '#')} className={navLinkClass}>Начало</a>
+            <a href="#features" onClick={(e) => handleSmoothScroll(e, '#features')} className={activeSection === 'features' ? activeLinkClass : navLinkClass}>Как работи</a>
+            <a href="#deals" onClick={(e) => handleSmoothScroll(e, '#deals')} className={activeSection === 'deals' ? activeLinkClass : navLinkClass}>Оферти</a>
+            <a href="#just-for-you" onClick={(e) => handleSmoothScroll(e, '#just-for-you')} className={activeSection === 'just-for-you' ? activeLinkClass : navLinkClass}>Само за теб</a>
+            <a href="#partners" onClick={(e) => handleSmoothScroll(e, '#partners')} className={activeSection === 'partners' ? activeLinkClass : navLinkClass}>Партньори</a>
           </nav>
 
           {/* Actions */}
@@ -311,9 +438,11 @@ const Header: React.FC<{ theme: Theme; onThemeToggle: () => void; scrollY: numbe
       {isMobileMenuOpen && (
         <div className={`md:hidden fixed inset-0 h-[100dvh] z-40 flex flex-col pt-24 px-6 backdrop-blur-xl animate-in slide-in-from-top-5 duration-300 overflow-y-auto ${theme.colors.background}`}>
           <div className="space-y-6 flex flex-col">
-            <a href="#" onClick={() => setIsMobileMenuOpen(false)} className={`text-2xl font-bold animate-in fade-in slide-in-from-left-4 delay-100 ${theme.colors.textMain}`}>Начало</a>
-            <a href="#features" onClick={() => setIsMobileMenuOpen(false)} className={`text-2xl font-bold animate-in fade-in slide-in-from-left-4 delay-150 ${theme.colors.textSecondary}`}>Как работи</a>
-            <a href="#deals" onClick={() => setIsMobileMenuOpen(false)} className={`text-2xl font-bold animate-in fade-in slide-in-from-left-4 delay-200 ${theme.colors.textSecondary}`}>Оферти</a>
+            <a href="#" onClick={(e) => handleSmoothScroll(e, '#')} className={`text-2xl font-bold animate-in fade-in slide-in-from-left-4 delay-100 ${theme.colors.textMain}`}>Начало</a>
+            <a href="#features" onClick={(e) => handleSmoothScroll(e, '#features')} className={`text-2xl font-bold animate-in fade-in slide-in-from-left-4 delay-150 ${theme.colors.textSecondary}`}>Как работи</a>
+            <a href="#deals" onClick={(e) => handleSmoothScroll(e, '#deals')} className={`text-2xl font-bold animate-in fade-in slide-in-from-left-4 delay-200 ${theme.colors.textSecondary}`}>Оферти</a>
+            <a href="#just-for-you" onClick={(e) => handleSmoothScroll(e, '#just-for-you')} className={`text-2xl font-bold animate-in fade-in slide-in-from-left-4 delay-250 ${theme.colors.textSecondary}`}>Само за теб</a>
+            <a href="#partners" onClick={(e) => handleSmoothScroll(e, '#partners')} className={`text-2xl font-bold animate-in fade-in slide-in-from-left-4 delay-300 ${theme.colors.textSecondary}`}>Партньори</a>
 
             <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-500/30 to-transparent my-4"></div>
 
@@ -794,7 +923,7 @@ const PopularPartnersSection: React.FC<{ theme: Theme }> = ({ theme }) => {
   };
 
   return (
-    <section className="py-20 px-4 relative overflow-hidden">
+    <section id="partners" className="py-20 px-4 relative overflow-hidden">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12 gravity-target">
@@ -931,7 +1060,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 1,
       title: "Apple iPhone 15 Pro Max",
-      image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/101/400/300",
       price: "2,199 лв.",
       oldPrice: "2,699 лв.",
       discount: "-18%",
@@ -943,7 +1072,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 2,
       title: "Sony WH-1000XM5",
-      image: "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/102/400/300",
       price: "629 лв.",
       oldPrice: "799 лв.",
       discount: "-21%",
@@ -955,7 +1084,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 3,
       title: "Nike Air Max 270",
-      image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/103/400/300",
       price: "189 лв.",
       oldPrice: "299 лв.",
       discount: "-36%",
@@ -967,7 +1096,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 4,
       title: "Philips Espresso Machine",
-      image: "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/104/400/300",
       price: "849 лв.",
       oldPrice: "1,299 лв.",
       discount: "-34%",
@@ -979,7 +1108,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 5,
       title: "Samsung 4K Smart TV",
-      image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/106/400/300",
       price: "1,099 лв.",
       oldPrice: "1,499 лв.",
       discount: "-26%",
@@ -991,7 +1120,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 6,
       title: "Adidas Ultraboost",
-      image: "https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/107/400/300",
       price: "220 лв.",
       oldPrice: "360 лв.",
       discount: "-38%",
@@ -1003,7 +1132,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 7,
       title: "iRobot Roomba j7+",
-      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/108/400/300",
       price: "1,399 лв.",
       oldPrice: "1,799 лв.",
       discount: "-22%",
@@ -1015,7 +1144,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 8,
       title: "Garmin Fenix 7",
-      image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/109/400/300",
       price: "999 лв.",
       oldPrice: "1,299 лв.",
       discount: "-23%",
@@ -1027,7 +1156,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 9,
       title: "MacBook Air M2",
-      image: "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/110/400/300",
       price: "2,199 лв.",
       oldPrice: "2,499 лв.",
       discount: "-12%",
@@ -1039,7 +1168,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 10,
       title: "The North Face Jacket",
-      image: "https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&q=80&w=400", // Ski jacket
+      image: "https://picsum.photos/seed/111/400/300", // Ski jacket
       price: "459 лв.",
       oldPrice: "629 лв.",
       discount: "-27%",
@@ -1051,7 +1180,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 11,
       title: "Tefal OptiGrill Elite",
-      image: "https://images.unsplash.com/photo-1544030288-e6e6108867f6?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/112/400/300",
       price: "389 лв.",
       oldPrice: "599 лв.",
       discount: "-35%",
@@ -1063,7 +1192,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 12,
       title: "Yoga Mat Pro",
-      image: "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/113/400/300",
       price: "45 лв.",
       oldPrice: "89 лв.",
       discount: "-49%",
@@ -1075,7 +1204,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 13,
       title: "PlayStation 5 Slim",
-      image: "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/114/400/300",
       price: "949 лв.",
       oldPrice: "1,099 лв.",
       discount: "-14%",
@@ -1087,7 +1216,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 14,
       title: "Levi's 501 Original",
-      image: "https://images.unsplash.com/photo-1542272617-08f086302542?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/115/400/300",
       price: "119 лв.",
       oldPrice: "189 лв.",
       discount: "-37%",
@@ -1099,7 +1228,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 15,
       title: "Nutribullet Pro",
-      image: "https://images.unsplash.com/photo-1570222094114-28a9d8895272?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/116/400/300",
       price: "159 лв.",
       oldPrice: "229 лв.",
       discount: "-30%",
@@ -1111,7 +1240,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 16,
       title: "Dumbbells Set 20kg",
-      image: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/117/400/300",
       price: "129 лв.",
       oldPrice: "199 лв.",
       discount: "-35%",
@@ -1123,7 +1252,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 17,
       title: "iPad Air 5",
-      image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/118/400/300",
       price: "1,299 лв.",
       oldPrice: "1,499 лв.",
       discount: "-13%",
@@ -1135,7 +1264,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 18,
       title: "Ray-Ban Aviator",
-      image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/119/400/300",
       price: "189 лв.",
       oldPrice: "289 лв.",
       discount: "-34%",
@@ -1147,7 +1276,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 19,
       title: "Philips Airfryer XXL",
-      image: "https://images.unsplash.com/photo-1626162978724-320eae50396c?auto=format&fit=crop&q=80&w=400", // Airfryer-like
+      image: "https://picsum.photos/seed/120/400/300", // Airfryer-like
       price: "429 лв.",
       oldPrice: "649 лв.",
       discount: "-33%",
@@ -1159,7 +1288,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 20,
       title: "Mountain Bike Cross",
-      image: "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/121/400/300",
       price: "899 лв.",
       oldPrice: "1,299 лв.",
       discount: "-30%",
@@ -1171,7 +1300,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 21,
       title: "Samsung Galaxy Watch 6",
-      image: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/122/400/300",
       price: "489 лв.",
       oldPrice: "649 лв.",
       discount: "-25%",
@@ -1183,7 +1312,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 22,
       title: "Zara Wool Coat",
-      image: "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/123/400/300",
       price: "199 лв.",
       oldPrice: "299 лв.",
       discount: "-33%",
@@ -1195,7 +1324,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 23,
       title: "Makita Cordless Drill",
-      image: "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/124/400/300",
       price: "249 лв.",
       oldPrice: "389 лв.",
       discount: "-36%",
@@ -1207,7 +1336,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 24,
       title: "Wilson Tennis Racket",
-      image: "https://images.unsplash.com/photo-1617083934555-563404543d35?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/125/400/300",
       price: "289 лв.",
       oldPrice: "399 лв.",
       discount: "-27%",
@@ -1219,7 +1348,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 25,
       title: "GoPro Hero 12",
-      image: "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/126/400/300",
       price: "799 лв.",
       oldPrice: "999 лв.",
       discount: "-20%",
@@ -1231,7 +1360,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 26,
       title: "H&M Hoodie",
-      image: "https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/127/400/300",
       price: "39 лв.",
       oldPrice: "69 лв.",
       discount: "-43%",
@@ -1243,7 +1372,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 27,
       title: "IKEA Strandmon Chair",
-      image: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/128/400/300",
       price: "399 лв.",
       oldPrice: "499 лв.",
       discount: "-20%",
@@ -1255,7 +1384,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 28,
       title: "Nike Running Shorts",
-      image: "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/129/400/300",
       price: "49 лв.",
       oldPrice: "79 лв.",
       discount: "-38%",
@@ -1267,7 +1396,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 29,
       title: "Nintendo Switch OLED",
-      image: "https://images.unsplash.com/photo-1612287230217-8c7c6c170b95?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/130/400/300",
       price: "649 лв.",
       oldPrice: "799 лв.",
       discount: "-19%",
@@ -1279,7 +1408,7 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
     {
       id: 30,
       title: "Protein Whey Gold",
-      image: "https://images.unsplash.com/photo-1593095948071-474c5cc2989d?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/131/400/300",
       price: "109 лв.",
       oldPrice: "159 лв.",
       discount: "-31%",
@@ -1408,92 +1537,95 @@ const DealsPreview: React.FC<{ theme: Theme }> = ({ theme }) => {
 
         {/* Relative Wrapper for Carousel and Controls */}
         <div className="relative">
-          {/* Carousel Container with Overflow Hidden */}
-          <div
-            className="relative group/carousel touch-pan-y cursor-grab active:cursor-grabbing overflow-hidden"
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            onMouseDown={(e) => setTouchStart(e.clientX)}
-            onMouseMove={(e) => { if (touchStart) setTouchEnd(e.clientX); }}
-            onMouseUp={() => { handleTouchEnd(); setTouchStart(0); }}
-            onMouseLeave={() => { if (touchStart) { handleTouchEnd(); setTouchStart(0); } }}
-          >
-            {/* Sliding Track */}
+          {/* Overflow wrapper to hide horizontal overflow but allow vertical expansion */}
+          <div className="overflow-hidden py-6 -my-6 px-2 -mx-2">
+            {/* Carousel Container */}
             <div
-              className="flex transition-transform duration-500 ease-out"
-              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+              className="relative group/carousel touch-pan-y cursor-grab active:cursor-grabbing"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              onMouseDown={(e) => setTouchStart(e.clientX)}
+              onMouseMove={(e) => { if (touchStart) setTouchEnd(e.clientX); }}
+              onMouseUp={() => { handleTouchEnd(); setTouchStart(0); }}
+              onMouseLeave={() => { if (touchStart) { handleTouchEnd(); setTouchStart(0); } }}
             >
-              {/* We group items into 'pages' for the slide effect */}
-              {Array.from({ length: totalPages }).map((_, pageIndex) => (
-                <div key={pageIndex} className="min-w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-1">
-                  {filteredDeals.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage).map((deal) => (
-                    <div key={deal.id} className={`gravity-target group relative rounded-2xl overflow-hidden border transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.3)] hover:-translate-y-1 hover:border-cyan-400/50 ${theme.colors.cardBg} ${theme.colors.cardBorder}`}>
-                      {/* Image Area */}
-                      <div className="h-56 relative overflow-hidden bg-slate-800 transition-all duration-500 ease-in-out">
-                        <img src={deal.image} alt={deal.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 pointer-events-none" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
-                        <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-md shadow-lg">{deal.discount}</div>
-                        <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md text-slate-900 text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-lg">
-                          <Store className="w-3 h-3" />
-                          {deal.store}
-                        </div>
-                        <div className="absolute bottom-3 left-3 bg-black/50 backdrop-blur-md text-white text-xs px-2.5 py-1 rounded-full flex items-center gap-1 border border-white/10">
-                          {deal.icon}
-                          {deal.category}
-                        </div>
-                      </div>
-
-                      <div className="p-5 relative">
-                        <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-purple-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-                        <h3 className={`font-bold text-lg mb-3 line-clamp-2 leading-snug ${theme.colors.textMain}`}>{deal.title}</h3>
-                        <div className="flex items-center gap-1 mb-3">
-                          <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                          <span className={`text-sm font-bold ${theme.colors.textMain}`}>{deal.rating}</span>
-                          <span className={`text-xs ${theme.colors.textMuted}`}>(120+ ревюта)</span>
-                        </div>
-                        <div className="flex items-end justify-between mb-4">
-                          <div className="flex flex-col">
-                            <span className={`text-xs line-through mb-0.5 ${theme.colors.textMuted}`}>{deal.oldPrice}</span>
-                            <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">{deal.price}</span>
+              {/* Sliding Track */}
+              <div
+                className="flex transition-transform duration-500 ease-out"
+                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+              >
+                {/* We group items into 'pages' for the slide effect */}
+                {Array.from({ length: totalPages }).map((_, pageIndex) => (
+                  <div key={pageIndex} className="min-w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
+                    {filteredDeals.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage).map((deal) => (
+                      <div key={deal.id} className={`gravity-target group relative rounded-2xl overflow-hidden border transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.3)] hover:-translate-y-1 hover:border-cyan-400/50 hover:z-10 ${theme.colors.cardBg} ${theme.colors.cardBorder}`}>
+                        {/* Image Area */}
+                        <div className="h-56 relative overflow-hidden bg-slate-800 transition-all duration-500 ease-in-out rounded-t-2xl">
+                          <img src={deal.image} alt={deal.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 pointer-events-none" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
+                          <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-md shadow-lg">{deal.discount}</div>
+                          <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md text-slate-900 text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-lg">
+                            <Store className="w-3 h-3" />
+                            {deal.store}
+                          </div>
+                          <div className="absolute bottom-3 left-3 bg-black/50 backdrop-blur-md text-white text-xs px-2.5 py-1 rounded-full flex items-center gap-1 border border-white/10">
+                            {deal.icon}
+                            {deal.category}
                           </div>
                         </div>
-                        <button className={`w-full py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-all ${theme.id === 'light' ? 'bg-slate-100 hover:bg-slate-200 text-slate-900' : 'bg-slate-800 hover:bg-slate-700 text-white'}`}>
-                          Виж оферта <ExternalLink className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                  {/* Fill empty slots if last page is not full */}
-                  {filteredDeals.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage).length < itemsPerPage &&
-                    Array.from({ length: itemsPerPage - filteredDeals.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage).length }).map((_, i) => (
-                      <div key={`empty-${i}`} className="hidden lg:block"></div>
-                    ))
-                  }
-                </div>
-              ))}
 
-              {filteredDeals.length === 0 && (
-                <div className={`min-w-full flex flex-col items-center justify-center h-64 text-center ${theme.colors.textMuted}`}>
-                  <Search className="w-12 h-12 mb-4 opacity-50" />
-                  <p>Няма намерени оферти в тази категория.</p>
-                </div>
-              )}
+                        <div className="p-5 relative">
+                          <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-purple-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                          <h3 className={`font-bold text-lg mb-3 line-clamp-2 leading-snug ${theme.colors.textMain}`}>{deal.title}</h3>
+                          <div className="flex items-center gap-1 mb-3">
+                            <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                            <span className={`text-sm font-bold ${theme.colors.textMain}`}>{deal.rating}</span>
+                            <span className={`text-xs ${theme.colors.textMuted}`}>(120+ ревюта)</span>
+                          </div>
+                          <div className="flex items-end justify-between mb-4">
+                            <div className="flex flex-col">
+                              <span className={`text-xs line-through mb-0.5 ${theme.colors.textMuted}`}>{deal.oldPrice}</span>
+                              <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">{deal.price}</span>
+                            </div>
+                          </div>
+                          <button className={`w-full py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-all ${theme.id === 'light' ? 'bg-slate-100 hover:bg-slate-200 text-slate-900' : 'bg-slate-800 hover:bg-slate-700 text-white'}`}>
+                            Виж оферта <ExternalLink className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                    {/* Fill empty slots if last page is not full */}
+                    {filteredDeals.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage).length < itemsPerPage &&
+                      Array.from({ length: itemsPerPage - filteredDeals.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage).length }).map((_, i) => (
+                        <div key={`empty-${i}`} className="hidden lg:block"></div>
+                      ))
+                    }
+                  </div>
+                ))}
+
+                {filteredDeals.length === 0 && (
+                  <div className={`min-w-full flex flex-col items-center justify-center h-64 text-center ${theme.colors.textMuted}`}>
+                    <Search className="w-12 h-12 mb-4 opacity-50" />
+                    <p>Няма намерени оферти в тази категория.</p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Carousel Controls - Visible on Mobile too now */}
+          {/* Carousel Controls - Buttons overlap carousel edges */}
           {totalPages > 1 && (
             <>
               <button
                 onClick={handlePrev}
-                className={`absolute top-1/2 -left-2 md:-left-12 -translate-y-1/2 p-3 rounded-full shadow-xl backdrop-blur-md border transition-all hover:scale-110 ${theme.colors.cardBg} ${theme.colors.cardBorder} ${theme.colors.textMain} hover:text-cyan-400 z-10`}
+                className={`absolute top-1/2 left-0 -translate-y-1/2 p-3 rounded-full shadow-xl backdrop-blur-md border transition-all hover:scale-110 ${theme.colors.cardBg} ${theme.colors.cardBorder} ${theme.colors.textMain} hover:text-cyan-400 z-10`}
               >
                 <ChevronLeft className="w-6 h-6" />
               </button>
               <button
                 onClick={handleNext}
-                className={`absolute top-1/2 -right-2 md:-right-12 -translate-y-1/2 p-3 rounded-full shadow-xl backdrop-blur-md border transition-all hover:scale-110 ${theme.colors.cardBg} ${theme.colors.cardBorder} ${theme.colors.textMain} hover:text-cyan-400 z-10`}
+                className={`absolute top-1/2 right-0 -translate-y-1/2 p-3 rounded-full shadow-xl backdrop-blur-md border transition-all hover:scale-110 ${theme.colors.cardBg} ${theme.colors.cardBorder} ${theme.colors.textMain} hover:text-cyan-400 z-10`}
               >
                 <ChevronRight className="w-6 h-6" />
               </button>
@@ -1523,7 +1655,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "AI_Асистент",
       foundDate: "Днес 18:30",
       title: "Samsung Galaxy S24 Ultra 512GB Смартфон с S Pen, 200MP камера, 5G, 12GB RAM, 512GB памет, титанов корпус",
-      image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/132/400/300",
       price: "1,899 лв.",
       oldPrice: "2,399 лв.",
       discount: "-20%",
@@ -1539,7 +1671,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Ofertiko_AI",
       foundDate: "Днес 17:15",
       title: "Sony WH-1000XM5 Безжични слушалки с шумопоглъщане, 30 часа батерия, Bluetooth 5.2, Hi-Res Audio",
-      image: "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/133/400/300",
       price: "599 лв.",
       oldPrice: "799 лв.",
       discount: "-25%",
@@ -1555,7 +1687,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Smart_Deals",
       foundDate: "Вчера 20:45",
       title: "Apple MacBook Pro 14\" M3 Pro чип, 18GB RAM, 512GB SSD, Liquid Retina XDR дисплей, 18 часа батерия",
-      image: "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/134/400/300",
       price: "3,299 лв.",
       oldPrice: "3,999 лв.",
       discount: "-17%",
@@ -1571,7 +1703,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Tech_Savvy",
       foundDate: "Днес 15:10",
       title: "LG OLED 65\" 4K Smart TV с AI ThinQ, Dolby Vision, HDR10, WebOS, 120Hz, HDMI 2.1, игров режим",
-      image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/135/400/300",
       price: "2,499 лв.",
       oldPrice: "3,299 лв.",
       discount: "-24%",
@@ -1587,7 +1719,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Deal_Finder",
       foundDate: "Днес 14:25",
       title: "Nike Air Max 270 Мъжки спортни обувки с Air технология, максимален комфорт, дънки за амортизация, различни размери",
-      image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/136/400/300",
       price: "189 лв.",
       oldPrice: "299 лв.",
       discount: "-36%",
@@ -1603,7 +1735,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Price_Watcher",
       foundDate: "Днес 13:40",
       title: "Canon EOS R6 Mark II Безогледален фотоапарат с 24.2MP сензор, 4K видео, Dual Pixel AF, 6K RAW, безжичен",
-      image: "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/137/400/300",
       price: "2,899 лв.",
       oldPrice: "3,599 лв.",
       discount: "-19%",
@@ -1619,7 +1751,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Smart_Buyer",
       foundDate: "Вчера 22:15",
       title: "Xbox Series X Игрова конзола с 1TB SSD, 4K 120fps, Ray Tracing, обратна съвместимост, Game Pass включен",
-      image: "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/138/400/300",
       price: "699 лв.",
       oldPrice: "899 лв.",
       discount: "-22%",
@@ -1635,7 +1767,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Tech_Expert",
       foundDate: "Днес 12:05",
       title: "Bose QuietComfort 45 Безжични слушалки с активно шумопоглъщане, 24 часа батерия, USB-C, Bluetooth 5.1",
-      image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/139/400/300",
       price: "449 лв.",
       oldPrice: "599 лв.",
       discount: "-25%",
@@ -1651,7 +1783,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Deal_Master",
       foundDate: "Днес 11:30",
       title: "KitchenAid Artisan Stand Mixer 5.5L с планетарно движение, 10 скорости, различни аксесоари, различни цветове",
-      image: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/140/400/300",
       price: "799 лв.",
       oldPrice: "1,099 лв.",
       store: "KitchenAid",
@@ -1666,7 +1798,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Fashion_Icon",
       foundDate: "Днес 10:00",
       title: "Ray-Ban Wayfarer Classic Слънчеви очила с поляризация, UV защита, класически дизайн, черен цвят",
-      image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/141/400/300",
       price: "189 лв.",
       oldPrice: "259 лв.",
       discount: "-27%",
@@ -1682,7 +1814,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Home_Expert",
       foundDate: "Вчера 16:45",
       title: "Philips Airfryer XXL Фритюрник с горещ въздух, 1.4кг капацитет, цифров дисплей, Smart Sensing технология",
-      image: "https://images.unsplash.com/photo-1626162978724-320eae50396c?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/142/400/300",
       price: "429 лв.",
       oldPrice: "649 лв.",
       discount: "-33%",
@@ -1698,7 +1830,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Sport_Fan",
       foundDate: "Днес 09:15",
       title: "Garmin Instinct 2 Solar GPS часовник с неограничен живот на батерията, удароустойчив, водоустойчив до 100м",
-      image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/143/400/300",
       price: "599 лв.",
       oldPrice: "799 лв.",
       discount: "-25%",
@@ -1714,7 +1846,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Gamer_Pro",
       foundDate: "Вчера 21:30",
       title: "Razer BlackWidow V4 Pro Механична геймърска клавиатура с RGB подсветка, макро бутони, wrist rest",
-      image: "https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/144/400/300",
       price: "349 лв.",
       oldPrice: "459 лв.",
       discount: "-24%",
@@ -1730,7 +1862,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Coffee_Lover",
       foundDate: "Днес 08:50",
       title: "De'Longhi Magnifica S Кафеавтомат с мелачка, 15 бара налягане, капучино система, черен",
-      image: "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/145/400/300",
       price: "599 лв.",
       oldPrice: "899 лв.",
       discount: "-33%",
@@ -1746,7 +1878,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Sneaker_Head",
       foundDate: "Днес 13:20",
       title: "Adidas Yeezy Boost 350 V2 Обувки с Boost технология, Primeknit горна част, лимитирана серия",
-      image: "https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/146/400/300",
       price: "489 лв.",
       oldPrice: "599 лв.",
       discount: "-18%",
@@ -1762,7 +1894,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Tech_Geek",
       foundDate: "Вчера 19:10",
       title: "GoPro Hero 12 Black Екшън камера с 5.3K видео, HyperSmooth 6.0, водоустойчива, гласов контрол",
-      image: "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/147/400/300",
       price: "799 лв.",
       oldPrice: "999 лв.",
       discount: "-20%",
@@ -1778,7 +1910,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Book_Worm",
       foundDate: "Днес 11:45",
       title: "Amazon Kindle Paperwhite Електронен четец с 6.8\" дисплей, регулируема топла светлина, водоустойчив",
-      image: "https://images.unsplash.com/photo-1592496431122-2349e0fbc666?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/148/400/300",
       price: "289 лв.",
       oldPrice: "349 лв.",
       discount: "-17%",
@@ -1794,7 +1926,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Music_Fan",
       foundDate: "Днес 15:30",
       title: "JBL Flip 6 Портативна Bluetooth колонка с мощен звук, водоустойчива IP67, 12 часа батерия",
-      image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/149/400/300",
       price: "199 лв.",
       oldPrice: "269 лв.",
       discount: "-26%",
@@ -1810,7 +1942,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Photo_Pro",
       foundDate: "Вчера 17:20",
       title: "DJI Mini 4 Pro Дрон с 4K камера, 34 минути полет, сензори за препятствия, лек и компактен",
-      image: "https://images.unsplash.com/photo-1579829366248-204fe8413f31?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/150/400/300",
       price: "1,499 лв.",
       oldPrice: "1,799 лв.",
       discount: "-17%",
@@ -1826,7 +1958,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Fitness_Guru",
       foundDate: "Днес 07:30",
       title: "Bowflex SelectTech 552 Регулируеми дъмбели (чифт), 2-24 кг, компактен дизайн, заместител на 15 чифта",
-      image: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/151/400/300",
       price: "799 лв.",
       oldPrice: "1,099 лв.",
       discount: "-27%",
@@ -1842,7 +1974,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Style_Expert",
       foundDate: "Днес 12:15",
       title: "Tommy Hilfiger Мъжки часовник с кожена каишка, кварцов механизъм, водоустойчив 5ATM",
-      image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/152/400/300",
       price: "249 лв.",
       oldPrice: "389 лв.",
       discount: "-36%",
@@ -1858,7 +1990,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Home_Chef",
       foundDate: "Вчера 18:40",
       title: "Le Creuset Чугунена тенджера 24см, емайлирана, подходяща за всички котлони, доживотна гаранция",
-      image: "https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/153/400/300",
       price: "459 лв.",
       oldPrice: "599 лв.",
       discount: "-23%",
@@ -1874,7 +2006,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Tech_Addict",
       foundDate: "Днес 14:50",
       title: "Logitech MX Master 3S Безжична мишка с ергономичен дизайн, 8K DPI сензор, тихи бутони",
-      image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/154/400/300",
       price: "189 лв.",
       oldPrice: "229 лв.",
       discount: "-17%",
@@ -1890,7 +2022,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Outdoor_Life",
       foundDate: "Днес 09:30",
       title: "Patagonia Nano Puff Яке с изолация PrimaLoft, ветроустойчиво, водоотблъскващо, рециклирани материали",
-      image: "https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/155/400/300",
       price: "389 лв.",
       oldPrice: "499 лв.",
       discount: "-22%",
@@ -1906,7 +2038,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Smart_Home",
       foundDate: "Вчера 20:10",
       title: "Google Nest Learning Thermostat 3rd Gen Смарт термостат, пести енергия, учи графика, дистанционно управление",
-      image: "https://images.unsplash.com/photo-1567789884554-0b844b597180?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/156/400/300",
       price: "429 лв.",
       oldPrice: "549 лв.",
       discount: "-22%",
@@ -1922,7 +2054,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Audio_Phile",
       foundDate: "Днес 11:15",
       title: "Sennheiser Momentum 4 Wireless Слушалки с 60 часа батерия, аудиофилски звук, активно шумопоглъщане",
-      image: "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/157/400/300",
       price: "549 лв.",
       oldPrice: "699 лв.",
       discount: "-21%",
@@ -1938,7 +2070,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Gadget_Freak",
       foundDate: "Днес 16:00",
       title: "Anker 737 Power Bank (PowerCore 24K) Външна батерия 24000mAh, 140W изход, дисплей, зарежда лаптопи",
-      image: "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/158/400/300",
       price: "249 лв.",
       oldPrice: "329 лв.",
       discount: "-24%",
@@ -1954,7 +2086,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Run_Fast",
       foundDate: "Вчера 18:20",
       title: "Hoka One One Clifton 9 Маратонки за бягане с максимално омекотяване, леки, дишащи, за дълги разстояния",
-      image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=400",
+      image: "https://picsum.photos/seed/159/400/300",
       price: "269 лв.",
       oldPrice: "329 лв.",
       discount: "-18%",
@@ -1970,7 +2102,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
       foundBy: "Clean_Freak",
       foundDate: "Днес 10:40",
       title: "Karcher K5 Power Control Водоструйка с приложение, 145 бара, 500 л/ч, за почистване на автомобили и тераси",
-      image: "https://images.unsplash.com/photo-1626221700716-67835d847725?q=80&w=400",
+      image: "https://picsum.photos/seed/160/400/300",
       price: "649 лв.",
       oldPrice: "849 лв.",
       discount: "-24%",
@@ -2033,7 +2165,7 @@ const JustForYouSection: React.FC<{ theme: Theme }> = ({ theme }) => {
   const visibleDeals = personalizedDeals;
 
   return (
-    <section className="py-16 px-4 relative overflow-hidden">
+    <section id="just-for-you" className="py-16 px-4 relative overflow-hidden">
       <div className="max-w-7xl mx-auto">
         {/* Header with title and info icon */}
         <div className="flex items-center justify-between mb-8">
@@ -2559,20 +2691,22 @@ const App: React.FC = () => {
       />
 
       {/* Animated Background blobs (Only visible on solid background or faintly behind) */}
-      <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div
-          className={`absolute top-0 -left-4 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl animate-blob ${isDark ? 'bg-purple-600 opacity-20' : 'bg-purple-300 opacity-40'}`}
-          style={{ animationDuration: '20s' }}
-        ></div>
-        <div
-          className={`absolute top-0 -right-4 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-long ${isDark ? 'bg-cyan-600 opacity-20' : 'bg-cyan-300 opacity-40'}`}
-          style={{ animationDuration: '25s' }}
-        ></div>
-        <div
-          className={`absolute -bottom-8 left-20 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-extra-long ${isDark ? 'bg-pink-600 opacity-20' : 'bg-pink-300 opacity-40'}`}
-          style={{ animationDuration: '23s' }}
-        ></div>
-      </div>
+      {/* Animated Background blobs (Only visible on solid background or faintly behind) */}
+      {backgroundMode === 'solid' && <InkFlowAnimation theme={currentTheme} />}
+
+      {/* Fallback simple blobs if not solid (optional, or just remove) */}
+      {backgroundMode !== 'solid' && (
+        <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+          <div
+            className={`absolute top-0 -left-4 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl animate-blob ${isDark ? 'bg-purple-600 opacity-20' : 'bg-purple-300 opacity-40'}`}
+            style={{ animationDuration: '20s' }}
+          ></div>
+          <div
+            className={`absolute top-0 -right-4 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-long ${isDark ? 'bg-cyan-600 opacity-20' : 'bg-cyan-300 opacity-40'}`}
+            style={{ animationDuration: '25s' }}
+          ></div>
+        </div>
+      )}
 
       {/* Grid Overlay */}
       <div className={`fixed inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] -z-10 ${isDark ? 'opacity-20' : 'opacity-10 invert'} pointer-events-none`}></div>
