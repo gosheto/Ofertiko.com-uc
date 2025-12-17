@@ -1,0 +1,1 @@
+{"root":["./App.tsx","./index.tsx","./replace-images.js","./types.ts","./vite.config.ts","./api/subscribe.ts","./components/AiForeman.tsx","./components/Countdown.tsx","./services/geminiService.ts"],"version":"5.9.3"}
