@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { Theme } from './types';
 import { themes, darkTheme } from './data/themes';
 import { FONTS } from './data/fonts';
@@ -222,6 +223,8 @@ const App: React.FC = () => {
       </div>
 
       <NewFooter theme={currentTheme} />
+
+      <Analytics />
     </div>
   );
 };
